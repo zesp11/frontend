@@ -1,0 +1,14 @@
+.navBarWrapper {
+  background-color: #312927;
+  width: 100%;
+}
+.logoWrapper {
+  width: 20vh;
+}
+.buttonWrapper {
+  display: flex;
+  gap: 10%;
+}
+.button {
+  color: white;
+}
