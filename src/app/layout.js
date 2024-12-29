@@ -1,3 +1,4 @@
+import NavBar from "../../components/navbar";
 import "./globals.css";
 export const metadata = {
   title: "GoAdventure",
@@ -7,7 +8,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="pl">
-      <body>{children}</body>
+      <body>
+        <nav>
+          <NavBar />
+        </nav>
+        {children}
+      </body>
     </html>
   );
 }

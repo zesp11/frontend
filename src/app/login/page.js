@@ -1,17 +1,24 @@
 import Image from "next/image";
 import NavBar from "../../../components/navbar";
+
 export default function Login() {
   return (
     <>
-      <Image
-        src="/login-bg.jpg"
-        alt="Background image"
-        layout="fill"
-        objectFit="cover"
-        quality={100}
+      <div
+        style={{
+          backgroundImage: "url('/login-bg.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: -9999,
+        }}
       />
-      <div className="wrapper">
-        <NavBar />
+      <div>
         <h1>Logowanie</h1>
       </div>
     </>
