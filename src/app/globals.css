@@ -9,7 +9,12 @@
     --foreground: #ededed;
   }
 }
-
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
 body {
   color: var(--foreground);
   background: var(--background);

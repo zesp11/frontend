@@ -1,4 +1,4 @@
-import NavBar from "../../components/navbar";
+import NavBar from "@/components/navbar";
 import "./globals.css";
 export const metadata = {
   title: "GoAdventure",

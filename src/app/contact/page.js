@@ -1,9 +1,7 @@
-import Image from "next/image";
-import NavBar from "../../../components/navbar";
 export default function Contact() {
   return (
     <>
-       <div
+      <div
         style={{
           backgroundImage: "url('/contact-bg.jpg')",
           backgroundSize: "cover",
