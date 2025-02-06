@@ -24,7 +24,7 @@ export default function NavBar() {
         <Link href="contact" className="button">
           Kontakt
         </Link>
-        <Link href="login" className="button">
+        <Link href="login" className="loginButton">
           Zaloguj
         </Link>
       </div>

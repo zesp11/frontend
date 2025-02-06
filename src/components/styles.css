@@ -1,18 +1,20 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Główne style */
 .navBarWrapper {
   height: 7vh;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 30px;
-  background-color: #312927;
+  background-color: #34241d;
 }
 
 .logoWrapper {
   display: flex;
   align-items: center;
+  padding: 5px 35px;
+  border-radius: 5px;
+  background-color: #ff9a68;
+  border: none;
 }
 
 .buttonWraper {
@@ -20,6 +22,7 @@
   gap: 15px;
 }
 
+.loginButton,
 .button {
   text-decoration: none;
   color: white;
@@ -28,6 +31,161 @@
   transition: background-color 0.3s ease;
 }
 
-.button:hover {
+.loginButton {
+  background-color: #ff9a68;
+}
+
+.loginButton:hover {
   background-color: #201b1a;
+}
+
+.button:hover {
+  background-color: #ff9a68;
+}
+
+.plainTextWrapper {
+  text-decoration: none;
+  color: black;
+  width: 80%;
+  margin: 10% 10%;
+  padding: 40px 40px;
+  border-radius: 5px;
+  background-color: rgba(243, 232, 202, 0.4);
+  border: none;
+}
+
+.login-container,
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.login-wrapper,
+.register-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.back-div {
+  background: linear-gradient(to right, #ff9a68, #34241d);
+  border-radius: 26px;
+  margin: 1rem;
+}
+
+.form-container {
+  border: 20px solid transparent;
+  border-radius: 20px;
+  background-color: #d8cfb5;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  padding: 2.5rem;
+  margin: 0.5rem;
+}
+
+.form-title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #666;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  cursor: default;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  font-size: 1.125rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.form-input {
+  border: 1px solid #d1d5db;
+  padding: 0.75rem;
+  background-color: #ff9a68;
+  color: #ffffff;
+  border-radius: 0.5rem;
+  width: 100%;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.forgot-password,
+.register-link-text,
+.login-link-text,
+.terms-link {
+  color: #60a5fa;
+  transition: all 0.1s ease-in-out;
+}
+
+.forgot-password span,
+.register-link-text span,
+.login-link-text span,
+.terms-link span {
+  background-image: linear-gradient(to right, #f3d480, #fcb22a);
+  background-size: 0% 2px;
+  background-repeat: no-repeat;
+  transition: all 0.5s ease-out;
+}
+
+.forgot-password:hover span,
+.register-link-text:hover span,
+.login-link-text:hover span,
+.terms-link:hover span {
+  background-size: 100% 2px;
+}
+
+.submit-button {
+  background: linear-gradient(to right, #ff9a68, #34241d);
+  color: #f3f4f6;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  padding: 0.5rem;
+  margin-top: 1.5rem;
+  width: 100%;
+  transition: all 0.3s ease-in-out;
+}
+
+.submit-button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(to left, #ff9a68, #34241d);
+}
+
+.register-link,
+.login-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+}
+
+.register-link h3,
+.login-link h3 {
+  color: #666;
+}
+
+.terms {
+  color: #6b7280;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+}
+
+.terms p {
+  cursor: default;
 }
