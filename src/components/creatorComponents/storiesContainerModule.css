@@ -1,0 +1,93 @@
+.storiesContainerWrapper {
+  position: fixed; /* Changed to fixed for better mobile support */
+  top: 7vh;
+  left: 15%;
+  width: 85%; /* Full width on mobile */
+  height: auto; /* Height will adjust based on content */
+  min-height: calc(100vh - 7vh);
+  padding: clamp(10px, 2vw, 20px); /* Responsive padding */
+
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  background-color: beige;
+  border: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 100; /* Ensure it stays above other content */
+}
+.upperPanel {
+  justify-content: center;
+  width: 100%;
+  display: flex;
+  gap: 60%;
+}
+.newStoryButton {
+  background-color: green;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 20px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+}
+
+.storyWrapper {
+  padding: 20px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.story-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+  max-width: 220px;
+  text-align: center;
+}
+
+.story-card:hover {
+  transform: scale(1.05);
+}
+
+.story-image {
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.story-info {
+  margin-top: 10px;
+}
+
+.story-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #34241d;
+}
+
+.story-author {
+  font-size: 14px;
+  color: #666;
+  margin-top: 5px;
+}
+
+.story-tags {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: center;
+}
+
+.story-tag {
+  background: #ff9a68;
+  color: white;
+  padding: 5px 8px;
+  border-radius: 5px;
+  font-size: 12px;
+}

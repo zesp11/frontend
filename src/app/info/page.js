@@ -1,11 +1,11 @@
-import PlainText from "@/components/PlainText";
-import"./info.css";
+import PlainText from "@/components/plainText";
+import "./info.css";
 export default function Info() {
   return (
     <>
-      <div className="infoContainer"/>
+      <div className="infoContainer" />
       <div>
-        <PlainText text="Informacje o projekcie"/>
+        <PlainText text="Informacje o projekcie" />
       </div>
     </>
   );

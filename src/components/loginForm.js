@@ -32,9 +32,9 @@ export default function LoginForm() {
               <a className="forgot-password" href="#">
                 Zapomniałeś Hasła?
               </a>
-              <button className="submit-button" type="submit">
+              <Link className="submit-button" type="submit" href="/creator">
                 ZALOGUJ
-              </button>
+              </Link>
             </form>
             <div className="register-link">
               <h3>
