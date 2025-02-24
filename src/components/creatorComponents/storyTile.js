@@ -1,6 +1,6 @@
 import "./storiesContainerModule.css";
 import Image from "next/image";
-
+//Story tile: to stylize
 export default function StoryTile({ story }) {
   return (
     <div className="story-card">

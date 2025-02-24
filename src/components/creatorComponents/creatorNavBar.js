@@ -1,11 +1,14 @@
 import Link from "next/link";
 import "../styles.css";
 import Image from "next/image";
+
+//Navbar rendered only in "/creator" part.
+//To implement: events when buttons are hovered and clicked
 export default function CreatorNavBar() {
   return (
     <div className="navBarWrapper">
       <div className="logoWrapper">
-        <Link href="/">
+        <Link href="/creator">
           <Image
             src="/temp-logo.png"
             alt="Background image"

@@ -1,4 +1,4 @@
-import SearchField from "@/components/creatorComponents/searchField";
+import SearchField from "@/clientComponents/searchField";
 import "./creator.css";
 import StoriesContainer from "@/components/creatorComponents/storiesContainer";
 
