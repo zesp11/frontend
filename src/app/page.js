@@ -1,6 +1,5 @@
-import NavBar from "@/components/navbar";
 import "./globals.css";
-import PlainText from "@/components/plainText";
+import PlainText from "@/components/PlainText";
 export default function Home() {
   return (
     <>
