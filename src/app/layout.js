@@ -1,7 +1,7 @@
 import "./globals.css";
-import NavbarSwitcher from "@/clientComponents/navBarSwitcher";
+import NavbarSwitcher from "@/components/clientSideComponents/creator/navBarSwitcher";
 export const metadata = {
-  title: "GoAdventure",
+  title: "GoTale",
   description: "Create your own real life adventure!",
 };
 

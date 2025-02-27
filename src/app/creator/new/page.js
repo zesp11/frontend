@@ -1,7 +1,11 @@
+import FlowComponent from "@/components/clientSideComponents/creator/flowComponent";
+import SearchField from "@/components/clientSideComponents/creator/searchField";
+
 export default function New() {
   return (
     <>
-      <div>Kreator nowego scenariusza</div>
+      <SearchField />
+      <FlowComponent />
     </>
   );
 }

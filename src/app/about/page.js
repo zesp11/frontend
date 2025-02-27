@@ -1,6 +1,6 @@
-import PlainText from "@/components/plainText";
+import PlainText from "@/components/generalComponents/PlainText";
 import "./about.css";
-import NavBar from "@/components/navbar";
+import NavBar from "@/components/generalComponents/navbar";
 export default function About() {
   return (
     <>

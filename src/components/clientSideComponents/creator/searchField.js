@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import "./searchFieldModule.css";
+import "./styleModules/searchFieldModule.css";
 
 //Component which is used to create query parameters based on user's input.
 export default function SearchField() {
