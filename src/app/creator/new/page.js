@@ -1,5 +1,5 @@
-import FlowComponent from "@/clientComponents/flowComponent";
-import SearchField from "@/clientComponents/searchField";
+import FlowComponent from "@/components/clientComponents/flowComponent";
+import SearchField from "@/components/clientComponents/searchField";
 
 export default function New() {
   return (

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import "../styles.css";
+import "@/components/styles.css";
 import Image from "next/image";
 
 //Navbar rendered only in "/creator" part.

@@ -2,6 +2,9 @@
 import React, { useCallback } from "react";
 import {
   ReactFlow,
+  MiniMap,
+  Controls,
+  Background,
   useNodesState,
   useEdgesState,
   addEdge,
@@ -10,20 +13,9 @@ import {
 import "@xyflow/react/dist/style.css";
 
 const initialNodes = [
-  {
-    id: "1",
-    position: { x: 500, y: 100 },
-    data: { label: "Początek Historii" },
-    type: "default", // explicitly set to default type
-  },
-  {
-    id: "2",
-    position: { x: 500, y: 200 },
-    data: { label: "Koniec Historii" },
-    type: "default", // explicitly set to default type
-  },
+  { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
+  { id: "2", position: { x: 0, y: 100 }, data: { label: "2" } },
 ];
-
 const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
 
 export default function FlowComponent() {
@@ -43,7 +35,11 @@ export default function FlowComponent() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-      />
+      >
+        <Controls />
+        <MiniMap />
+        <Background variant="dots" gap={12} size={1} />
+      </ReactFlow>
     </div>
   );
 }

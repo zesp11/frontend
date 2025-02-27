@@ -1,6 +1,6 @@
-import SearchField from "@/clientComponents/searchField";
+import SearchField from "@/components/clientComponents/searchField";
 import "./creator.css";
-import StoriesContainer from "@/components/creatorComponents/storiesContainer";
+import StoriesContainer from "@/components/clientComponents/storiesContainer";
 
 export default function Creator() {
   return (
