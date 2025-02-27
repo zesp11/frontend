@@ -1,5 +1,6 @@
+"use client";
 import Link from "next/link";
-import "./styles.css"; // Importujemy plik CSS
+import "@/components/generalComponents/styleModules/styles.css";
 
 export default function LoginForm() {
   return (

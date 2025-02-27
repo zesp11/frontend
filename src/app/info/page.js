@@ -1,4 +1,4 @@
-import PlainText from "@/components/plainText";
+import PlainText from "@/components/generalComponents/PlainText";
 import "./info.css";
 export default function Info() {
   return (

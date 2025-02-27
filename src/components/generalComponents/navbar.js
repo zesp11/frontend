@@ -1,6 +1,6 @@
 import Link from "next/link";
-import "./styles.css";
 import Image from "next/image";
+import "./styleModules/styles.css";
 export default function NavBar() {
   return (
     <div className="navBarWrapper">

@@ -1,5 +1,5 @@
 import "./globals.css";
-import PlainText from "@/components/PlainText";
+import PlainText from "@/components/generalComponents/PlainText";
 export default function Home() {
   return (
     <>

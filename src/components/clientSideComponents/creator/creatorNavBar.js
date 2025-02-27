@@ -1,7 +1,6 @@
 import Link from "next/link";
-import "@/components/styles.css";
 import Image from "next/image";
-
+import "@/components/generalComponents/styleModules/styles.css";
 //Navbar rendered only in "/creator" part.
 //To implement: events when buttons are hovered and clicked
 export default function CreatorNavBar() {

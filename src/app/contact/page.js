@@ -1,4 +1,4 @@
-import PlainText from "@/components/PlainText";
+import PlainText from "@/components/generalComponents/PlainText";
 import "./contact.css";
 export default function Contact() {
   return (

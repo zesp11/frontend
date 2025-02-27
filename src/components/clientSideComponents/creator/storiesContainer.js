@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import StoryTile from "@/components/creatorComponents/storyTile";
+import "./styleModules/storiesContainerModule.css";
+
 export default function StoriesContainer() {
   const [story, setStory] = useState([]);
   useEffect(() => {

@@ -1,5 +1,5 @@
-import "../clientComponents/storiesContainerModule.css";
-import Image from "next/image";
+import "./styleModules/storyTileModule.css";
+
 //Story tile: to stylize
 export default function StoryTile({ story }) {
   return (
