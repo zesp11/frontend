@@ -37,3 +37,18 @@
   gap: 10px;
   flex-wrap: wrap;
 }
+.pageWrapper {
+  display: flex;
+  position: fixed;
+  gap: 20px;
+  top: 93vh;
+}
+.pageButton {
+  background-color: green;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 10rem;
+  font-size: 15px;
+  text-decoration: none;
+  color: white;
+}

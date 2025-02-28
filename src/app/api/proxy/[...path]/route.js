@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 
 export async function GET(request, { params }) {
   // Extract the path from params
-  const path = params.path.join("/");
+  const p = await params;
+  const path = p.path.join("/");
 
   // Get query parameters
   const url = new URL(request.url);

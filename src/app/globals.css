@@ -13,7 +13,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  overflow: hidden;
 }
 body {
   color: var(--foreground);
@@ -24,9 +23,9 @@ body {
   position: relative;
   z-index: 1;
 }
-  
+
 .homeContener {
-  background-image: url('/home-bg.jpg');
+  background-image: url("/home-bg.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -35,5 +34,5 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -9999; 
+  z-index: -9999;
 }

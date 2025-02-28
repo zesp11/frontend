@@ -4,7 +4,6 @@ import SearchField from "@/components/clientSideComponents/creator/searchField";
 export default function New() {
   return (
     <>
-      <SearchField />
       <FlowComponent />
     </>
   );
