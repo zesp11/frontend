@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import {
   ReactFlow,
   useNodesState,
@@ -8,26 +8,52 @@ import {
   Background,
   Controls,
 } from "@xyflow/react";
-
 import "@xyflow/react/dist/style.css";
 import "./styleModules/flowComponentModule.css";
-const initialNodes = [
-  {
-    id: "1",
-    position: { x: 0, y: 0 },
-    data: { label: "1" },
-  },
-  {
-    id: "2",
-    position: { x: 0, y: 100 },
-    data: { label: "2" },
-  },
-];
-const initialEdges = [{ id: "e1-2", source: "1", target: "2", animated: true }];
+import { initialEdges, initialNodes } from "./initialData";
+export default function FlowComponent({ id }) {
+  const [nodes, setNodes, onNodesChange] = useNodesState();
+  const [edges, setEdges, onEdgesChange] = useEdgesState();
+  useEffect(() => {
+    async function FetchItem() {
+      if (!id && nodes.length === 0 && edges.length === 0) {
+        setEdges(initialEdges);
+        setNodes(initialNodes);
+        return;
+      }
 
-export default function FlowComponent() {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+      // Pobierz token Bearer z localStorage
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        console.error("No token found in localStorage");
+        return;
+      }
+
+      // Sprawdź ID i token w konsoli
+
+      const url = `/api/proxy/scenarios/${id}`;
+
+      // Wykonaj zapytanie
+      const res = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("Failed to fetch data", res.status, errorText);
+        return;
+      }
+
+      const data = await res.json();
+      console.log(data);
+    }
+
+    // Wywołanie funkcji FetchItem
+    FetchItem();
+  }, []);
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),

@@ -2,8 +2,9 @@
 import Link from "next/link";
 import "@/components/generalComponents/styleModules/styles.css";
 import { useState } from "react";
-
+import { useRouter } from "next/navigation";
 export default function LoginForm() {
+  const router = useRouter();
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
 
@@ -16,16 +17,22 @@ export default function LoginForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: login, password }),
+        body: JSON.stringify({ login: login, password: password }),
       });
-
       if (!res.ok) {
         console.error("Failed to fetch data", res.status);
         return;
       }
-
       const data = await res.json();
-      console.log(data);
+      if (data.error === "Invalid credentials.") {
+        alert("Niepoprawny login lub hasło");
+      }
+      if (data.message === "Login successful.") {
+        localStorage.setItem("accessToken", data.token);
+        localStorage.setItem("refreshToken", data.refreshToken);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        router.push("/creator");
+      }
     } catch (error) {
       console.error("Error:", error);
     }

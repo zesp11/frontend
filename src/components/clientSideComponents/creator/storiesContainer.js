@@ -10,12 +10,15 @@ export default function StoriesContainer() {
   useEffect(() => {
     async function FetchItems() {
       setStory([]);
-      const res = await fetch(`/api/proxy/scenarios?page=${page}&limit=5`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await fetch(
+        `/api/proxy/scenarios?search=a&page=${page}&limit=5`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!res.ok) {
         console.error("Failed to fetch data", res.status);
