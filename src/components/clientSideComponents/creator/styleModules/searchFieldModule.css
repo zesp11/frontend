@@ -1,27 +1,27 @@
+/* Search Field Wrapper */
 .searchFieldWrapper {
-  position: fixed; /* Changed to fixed for better mobile support */
-  top: 7vh;
+  position: fixed;
+  top: 7vh; /* Align below navbar */
   left: 0;
-  width: 15%; /* Full width on mobile */
-  height: auto; /* Height will adjust based on content */
-  min-height: calc(100vh - 7vh);
-  padding: clamp(10px, 2vw, 20px); /* Responsive padding */
+  width: 15%;
+  height: calc(100vh - 7vh); /* Adjust height to fill remaining screen */
+  padding: clamp(10px, 2vw, 20px);
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   background-color: rgb(253, 119, 29);
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 100; /* Ensure it stays above other content */
+  z-index: 100;
 }
 
 .searchForm {
   display: flex;
   align-items: center;
-  gap: clamp(4px, 1vw, 8px); /* Responsive gap */
+  gap: clamp(4px, 1vw, 8px);
   background: #34241d;
   padding: clamp(3px, 1vw, 5px);
   width: 100%;
-  max-width: 600px; /* Prevent too wide on large screens */
+  max-width: 600px;
   border-radius: 4px;
 }
 
@@ -32,7 +32,7 @@
   outline: none;
   padding: clamp(6px, 1.5vw, 8px);
   flex-grow: 1;
-  font-size: clamp(14px, 2vw, 17px); /* Responsive font size */
+  font-size: clamp(14px, 2vw, 17px);
   font-weight: bold;
   width: 100%;
 }
@@ -46,9 +46,9 @@
   transition: 0.3s;
   font-size: clamp(16px, 2.5vw, 20px);
   white-space: nowrap;
+  color: white;
 }
 
 .searchButton:hover {
-  background: #34241d;
-  color: white;
+  background: #ff9a68;
 }

@@ -30,7 +30,7 @@ export default function LoginForm() {
       if (data.message === "Login successful.") {
         localStorage.setItem("accessToken", data.token);
         localStorage.setItem("refreshToken", data.refreshToken);
-        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("user", data.user.login);
         router.push("/creator");
       }
     } catch (error) {

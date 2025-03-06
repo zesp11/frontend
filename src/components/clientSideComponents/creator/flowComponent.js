@@ -1,5 +1,6 @@
 "use client";
 import React, { useCallback, useEffect } from "react";
+import "./styleModules/flowComponentModule.css";
 import {
   ReactFlow,
   useNodesState,
@@ -12,10 +13,10 @@ import "@xyflow/react/dist/style.css";
 import "./styleModules/flowComponentModule.css";
 import { initialEdges, initialNodes } from "./initialData";
 export default function FlowComponent({ id }) {
-  const [nodes, setNodes, onNodesChange] = useNodesState();
-  const [edges, setEdges, onEdgesChange] = useEdgesState();
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   useEffect(() => {
-    async function FetchItem() {
+    async function fetchItem() {
       if (!id && nodes.length === 0 && edges.length === 0) {
         setEdges(initialEdges);
         setNodes(initialNodes);
@@ -52,9 +53,10 @@ export default function FlowComponent({ id }) {
     }
 
     // Wywołanie funkcji FetchItem
-    FetchItem();
+    fetchItem();
+    fetchNodes();
   }, []);
-
+  const fetchNodes = () => {};
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
@@ -66,7 +68,15 @@ export default function FlowComponent({ id }) {
   }, []);
 
   return (
-    <div style={{ width: "100%", height: "600px", border: "1px solid #ddd" }}>
+    <div
+      style={{
+        position: "fixed",
+        left: "8vw",
+        width: "100vw",
+        height: "100vh",
+        border: "1px solid #ddd",
+      }}
+    >
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -75,7 +85,7 @@ export default function FlowComponent({ id }) {
         onConnect={onConnect}
         onNodeClick={onNodeClick}
         fitView
-        attributionPosition="bottom-left"
+        attributionPosition="bottom-right"
       >
         <Background />
         <Controls />

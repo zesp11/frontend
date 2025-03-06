@@ -19,7 +19,11 @@ export default function CreatorNavBar() {
       <div className="buttonWraper">
         <div className="button">🔔</div>
         <div className="button">⚙️</div>
-        <div className="button">Nazwa użytkownika</div>
+        <div className="button">
+          {localStorage.getItem("user")
+            ? localStorage.getItem("user")
+            : "Zaloguj"}
+        </div>
       </div>
     </div>
   );

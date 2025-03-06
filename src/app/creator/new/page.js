@@ -1,5 +1,6 @@
 "use client";
 import FlowComponent from "@/components/clientSideComponents/creator/flowComponent";
+import ScenarioSettings from "@/components/clientSideComponents/creator/scenarioSettings";
 import SearchField from "@/components/clientSideComponents/creator/searchField";
 import { useSearchParams } from "next/navigation";
 export default function New() {
@@ -7,6 +8,7 @@ export default function New() {
   const id = searchParams.get("id");
   return (
     <>
+      <ScenarioSettings />
       <FlowComponent id={id} />
     </>
   );

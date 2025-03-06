@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 
 export async function GET(request, { params }) {
   // Join the path array with '/' to handle both list and single item routes
-  const path = params.path.join("/");
+  const p = await params;
+  const path = p.path.join("/");
 
   const url = new URL(request.url);
   const queryString = url.search;
