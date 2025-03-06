@@ -1,0 +1,161 @@
+/* Login and Register Form Styles */
+
+/* Common container styles */
+.login-container,
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f7fa;
+  padding: 20px;
+}
+
+/* Common wrapper styles */
+.login-wrapper,
+.register-wrapper {
+  width: 100%;
+  max-width: 480px;
+}
+
+.back-div {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.form-container {
+  padding: 36px 32px;
+}
+
+.form-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 32px;
+  color: #333;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+}
+
+.form-input {
+  padding: 14px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #3182ce;
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
+}
+
+.form-input::placeholder {
+  color: #a0aec0;
+}
+
+.forgot-password {
+  align-self: flex-end;
+  font-size: 14px;
+  color: #3182ce;
+  text-decoration: none;
+  margin-bottom: 8px;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
+.submit-button {
+  background-color: #3182ce;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 16px;
+}
+
+.submit-button:hover {
+  background-color: #2c5282;
+}
+
+/* Register/Login link styles */
+.register-link,
+.login-link {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.register-link h3,
+.login-link h3 {
+  font-size: 16px;
+  font-weight: 400;
+  color: #555;
+}
+
+.register-link-text,
+.login-link-text {
+  color: #3182ce;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.register-link-text:hover,
+.login-link-text:hover {
+  text-decoration: underline;
+}
+
+.terms {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.terms p {
+  font-size: 12px;
+  color: #718096;
+}
+
+.terms-link {
+  color: #3182ce;
+  text-decoration: none;
+}
+
+.terms-link:hover {
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .form-container {
+    padding: 24px 16px;
+  }
+
+  .form-title {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+}

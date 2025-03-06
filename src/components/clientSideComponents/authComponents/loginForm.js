@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import "@/components/generalComponents/styleModules/styles.css";
+import "./styleModules/authStyles.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 export default function LoginForm() {
