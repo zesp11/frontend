@@ -1,23 +1,28 @@
 "use client";
 import { useState } from "react";
 import "./styleModules/searchFieldModule.css";
-
 //Component which is used to create query parameters based on user's input.
-export default function SearchField({ search, onSearch }) {
+export default function ScenarioSettings() {
+  const [query, setQuery] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Implement search logic here
+    console.log("Searching for:", query);
+  };
+
   return (
     <div className="searchFieldWrapper">
-      <form className="searchForm">
+      <form className="searchForm" onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Szukaj..."
+          placeholder="Nazwa scenariusza"
           className="searchInput"
-          value={search}
-          onChange={(e) => {
-            onSearch(e.target.value);
-          }}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
         />
         <button type="submit" className="searchButton">
-          🔍
+          OK
         </button>
       </form>
       {/* To implement: filters which will be used in query parameters */}

@@ -1,0 +1,9 @@
+.flow-container {
+  position: fixed;
+  top: 7vh; /* Align below navbar */
+  left: 15%; /* Adjust to start after search field */
+  width: calc(100vw - 15%); /* Full width minus search field */
+  height: calc(100vh - 7vh); /* Full height minus navbar */
+  border: 1px solid #ddd;
+  overflow: hidden;
+}

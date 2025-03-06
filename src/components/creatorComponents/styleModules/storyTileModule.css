@@ -9,6 +9,7 @@
   transition: transform 0.3s ease-in-out;
   max-width: 220px;
   text-align: center;
+  cursor: pointer;
 }
 
 .story-card:hover {

@@ -1,9 +1,14 @@
 import "./styleModules/storyTileModule.css";
+import { useRouter } from "next/navigation";
 
 //Story tile: to stylize
 export default function StoryTile({ story }) {
+  const router = useRouter();
+  const onTileClick = () => {
+    router.push(`/creator/new?id=${story.id}`);
+  };
   return (
-    <div className="story-card">
+    <div className="story-card" onClick={onTileClick}>
       {/* <Image
         src={story.photo}
         alt={story.name}
