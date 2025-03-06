@@ -3,23 +3,18 @@ import { useState } from "react";
 import "./styleModules/searchFieldModule.css";
 
 //Component which is used to create query parameters based on user's input.
-export default function SearchField() {
-  const [query, setQuery] = useState("");
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    alert(`Wyszukano: ${query}`);
-  };
-
+export default function SearchField({ search, onSearch }) {
   return (
     <div className="searchFieldWrapper">
-      <form onSubmit={handleSearch} className="searchForm">
+      <form className="searchForm">
         <input
           type="text"
           placeholder="Szukaj..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
           className="searchInput"
+          value={search}
+          onChange={(e) => {
+            onSearch(e.target.value);
+          }}
         />
         <button type="submit" className="searchButton">
           🔍

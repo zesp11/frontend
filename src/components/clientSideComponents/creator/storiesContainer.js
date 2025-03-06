@@ -4,21 +4,21 @@ import { useState, useEffect } from "react";
 import StoryTile from "@/components/creatorComponents/storyTile";
 import "./styleModules/storiesContainerModule.css";
 
-export default function StoriesContainer() {
+export default function StoriesContainer({ search }) {
   const [story, setStory] = useState([]);
   const [page, setPage] = useState(1);
   useEffect(() => {
     async function FetchItems() {
       setStory([]);
-      const res = await fetch(
-        `/api/proxy/scenarios?search=a&page=${page}&limit=5`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const params =
+        (search.length !== 0 ? `search=${search}&` : "") +
+        `page=${page}&limit=5`;
+      const res = await fetch(`/api/proxy/scenarios?${params}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!res.ok) {
         console.error("Failed to fetch data", res.status);
@@ -31,7 +31,7 @@ export default function StoriesContainer() {
     }
 
     FetchItems();
-  }, [page]);
+  }, [page, search]);
   const onPageDown = () => {
     if (page == 1) return;
     setPage((e) => e - 1);
