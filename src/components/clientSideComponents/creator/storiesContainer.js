@@ -12,7 +12,7 @@ export default function StoriesContainer({ search }) {
       setStory([]);
       const params =
         (search.length !== 0 ? `search=${search}&` : "") +
-        `page=${page}&limit=5`;
+        `page=${page}&limit=50`;
       const res = await fetch(`/api/proxy/scenarios?${params}`, {
         method: "GET",
         headers: {
