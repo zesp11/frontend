@@ -1,6 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import flowComponentModule from "./styleModules/flowComponentModule.css";
-export default function NodeEditor({ node, onSave, onClose }) {
+
+export default function NodeEditor({
+  node,
+  onSave,
+  onClose,
+  onDelete,
+  canDelete,
+}) {
   const [nodeData, setNodeData] = useState({
     label: node.data.label,
     text: node.data.text,
@@ -14,6 +21,11 @@ export default function NodeEditor({ node, onSave, onClose }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave(node.id, nodeData);
+    onClose();
+  };
+
+  const handleDelete = () => {
+    onDelete(node.id);
     onClose();
   };
 
@@ -62,6 +74,15 @@ export default function NodeEditor({ node, onSave, onClose }) {
             <button type="button" onClick={onClose}>
               Cancel
             </button>
+            {canDelete && (
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="delete-button"
+              >
+                Delete Node
+              </button>
+            )}
           </div>
         </form>
       </div>
