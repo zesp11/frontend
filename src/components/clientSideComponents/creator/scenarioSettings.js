@@ -1,16 +1,20 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./styleModules/searchFieldModule.css";
 //Component which is used to create query parameters based on user's input.
-export default function ScenarioSettings() {
-  const [query, setQuery] = useState("");
-
+export default function ScenarioSettings({ scenario, setScenario }) {
+  const [name, setName] = useState(scenario ? scenario.name : "");
+  const [numPlayers, setNumPlayers] = useState(
+    scenario ? scenario.limit_players : 1
+  );
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Implement search logic here
-    console.log("Searching for:", query);
+    setScenario((s) => ({
+      ...s,
+      name: { name },
+      limit_players: { numPlayers },
+    }));
   };
-
   return (
     <div className="searchFieldWrapper">
       <form className="searchForm" onSubmit={handleSubmit}>
@@ -18,8 +22,20 @@ export default function ScenarioSettings() {
           type="text"
           placeholder="Nazwa scenariusza"
           className="searchInput"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+
+        <button type="submit" className="searchButton">
+          OK
+        </button>
+      </form>
+      <form className="searchForm" onSubmit={handleSubmit}>
+        <input
+          type="number"
+          className="searchInput"
+          value={numPlayers}
+          onChange={(e) => setNumPlayers(e.target.value)}
         />
         <button type="submit" className="searchButton">
           OK

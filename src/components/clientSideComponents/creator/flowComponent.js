@@ -60,36 +60,22 @@ const getLayoutedElements = (nodes, edges, direction = "TB") => {
   return { nodes: layoutedNodes, edges };
 };
 
-export default function FlowComponent({ id }) {
+export default function FlowComponent({ loading, setLoading, scenario }) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [loading, setLoading] = useState(false);
-  const [layout, setLayout] = useState("TB"); // TB = top-bottom, LR = left-right
-
-  // Function to apply the selected layout
-  const onLayoutChange = useCallback(
-    (direction) => {
-      setLayout(direction);
-      const { nodes: layoutedNodes, edges: layoutedEdges } =
-        getLayoutedElements(nodes, edges, direction);
-
-      setNodes([...layoutedNodes]);
-    },
-    [nodes, edges, setNodes]
-  );
 
   useEffect(() => {
     async function fetchItem() {
-      if (!id && nodes.length === 0 && edges.length === 0) {
+      //If we want to add new scenario
+      if (!scenario) {
         const { nodes: layoutedNodes, edges: layoutedEdges } =
-          getLayoutedElements(initialNodes, initialEdges, layout);
+          getLayoutedElements(initialNodes, initialEdges, "TB");
         setNodes(layoutedNodes);
         setEdges(layoutedEdges);
         return;
       }
 
       setLoading(true);
-
       // Get Bearer token from localStorage
       const token = localStorage.getItem("accessToken");
       if (!token) {
@@ -98,31 +84,10 @@ export default function FlowComponent({ id }) {
         return;
       }
 
-      const url = `/api/proxy/scenarios/${id}`;
-
       try {
-        // Execute request
-        const res = await fetch(url, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!res.ok) {
-          const errorText = await res.text();
-          console.error("Failed to fetch data", res.status, errorText);
-          setLoading(false);
-          return;
-        }
-
-        const data = await res.json();
-        console.log("Scenario data:", data);
-
-        // If we have a first step, process the tree
-        if (data.first_step) {
+        if (scenario.first_step) {
           // Create a queue of steps to process
-          const stepQueue = [data.first_step];
+          const stepQueue = [scenario.first_step];
           const processedSteps = new Set();
           const pendingNodes = [];
           const pendingEdges = [];
@@ -222,7 +187,7 @@ export default function FlowComponent({ id }) {
           const layoutedElements = getLayoutedElements(
             pendingNodes,
             pendingEdges,
-            layout
+            "TB"
           );
 
           // Update the graph with all nodes and edges at once
@@ -237,7 +202,7 @@ export default function FlowComponent({ id }) {
     }
 
     fetchItem();
-  }, [id, layout]);
+  }, []);
 
   const onConnect = useCallback(
     (params) => {
@@ -307,7 +272,7 @@ export default function FlowComponent({ id }) {
                 onClick={() => onLayoutChange("TB")}
                 style={{
                   marginRight: "5px",
-                  backgroundColor: layout === "TB" ? "#CCC" : "#FFF",
+                  backgroundColor: "#CCC",
                   padding: "5px 10px",
                   border: "1px solid #DDD",
                   borderRadius: "4px",
@@ -318,7 +283,7 @@ export default function FlowComponent({ id }) {
               <button
                 onClick={() => onLayoutChange("LR")}
                 style={{
-                  backgroundColor: layout === "LR" ? "#CCC" : "#FFF",
+                  backgroundColor: "#CCC",
                   padding: "5px 10px",
                   border: "1px solid #DDD",
                   borderRadius: "4px",
