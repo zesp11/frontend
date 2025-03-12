@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import "./styleModules/flowComponentModule.css";
 import {
   ReactFlow,
@@ -8,13 +8,13 @@ import {
   addEdge,
   Background,
   Controls,
-  Panel,
 } from "@xyflow/react";
 import dagre from "dagre";
 import "@xyflow/react/dist/style.css";
 import "./styleModules/flowComponentModule.css";
 import { initialEdges, initialNodes } from "./initialData";
-
+import NodeEditor from "./nodeEditor";
+import EdgeEditor from "./edgeEditor";
 // Define node dimensions for layout calculations
 const nodeWidth = 180;
 const nodeHeight = 80;
@@ -63,10 +63,12 @@ const getLayoutedElements = (nodes, edges, direction = "TB") => {
 export default function FlowComponent({ loading, setLoading, scenario }) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-
+  const [selectedNode, setSelectedNode] = useState(null);
+  const [selectedEdge, setSelectedEdge] = useState(null);
+  // Function to change layout
   useEffect(() => {
     async function fetchItem() {
-      //If we want to add new scenario
+      // If we want to add new scenario
       if (!scenario) {
         const { nodes: layoutedNodes, edges: layoutedEdges } =
           getLayoutedElements(initialNodes, initialEdges, "TB");
@@ -208,27 +210,91 @@ export default function FlowComponent({ loading, setLoading, scenario }) {
     (params) => {
       // Prevent self-connections
       if (params.source !== params.target) {
-        setEdges((eds) =>
-          addEdge(
-            {
-              ...params,
-              animated: false,
-              style: { stroke: "#333" },
-              markerEnd: {
-                type: "arrowclosed",
-              },
-            },
-            eds
-          )
+        // Check if an edge already exists between these nodes
+        const existingEdge = edges.find(
+          (edge) =>
+            edge.source === params.source && edge.target === params.target
         );
+
+        if (existingEdge) {
+          // If edge exists, remove it
+          setEdges((eds) => eds.filter((edge) => edge.id !== existingEdge.id));
+        } else {
+          // If no edge exists, add a new one
+          setEdges((eds) =>
+            addEdge(
+              {
+                ...params,
+                id: `e${params.source}-${params.target}`,
+                animated: false,
+                style: { stroke: "#333" },
+                label: "Continue",
+                markerEnd: {
+                  type: "arrowclosed",
+                },
+              },
+              eds
+            )
+          );
+        }
       }
+    },
+    [edges, setEdges]
+  );
+
+  // Function to update node data after editing
+  const updateNodeData = useCallback(
+    (id, data) => {
+      setNodes((nds) =>
+        nds.map((node) => {
+          if (node.id === id) {
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                label: data.label,
+                text: data.text,
+              },
+            };
+          }
+          return node;
+        })
+      );
+    },
+    [setNodes]
+  );
+  // Function to handle node click - open edit popup instead of alert
+  const onNodeClick = useCallback((event, node) => {
+    setSelectedNode(node);
+  }, []);
+  const updateEdgeData = useCallback(
+    (id, data) => {
+      setEdges((eds) =>
+        eds.map((edge) => {
+          if (edge.id === id) {
+            return {
+              ...edge,
+              label: data.label,
+              animated: data.animated,
+              style: {
+                ...edge.style,
+                stroke: data.style.stroke,
+              },
+            };
+          }
+          return edge;
+        })
+      );
     },
     [setEdges]
   );
-
-  // Function to handle node click
-  const onNodeClick = useCallback((event, node) => {
-    alert(`${node.data.label}\n${node.data.text}`);
+  const onEdgeClick = useCallback((event, edge) => {
+    setSelectedEdge(edge);
+  }, []);
+  // Close the popup
+  const closePopup = useCallback(() => {
+    setSelectedNode(null);
+    setSelectedEdge(null);
   }, []);
 
   return (
@@ -253,47 +319,37 @@ export default function FlowComponent({ loading, setLoading, scenario }) {
           Loading scenario tree...
         </div>
       ) : (
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          onNodeClick={onNodeClick}
-          fitView
-          fitViewOptions={{ padding: 0.2 }}
-          attributionPosition="bottom-right"
-        >
-          <Background />
-          <Controls />
-          <Panel position="top-right">
-            <div style={{ marginBottom: "10px" }}>
-              <button
-                onClick={() => onLayoutChange("TB")}
-                style={{
-                  marginRight: "5px",
-                  backgroundColor: "#CCC",
-                  padding: "5px 10px",
-                  border: "1px solid #DDD",
-                  borderRadius: "4px",
-                }}
-              >
-                Top-Down
-              </button>
-              <button
-                onClick={() => onLayoutChange("LR")}
-                style={{
-                  backgroundColor: "#CCC",
-                  padding: "5px 10px",
-                  border: "1px solid #DDD",
-                  borderRadius: "4px",
-                }}
-              >
-                Left-Right
-              </button>
-            </div>
-          </Panel>
-        </ReactFlow>
+        <>
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            onNodeClick={onNodeClick}
+            onEdgeClick={onEdgeClick}
+            fitView
+            fitViewOptions={{ padding: 0.2 }}
+            attributionPosition="bottom-right"
+          >
+            <Background />
+            <Controls />
+          </ReactFlow>
+          {selectedNode && (
+            <NodeEditor
+              node={selectedNode}
+              onSave={updateNodeData}
+              onClose={closePopup}
+            />
+          )}
+          {selectedEdge && (
+            <EdgeEditor
+              edge={selectedEdge}
+              onSave={updateEdgeData}
+              onClose={closePopup}
+            />
+          )}
+        </>
       )}
     </div>
   );
