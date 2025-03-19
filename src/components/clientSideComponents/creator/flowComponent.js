@@ -18,6 +18,14 @@ import NodeEditor from "./nodeEditor";
 import EdgeEditor from "./edgeEditor";
 import getLayoutedElements from "./functionalComponents/dagreComponent";
 import FillNode from "./functionalComponents/fillNode";
+import {
+  addChoice,
+  deleteChoice,
+  editStep,
+  deleteStep,
+  addStep,
+  editChoice,
+} from "./functionalComponents/fetchFunctions";
 // Define node dimensions for layout calculations
 const nodeWidth = 180;
 const nodeHeight = 80;
@@ -67,71 +75,30 @@ export default function FlowComponent({ loading, setLoading, scenario, id }) {
         // Check if an edge already exists between these nodes
         const existingEdge = edges.find(
           (edge) =>
-            edge.source === params.source && edge.target === params.target
+            (edge.source === params.source && edge.target === params.target) ||
+            (edge.source === params.target && edge.target === params.source)
         );
-        const token = localStorage.getItem("accessToken");
-        if (!token) {
-          return;
-        }
+
         if (existingEdge) {
-          // If edge exists, remove it
-          try {
-            const response = await fetch(
-              `https://squid-app-p63zw.ondigitalocean.app/api/choices/${existingEdge.id}`,
-              {
-                method: "DELETE",
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                  "Content-Type": "application/json",
-                },
-              }
-            );
-          } catch (error) {
-            console.log(error);
-          }
+          deleteChoice(existingEdge.id);
           setEdges((eds) => eds.filter((edge) => edge.id !== existingEdge.id));
         } else {
-          // If no edge exists, add a new one
-          try {
-            const responseChoice = await fetch(
-              `https://squid-app-p63zw.ondigitalocean.app/api/choices`,
+          const edgeId = await addChoice(params.source, params.target);
+          setEdges((eds) =>
+            addEdge(
               {
-                method: "POST",
-                body: JSON.stringify({
-                  text: "Continue",
-                  id_next_step: Number(params.target),
-                  id_step: Number(params.source),
-                }),
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                  "Content-Type": "application/json",
+                ...params,
+                id: edgeId,
+                animated: false,
+                style: { stroke: "#333" },
+                label: "Continue",
+                markerEnd: {
+                  type: "arrowclosed",
                 },
-              }
-            );
-            if (!responseChoice.ok) {
-              throw new Error("Cannot connect");
-            }
-
-            const res = await responseChoice.json();
-
-            setEdges((eds) =>
-              addEdge(
-                {
-                  ...params,
-                  id: res.id_choice,
-                  animated: false,
-                  style: { stroke: "#333" },
-                  label: "Continue",
-                  markerEnd: {
-                    type: "arrowclosed",
-                  },
-                },
-                eds
-              )
-            );
-          } catch (error) {
-            console.log(error);
-          }
+              },
+              eds
+            )
+          );
         }
       }
     },
@@ -141,50 +108,24 @@ export default function FlowComponent({ loading, setLoading, scenario, id }) {
   // Function to update node data after editing
   const updateNodeData = useCallback(
     async (id, data) => {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        console.error("No token found in localStorage");
-        return;
-      }
-      try {
-        const response = await fetch(
-          `https://squid-app-p63zw.ondigitalocean.app/api/steps/${id}`,
-          {
-            method: "PUT",
-            body: JSON.stringify({
-              title: data.label,
-              text: data.text,
-              longitude: data.longitude,
-              latitude: data.latitude,
-              choices: [],
-            }),
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
+      await editStep(id, data);
+      setNodes((nds) =>
+        nds.map((node) => {
+          if (node.id === id) {
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                label: data.label,
+                text: data.text,
+                longitude: data.longitude,
+                latitude: data.latitude,
+              },
+            };
           }
-        );
-        if (!response.ok) {
-          throw new Error("Failed to create node");
-        }
-        setNodes((nds) =>
-          nds.map((node) => {
-            if (node.id === id) {
-              return {
-                ...node,
-                data: {
-                  ...node.data,
-                  label: data.label,
-                  text: data.text,
-                },
-              };
-            }
-            return node;
-          })
-        );
-      } catch (error) {
-        console.log(error);
-      }
+          return node;
+        })
+      );
     },
     [setNodes]
   );
@@ -197,72 +138,32 @@ export default function FlowComponent({ loading, setLoading, scenario, id }) {
 
   const updateEdgeData = useCallback(
     async (edgeId, data) => {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        console.log("No token found");
+      //   // First, make sure we have the most current edges array
+      const currentEdge = edges.find((e) => e.id === edgeId);
+
+      if (!currentEdge) {
+        console.error(`Edge with ID ${edgeId} not found in the edges array`);
         return;
       }
 
-      try {
-        // First, make sure we have the most current edges array
-        const currentEdge = edges.find((e) => e.id === edgeId);
-
-        if (!currentEdge) {
-          console.error(`Edge with ID ${edgeId} not found in the edges array`);
-          return;
-        }
-
-        // Extract target and source safely
-        const targetId = currentEdge.target;
-        const sourceId = currentEdge.source;
-
-        if (!targetId || !sourceId) {
-          console.error("Edge is missing target or source:", currentEdge);
-          return;
-        }
-
-        const response = await fetch(
-          `https://squid-app-p63zw.ondigitalocean.app/api/choices/${edgeId}`,
-          {
-            method: "PUT",
-            body: JSON.stringify({
-              text: data.label,
-              id_next_step: Number(targetId),
-              id_step: Number(sourceId),
-            }),
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
+      editChoice(edgeId, currentEdge.source, currentEdge.target, data.label);
+      // Only update state if the API call was successful
+      setEdges((eds) =>
+        eds.map((edge) => {
+          if (edge.id === edgeId) {
+            return {
+              ...edge,
+              label: data.label,
+              animated: data.animated,
+              style: {
+                ...edge.style,
+                stroke: data.style.stroke,
+              },
+            };
           }
-        );
-
-        // Check response
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`API error: ${response.status} - ${errorText}`);
-        }
-
-        // Only update state if the API call was successful
-        setEdges((eds) =>
-          eds.map((edge) => {
-            if (edge.id === edgeId) {
-              return {
-                ...edge,
-                label: data.label,
-                animated: data.animated,
-                style: {
-                  ...edge.style,
-                  stroke: data.style.stroke,
-                },
-              };
-            }
-            return edge;
-          })
-        );
-      } catch (error) {
-        console.error("Error updating edge:", error);
-      }
+          return edge;
+        })
+      );
     },
     [edges, setEdges]
   );
@@ -280,62 +181,33 @@ export default function FlowComponent({ loading, setLoading, scenario, id }) {
 
   // Function to add a new node
   const addNode = useCallback(async () => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      console.error("No token found in localStorage");
-      return;
-    }
-    try {
-      const response = await fetch(
-        `https://squid-app-p63zw.ondigitalocean.app/api/steps?id_scen=${id}`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            title: "New Step",
-            text: "This is a new step in the scenario.",
-            longitude: -0.15,
-            latitude: 51.48,
-            choices: [],
-          }),
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+    const newNodeId = await addStep(id);
+    const centerX = window.innerWidth / 2 - nodeHeight; // half node width
+    const centerY = window.innerHeight / 2 - nodeWidth; // half node height
 
-      if (!response.ok) {
-        throw new Error("Failed to create node");
-      }
+    const newNode = {
+      id: newNodeId,
+      data: {
+        label: "Nowy krok",
+        text: "To jest nowy krok do twojego scenariusza...",
+        choices: [],
+        longitude: 0,
+        latitude: 0,
+      },
+      position: { x: centerX, y: centerY },
+      style: {
+        background: "#f0f0f0",
+        border: "1px solid red",
+        padding: 10,
+        borderRadius: 5,
+        width: nodeWidth,
+      },
+    };
 
-      const r = await response.json();
-      const newNodeId = String(r.id_step);
-      const centerX = window.innerWidth / 2 - nodeHeight; // half node width
-      const centerY = window.innerHeight / 2 - nodeWidth; // half node height
+    setNodes((nds) => [...nds, newNode]);
 
-      const newNode = {
-        id: newNodeId,
-        data: {
-          label: "New Node",
-          text: "Add description here",
-        },
-        position: { x: centerX, y: centerY },
-        style: {
-          background: "#f0f0f0",
-          border: "1px solid red",
-          padding: 10,
-          borderRadius: 5,
-          width: nodeWidth,
-        },
-      };
-
-      setNodes((nds) => [...nds, newNode]);
-
-      // Immediately open the node editor for the new node
-      setSelectedNode(newNode);
-    } catch (error) {
-      console.log(error);
-    }
+    // Immediately open the node editor for the new node
+    setSelectedNode(newNode);
   }, [setNodes, id]);
 
   // Function to check if a node can be deleted (no connected edges)
@@ -354,28 +226,8 @@ export default function FlowComponent({ loading, setLoading, scenario, id }) {
     async (nodeId) => {
       // Only delete if the node has no connected edges
       if (canDeleteNode(nodeId)) {
-        const token = localStorage.getItem("accessToken");
-        if (!token) {
-          console.error("No token found in localStorage");
-          return;
-        }
-        try {
-          const response = await fetch(
-            `https://squid-app-p63zw.ondigitalocean.app/api/steps/${nodeId}`,
-            {
-              method: "DELETE",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          if (!response.ok) {
-            throw new Error("Failed to create node");
-          }
-          setNodes((nds) => nds.filter((node) => node.id !== nodeId));
-        } catch (error) {
-          console.log(error);
-        }
+        deleteStep(nodeId);
+        setNodes((nds) => nds.filter((node) => node.id !== nodeId));
       } else {
         alert(
           "Cannot delete a node with connected edges. Remove the connections first."
