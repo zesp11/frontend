@@ -22,7 +22,7 @@ export default function New() {
         return;
       }
 
-      const url = `/api/proxy/scenarios/${id}`;
+      const url = `https://squid-app-p63zw.ondigitalocean.app/api/scenarios/${id}`;
       setLoading(true);
 
       try {
@@ -61,6 +61,7 @@ export default function New() {
             loading={loading}
             setLoading={setLoading}
             scenario={scenario}
+            id={id}
           />
         </>
       ) : (

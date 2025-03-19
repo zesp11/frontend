@@ -13,12 +13,16 @@ export default function StoriesContainer({ search }) {
       const params =
         (search.length !== 0 ? `search=${search}&` : "") +
         `page=${page}&limit=50`;
-      const res = await fetch(`/api/proxy/scenarios?${params}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await fetch(
+        `https://squid-app-p63zw.ondigitalocean.app/api/scenarios?${params}`,
+        {
+          method: "GET",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!res.ok) {
         console.error("Failed to fetch data", res.status);
@@ -26,7 +30,6 @@ export default function StoriesContainer({ search }) {
       }
 
       const data = await res.json();
-      console.log(data);
       setStory(data.data);
     }
 

@@ -1,9 +1,22 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import "@/components/generalComponents/styleModules/styles.css";
-//Navbar rendered only in "/creator" part.
-//To implement: events when buttons are hovered and clicked
+import { useState, useEffect } from "react";
+
 export default function CreatorNavBar() {
+  const [username, setUsername] = useState("Zaloguj");
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    // This code only runs on the client
+    setIsClient(true);
+    const user = localStorage.getItem("user");
+    if (user) {
+      setUsername(user);
+    }
+  }, []);
+
   return (
     <div className="navBarWrapper">
       <div className="logoWrapper">
@@ -19,11 +32,7 @@ export default function CreatorNavBar() {
       <div className="buttonWraper">
         <div className="button">🔔</div>
         <div className="button">⚙️</div>
-        <div className="button">
-          {localStorage.getItem("user")
-            ? localStorage.getItem("user")
-            : "Zaloguj"}
-        </div>
+        <div className="button">{username}</div>
       </div>
     </div>
   );

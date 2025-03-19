@@ -22,7 +22,6 @@ export default async function FillNode(
   while (stepQueue.length > 0) {
     const currentStep = stepQueue.shift();
     const stepId = currentStep.id_step;
-
     // Skip if already processed
     if (processedSteps.has(stepId)) {
       continue;
@@ -37,6 +36,9 @@ export default async function FillNode(
       data: {
         label: currentStep.title || `Step ${stepId}`,
         text: currentStep.text || "No description",
+        choices: currentStep.choices || [],
+        longitude: currentStep.longitude || 0,
+        latitude: currentStep.latitude || 0,
       },
       position: { x: 0, y: 0 }, // Will be calculated by layout algorithm
       style: {
@@ -60,7 +62,7 @@ export default async function FillNode(
         }
 
         // Create unique edge ID and check if we've already processed this edge
-        const edgeId = `e${stepId}-${nextStepId}`;
+        const edgeId = choice.id_choice;
         if (processedEdges.has(edgeId)) {
           continue;
         }
