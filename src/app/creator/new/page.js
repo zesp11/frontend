@@ -80,12 +80,15 @@ export default function New() {
 
     fetchData(); // Call the function inside useEffect
   }, []); // Add id as a dependency
-
   return (
     <>
       {(id && scenario) || !id ? (
         <>
-          <ScenarioSettings scenario={scenario} setScenario={setScenario} />
+          <ScenarioSettings
+            scenario={scenario}
+            setScenario={setScenario}
+            id={id}
+          />
           <FlowComponent
             loading={loading}
             setLoading={setLoading}
