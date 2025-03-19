@@ -9,18 +9,47 @@ export default function New() {
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [scenario, setScenario] = useState(null);
+  const [newId, setNewId] = useState(null);
   const id = searchParams.get("id");
 
   useEffect(() => {
     async function fetchData() {
-      if (!id) return;
-
-      // Get Bearer token from localStorage
       const token = localStorage.getItem("accessToken");
       if (!token) {
         console.error("No token found in localStorage");
         return;
       }
+      if (!id) {
+        return;
+      }
+      //   try {
+      //     const res = await fetch(
+      //       `https://squid-app-p63zw.ondigitalocean.app/api/scenarios`,
+      //       {
+      //         method: "POST",
+      //         body: JSON.stringify({
+      //           name: "Nowy scenariusz",
+      //           limit_players: 4,
+      //           description: "Wpisz opis swojej przygody...",
+      //         }),
+      //         headers: {
+      //           Authorization: `Bearer ${token}`,
+      //           "Content-Type": "application/json",
+      //         },
+      //       }
+      //     );
+
+      //     if (!res.ok) {
+      //       return;
+      //     }
+      //     const response = await res.json();
+      //     setNewId(response.id_scen);
+      //   } catch (error) {
+      //     console.log(error);
+      //   }
+      // }
+
+      // Get Bearer token from localStorage
 
       const url = `https://squid-app-p63zw.ondigitalocean.app/api/scenarios/${id}`;
       setLoading(true);
@@ -50,7 +79,7 @@ export default function New() {
     }
 
     fetchData(); // Call the function inside useEffect
-  }, [id]); // Add id as a dependency
+  }, []); // Add id as a dependency
 
   return (
     <>

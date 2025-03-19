@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from "react";
-import flowComponentModule from "./styleModules/flowComponentModule.css";
+import React, { useState, useRef, useEffect } from "react";
+import NodeMapView from "./nodeMapView";
 
 export default function NodeEditor({
   node,
@@ -9,12 +9,18 @@ export default function NodeEditor({
   canDelete,
 }) {
   const [nodeData, setNodeData] = useState({
-    label: node.data.label,
-    text: node.data.text,
+    label: node.data.label || "",
+    text: node.data.text || "",
+    longitude: node.data.longitude || "",
+    latitude: node.data.latitude || "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    setNodeData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCoordinateChange = (name, value) => {
     setNodeData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -69,6 +75,45 @@ export default function NodeEditor({
               rows={4}
             />
           </div>
+
+          <div className="location-section">
+            <h4>Location</h4>
+            <div className="form-row">
+              <div className="form-group half">
+                <label htmlFor="longitude">Longitude:</label>
+                <input
+                  type="number"
+                  step="0.000001"
+                  id="longitude"
+                  name="longitude"
+                  value={nodeData.longitude}
+                  onChange={handleChange}
+                  placeholder="-180 to 180"
+                />
+              </div>
+              <div className="form-group half">
+                <label htmlFor="latitude">Latitude:</label>
+                <input
+                  type="number"
+                  step="0.000001"
+                  id="latitude"
+                  name="latitude"
+                  value={nodeData.latitude}
+                  onChange={handleChange}
+                  placeholder="-90 to 90"
+                />
+              </div>
+            </div>
+
+            {/* Map component with fixed height */}
+            <div style={{ height: "300px", marginBottom: "15px" }}>
+              <NodeMapView
+                node={{ data: nodeData }}
+                onCoordinateChange={handleCoordinateChange}
+              />
+            </div>
+          </div>
+
           <div className="button-group">
             <button type="submit">Save</button>
             <button type="button" onClick={onClose}>

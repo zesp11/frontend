@@ -154,8 +154,8 @@ export default function FlowComponent({ loading, setLoading, scenario, id }) {
             body: JSON.stringify({
               title: data.label,
               text: data.text,
-              longitude: -0.15,
-              latitude: 51.48,
+              longitude: data.longitude,
+              latitude: data.latitude,
               choices: [],
             }),
             headers: {
