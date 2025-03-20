@@ -18,6 +18,7 @@ export default function StoryTile({ story }) {
       /> */}
       <div className="story-info">
         <h3 className="story-title">{story.name}</h3>
+        <h3 className="story-title">{story.id}</h3>
         {/* <p className="story-author">Autor: {story.author}</p> */}
         <div className="story-tags">
           {/* {story.tags.map((tag, index) => (

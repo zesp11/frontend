@@ -7,98 +7,123 @@ import { useEffect, useState } from "react";
 
 export default function New() {
   const searchParams = useSearchParams();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [scenario, setScenario] = useState(null);
-  const [newId, setNewId] = useState(null);
-  const id = searchParams.get("id");
+  const [id, setId] = useState(searchParams.get("id"));
 
   useEffect(() => {
     async function fetchData() {
+      // Get Bearer token from localStorage
       const token = localStorage.getItem("accessToken");
       if (!token) {
         console.error("No token found in localStorage");
+        setLoading(false);
         return;
       }
-      if (!id) {
-        return;
-      }
-      //   try {
-      //     const res = await fetch(
-      //       `https://squid-app-p63zw.ondigitalocean.app/api/scenarios`,
-      //       {
-      //         method: "POST",
-      //         body: JSON.stringify({
-      //           name: "Nowy scenariusz",
-      //           limit_players: 4,
-      //           description: "Wpisz opis swojej przygody...",
-      //         }),
-      //         headers: {
-      //           Authorization: `Bearer ${token}`,
-      //           "Content-Type": "application/json",
-      //         },
-      //       }
-      //     );
-
-      //     if (!res.ok) {
-      //       return;
-      //     }
-      //     const response = await res.json();
-      //     setNewId(response.id_scen);
-      //   } catch (error) {
-      //     console.log(error);
-      //   }
-      // }
-
-      // Get Bearer token from localStorage
-
-      const url = `https://squid-app-p63zw.ondigitalocean.app/api/scenarios/${id}`;
-      setLoading(true);
 
       try {
-        // Execute request
-        const res = await fetch(url, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        // If no ID is provided, create a new scenario
+        if (!id) {
+          const createRes = await fetch(
+            `https://squid-app-p63zw.ondigitalocean.app/api/scenarios`,
+            {
+              method: "POST",
+              body: JSON.stringify({
+                name: "Nowy scenariusz",
+                limit_players: 1,
+                description: "Tu wpisz opis swojego nowego scenariusza...",
+                step_title: "Początek przygody",
+                step_text: "Za górami, za lasami...",
+              }),
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
 
-        if (!res.ok) {
-          const errorText = await res.text();
-          console.error("Failed to fetch data", res.status, errorText);
-          return;
+          if (!createRes.ok) {
+            console.error("Failed to create scenario", await createRes.text());
+            setLoading(false);
+            return;
+          }
+
+          const createResponse = await createRes.json();
+          const newId = createResponse.id_scen;
+          setId(newId);
+
+          // Fetch the newly created scenario
+          const fetchRes = await fetch(
+            `https://squid-app-p63zw.ondigitalocean.app/api/scenarios/${newId}`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (!fetchRes.ok) {
+            console.error(
+              "Failed to fetch new scenario",
+              await fetchRes.text()
+            );
+            setLoading(false);
+            return;
+          }
+
+          const scenarioData = await fetchRes.json();
+          setScenario(scenarioData);
+          setLoading(false);
         }
+        // If ID is provided, fetch the existing scenario
+        else {
+          const fetchRes = await fetch(
+            `https://squid-app-p63zw.ondigitalocean.app/api/scenarios/${id}`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
 
-        const data = await res.json();
-        setScenario(data);
+          if (!fetchRes.ok) {
+            console.error("Failed to fetch scenario", await fetchRes.text());
+            setLoading(false);
+            return;
+          }
+
+          const scenarioData = await fetchRes.json();
+          setScenario(scenarioData);
+          setLoading(false);
+        }
       } catch (error) {
-        console.error(`Error fetching scenario:`, error);
-      } finally {
+        console.error("Error in scenario handling:", error);
         setLoading(false);
       }
     }
 
-    fetchData(); // Call the function inside useEffect
-  }, []); // Add id as a dependency
+    fetchData();
+  }, [id]); // Only re-run if ID changes
+
+  if (loading) {
+    return <div>Wczytywanie scenariusza...</div>;
+  }
+
+  if (!scenario) {
+    return <div>Nie można załadować scenariusza</div>;
+  }
+
   return (
     <>
-      {(id && scenario) || !id ? (
-        <>
-          <ScenarioSettings
-            scenario={scenario}
-            setScenario={setScenario}
-            id={id}
-          />
-          <FlowComponent
-            loading={loading}
-            setLoading={setLoading}
-            scenario={scenario}
-            id={id}
-          />
-        </>
-      ) : (
-        <div>Wczytywanie scenariusza</div>
-      )}
+      <ScenarioSettings scenario={scenario} setScenario={setScenario} id={id} />
+      <FlowComponent
+        loading={loading}
+        setLoading={setLoading}
+        scenario={scenario}
+        id={id}
+      />
     </>
   );
 }

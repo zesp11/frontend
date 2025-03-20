@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import "./styleModules/searchFieldModule.css";
+import { useRouter } from "next/navigation";
 //Component which is used to create query parameters based on user's input.
 export default function ScenarioSettings({ scenario, setScenario, id }) {
   const [name, setName] = useState(scenario ? scenario.name : "");
@@ -10,7 +11,7 @@ export default function ScenarioSettings({ scenario, setScenario, id }) {
   const [numPlayers, setNumPlayers] = useState(
     scenario ? scenario.limit_players : 1
   );
-
+  const router = useRouter();
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("accessToken");
@@ -55,6 +56,32 @@ export default function ScenarioSettings({ scenario, setScenario, id }) {
       console.log(error);
     }
   };
+  const onDeleteScenario = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      console.error("No token found in localStorage");
+      return;
+    }
+    try {
+      const res = await fetch(
+        `https://squid-app-p63zw.ondigitalocean.app/api/scenarios/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(res);
+      if (res.ok) {
+        router.push("/creator");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="searchFieldWrapper">
       <form className="searchForm" onSubmit={handleSubmit}>
@@ -92,6 +119,9 @@ export default function ScenarioSettings({ scenario, setScenario, id }) {
           OK
         </button>
       </form>
+      <button type="submit" className="searchButton" onClick={onDeleteScenario}>
+        Usuń scenariusz
+      </button>
     </div>
   );
 }
