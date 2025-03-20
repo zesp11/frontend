@@ -10,7 +10,6 @@ import {
   Controls,
   Panel,
 } from "@xyflow/react";
-import dagre from "dagre";
 import "@xyflow/react/dist/style.css";
 import "./styleModules/flowComponentModule.css";
 import { initialEdges, initialNodes } from "./initialData";

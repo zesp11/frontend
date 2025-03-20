@@ -36,6 +36,7 @@ export async function addStep(id_scen) {
   }
 }
 export async function editStep(id, data) {
+  console.log(id, data);
   try {
     const token = getToken();
     const response = await fetch(`${url}/steps/${id}`, {
@@ -45,7 +46,6 @@ export async function editStep(id, data) {
         text: data.text,
         longitude: data.longitude,
         latitude: data.latitude,
-        choices: [],
       }),
       headers: {
         Authorization: `Bearer ${token}`,

@@ -11,8 +11,8 @@ export default function NodeEditor({
   const [nodeData, setNodeData] = useState({
     label: node.data.label || "",
     text: node.data.text || "",
-    longitude: node.data.longitude || "",
-    latitude: node.data.latitude || "",
+    longitude: node.data.longitude || 0,
+    latitude: node.data.latitude || 0,
   });
 
   const handleChange = (e) => {
@@ -26,6 +26,7 @@ export default function NodeEditor({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(node.id, nodeData);
     onSave(node.id, nodeData);
     onClose();
   };
