@@ -54,7 +54,6 @@ export default async function FillNode(
     if (currentStep.choices && currentStep.choices.length > 0) {
       for (const choice of currentStep.choices) {
         const nextStepId = choice.id_next_step;
-
         // Skip self-connections
         if (stepId === nextStepId) {
           console.warn(`Skipping self-connection for step ${stepId}`);
@@ -73,7 +72,7 @@ export default async function FillNode(
           id: edgeId,
           source: stepId.toString(),
           target: nextStepId.toString(),
-          label: choice.text || "Continue",
+          label: choice.choice_text || "Continue",
           style: { stroke: "#333" },
           animated: false,
           markerEnd: {

@@ -31,7 +31,12 @@ const nodeHeight = 80;
 
 // Function to create a proper tree layout
 
-export default function FlowComponent({ loading, setLoading, scenario, id }) {
+export default function FlowComponent({
+  loading,
+  setLoading,
+  scenario,
+  id_scen,
+}) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedNode, setSelectedNode] = useState(null);
@@ -40,6 +45,7 @@ export default function FlowComponent({ loading, setLoading, scenario, id }) {
 
   // Initial render
   useEffect(() => {
+    console.log("ID SCENARIUSZA: " + id_scen);
     async function fetchItem() {
       // If we want to add new scenario
       if (!scenario) {
@@ -79,10 +85,10 @@ export default function FlowComponent({ loading, setLoading, scenario, id }) {
         );
 
         if (existingEdge) {
-          deleteChoice(existingEdge.id);
+          deleteChoice(existingEdge.id, id_scen);
           setEdges((eds) => eds.filter((edge) => edge.id !== existingEdge.id));
         } else {
-          const edgeId = await addChoice(params.source, params.target);
+          const edgeId = await addChoice(params.source, params.target, id_scen);
           setEdges((eds) =>
             addEdge(
               {
@@ -107,7 +113,7 @@ export default function FlowComponent({ loading, setLoading, scenario, id }) {
   // Function to update node data after editing
   const updateNodeData = useCallback(
     async (id, data) => {
-      await editStep(id, data);
+      await editStep(id, data, id_scen);
       setNodes((nds) =>
         nds.map((node) => {
           if (node.id === id) {
@@ -145,7 +151,13 @@ export default function FlowComponent({ loading, setLoading, scenario, id }) {
         return;
       }
 
-      editChoice(edgeId, currentEdge.source, currentEdge.target, data.label);
+      editChoice(
+        edgeId,
+        currentEdge.source,
+        currentEdge.target,
+        data.label,
+        id_scen
+      );
       // Only update state if the API call was successful
       setEdges((eds) =>
         eds.map((edge) => {
@@ -180,18 +192,17 @@ export default function FlowComponent({ loading, setLoading, scenario, id }) {
 
   // Function to add a new node
   const addNode = useCallback(async () => {
-    const newNodeId = await addStep(id);
+    const newNodeId = await addStep(id_scen);
     const centerX = window.innerWidth / 2 - nodeHeight; // half node width
     const centerY = window.innerHeight / 2 - nodeWidth; // half node height
-
     const newNode = {
       id: newNodeId,
       data: {
         label: "Nowy krok",
         text: "To jest nowy krok do twojego scenariusza...",
         choices: [],
-        longitude: 0,
-        latitude: 0,
+        longitude: 18.594415,
+        latitude: 53.010001,
       },
       position: { x: centerX, y: centerY },
       style: {
@@ -207,7 +218,7 @@ export default function FlowComponent({ loading, setLoading, scenario, id }) {
 
     // Immediately open the node editor for the new node
     setSelectedNode(newNode);
-  }, [setNodes, id]);
+  }, [setNodes, id_scen]);
 
   // Function to check if a node can be deleted (no connected edges)
   const canDeleteNode = useCallback(
@@ -225,7 +236,7 @@ export default function FlowComponent({ loading, setLoading, scenario, id }) {
     async (nodeId) => {
       // Only delete if the node has no connected edges
       if (canDeleteNode(nodeId)) {
-        deleteStep(nodeId);
+        deleteStep(nodeId, id_scen);
         setNodes((nds) => nds.filter((node) => node.id !== nodeId));
       } else {
         alert(

@@ -48,20 +48,26 @@ export default function New() {
         console.log("Creating new scenario");
 
         try {
+          // Create FormData for scenario creation
+          const formData = new FormData();
+          formData.append("name", "Nowy scenariusz");
+          formData.append("limit_players", "1");
+          formData.append(
+            "description",
+            "Tu wpisz opis swojego nowego scenariusza..."
+          );
+          // Optional: Add a default photo if you have one
+          // formData.append('photo', photoFile);
+
           const createRes = await fetch(
             `https://squid-app-p63zw.ondigitalocean.app/api/scenarios`,
             {
               method: "POST",
-              body: JSON.stringify({
-                name: "Nowy scenariusz",
-                limit_players: 1,
-                description: "Tu wpisz opis swojego nowego scenariusza...",
-                step_title: "Początek przygody",
-                step_text: "Za górami, za lasami...",
-              }),
+              body: formData,
               headers: {
                 Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
+                // Do NOT set Content-Type header when using FormData
+                // The browser will set the correct multipart/form-data boundary
               },
             }
           );
@@ -147,7 +153,7 @@ export default function New() {
         loading={loading}
         setLoading={setLoading}
         scenario={scenario}
-        id={id}
+        id_scen={id}
       />
     </>
   );

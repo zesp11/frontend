@@ -10,18 +10,20 @@ function getToken() {
 export async function addStep(id_scen) {
   try {
     const token = getToken();
+    const form = new FormData();
+    form.append("title", "Nowy krok");
+    form.append("text", "To jest nowy krok do twojego scenariusza...");
+    form.append("longitude", 18.594415);
+    form.append("latitude", 53.010001);
+    form.append("choices", JSON.stringify([])); // Convert array to string
+
+    // If photo is null, don't append it
     const response = await fetch(`${url}/steps?id_scen=${id_scen}`, {
       method: "POST",
-      body: JSON.stringify({
-        title: "Nowy krok",
-        text: "To jest nowy krok do twojego scenariusza...",
-        longitude: -0.15,
-        latitude: 51.48,
-        choices: [],
-      }),
+      body: form,
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+        // Remove "Content-Type" header when using FormData
       },
     });
 
@@ -32,38 +34,47 @@ export async function addStep(id_scen) {
     const r = await response.json();
     return String(r.id_step);
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    throw error; // Re-throw to allow caller to handle the error
   }
 }
-export async function editStep(id, data) {
-  console.log(id, data);
+
+export async function editStep(id, data, id_scen) {
   try {
     const token = getToken();
-    const response = await fetch(`${url}/steps/${id}`, {
+    const form = new FormData();
+    form.append("title", data.label);
+    form.append("text", data.text);
+    form.append("longitude", data.longitude);
+    form.append("latitude", data.latitude);
+
+    // Only append photo if it exists
+    if (data.photo) {
+      form.append("photo", data.photo);
+    }
+
+    const response = await fetch(`${url}/steps/${id}?id_scen=${id_scen}`, {
       method: "PUT",
-      body: JSON.stringify({
-        title: data.label,
-        text: data.text,
-        longitude: data.longitude,
-        latitude: data.latitude,
-      }),
+      body: form,
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+        // Remove "Content-Type" header when using FormData
       },
     });
-    console.log(response);
+
     if (!response.ok) {
-      throw new Error("Failed to create node");
+      const errorBody = await response.text();
+      throw new Error(`Failed to edit node: ${errorBody}`);
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    throw error; // Re-throw to allow caller to handle the error
   }
 }
-export async function deleteStep(id) {
+export async function deleteStep(id, id_scen) {
   try {
     const token = getToken();
-    const response = await fetch(`${url}/steps/${id}`, {
+    const response = await fetch(`${url}/steps/${id}?id_scen=${id_scen}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -76,10 +87,10 @@ export async function deleteStep(id) {
     console.log(error);
   }
 }
-export async function addChoice(source, target) {
+export async function addChoice(source, target, id_scen) {
   try {
     const token = getToken();
-    const responseChoice = await fetch(`${url}/choices`, {
+    const responseChoice = await fetch(`${url}/choices?id_scen=${id_scen}`, {
       method: "POST",
       body: JSON.stringify({
         text: "Continue",
@@ -102,17 +113,23 @@ export async function addChoice(source, target) {
     console.log(error);
   }
 }
-export async function editChoice(edgeId, source, target, label) {
+export async function editChoice(edgeId, source, target, label, id_scen) {
   try {
     const token = getToken();
     // First, make sure we have the most current edges array
-
+    console.log(
+      JSON.stringify({
+        id_scen: id_scen,
+        text: label,
+        id_next_step: Number(target),
+      })
+    );
     const response = await fetch(`${url}/choices/${edgeId}`, {
       method: "PUT",
       body: JSON.stringify({
+        id_scen: Number(id_scen),
         text: label,
         id_next_step: Number(target),
-        id_step: Number(source),
       }),
       headers: {
         Authorization: `Bearer ${token}`,
@@ -129,10 +146,10 @@ export async function editChoice(edgeId, source, target, label) {
     console.log(error);
   }
 }
-export async function deleteChoice(id) {
+export async function deleteChoice(id, id_scen) {
   try {
     const token = getToken();
-    const response = await fetch(`${url}/choices/${id}`, {
+    const response = await fetch(`${url}/choices/${id}?id_scen=${id_scen}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
