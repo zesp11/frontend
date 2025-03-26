@@ -45,8 +45,6 @@ export default function New() {
     try {
       // If no ID is provided, create a new scenario
       if (!id) {
-        console.log("Creating new scenario");
-
         try {
           // Create FormData for scenario creation
           const formData = new FormData();
@@ -81,7 +79,6 @@ export default function New() {
           }
 
           const createResponse = await createRes.json();
-          console.log("Successfully created scenario:", createResponse);
           const newId = createResponse.id_scen;
 
           // Update the ID state without triggering a re-render immediately
@@ -107,7 +104,6 @@ export default function New() {
 
   async function fetchScenario(scenarioId, token) {
     try {
-      console.log(`Fetching scenario with ID: ${scenarioId}`);
       const fetchRes = await fetch(
         `https://squid-app-p63zw.ondigitalocean.app/api/scenarios/${scenarioId}`,
         {
@@ -127,7 +123,6 @@ export default function New() {
       }
 
       const scenarioData = await fetchRes.json();
-      console.log("Successfully fetched scenario:", scenarioData);
       setScenario(scenarioData);
       setLoading(false);
       requestInProgress.current = false;

@@ -48,7 +48,6 @@ export default function StoriesContainer({ search }) {
         }
 
         const data = await res.json();
-        console.log("API response:", data);
 
         // Check if data is directly an array or has a data property
         if (Array.isArray(data)) {

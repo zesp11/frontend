@@ -55,13 +55,13 @@ export default function ScenarioSettings({ scenario, setScenario, id }) {
       );
 
       if (res.ok) {
-        const updatedScenario = await res.json();
+        alert("Zaktualizowano dane scenariusza!");
         setScenario((s) => ({
           ...s,
           name: name,
           limit_players: Number(numPlayers),
           description: description,
-          photo_url: updatedScenario.photo_url || previewUrl,
+          photo_url: previewUrl,
         }));
       } else {
         const errorText = await res.text();
@@ -111,10 +111,13 @@ export default function ScenarioSettings({ scenario, setScenario, id }) {
           <Image
             src={previewUrl}
             alt="Scenario Preview"
-            layout="fill"
-            objectFit="cover"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            style={{ objectFit: "cover" }}
+            priority
           />
         )}
+
         <div
           className="scenarioPhotoUpload"
           onClick={() => fileInputRef.current.click()}

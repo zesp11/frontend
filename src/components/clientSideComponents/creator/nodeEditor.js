@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import NodeMapView from "./nodeMapView";
+import "./styleModules/nodeEditorModule.css";
 
 export default function NodeEditor({
   node,
@@ -7,13 +8,18 @@ export default function NodeEditor({
   onClose,
   onDelete,
   canDelete,
+  scenarioId,
 }) {
   const [nodeData, setNodeData] = useState({
     label: node.data.label || "",
     text: node.data.text || "",
     longitude: node.data.longitude || 0,
     latitude: node.data.latitude || 0,
+    photo: null,
+    photoPreview: node.data.photoUrl || null,
   });
+
+  const fileInputRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,10 +30,32 @@ export default function NodeEditor({
     setNodeData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setNodeData((prev) => ({
+        ...prev,
+        photo: file,
+        photoPreview: URL.createObjectURL(file),
+      }));
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setNodeData((prev) => ({
+      ...prev,
+      photo: null,
+      photoPreview: null,
+    }));
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(node.id, nodeData);
-    onSave(node.id, nodeData);
+    onSave(node.id, nodeData, scenarioId);
     onClose();
   };
 
@@ -36,7 +64,6 @@ export default function NodeEditor({
     onClose();
   };
 
-  // Handle clicks outside the popup to close it
   const popupRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -69,12 +96,40 @@ export default function NodeEditor({
           <div className="form-group">
             <label htmlFor="text">Description:</label>
             <textarea
+              maxLength="255"
               id="text"
               name="text"
               value={nodeData.text}
               onChange={handleChange}
               rows={4}
             />
+          </div>
+
+          <div className="form-group">
+            <label>Image:</label>
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept="image/*"
+              onChange={handleImageChange}
+              className="file-input"
+            />
+            {nodeData.photoPreview && (
+              <div className="image-preview-container">
+                <img
+                  src={nodeData.photoPreview}
+                  alt="Preview"
+                  className="image-preview"
+                />
+                <button
+                  type="button"
+                  onClick={handleRemoveImage}
+                  className="remove-image-button"
+                >
+                  Remove Image
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="location-section">
@@ -106,7 +161,6 @@ export default function NodeEditor({
               </div>
             </div>
 
-            {/* Map component with fixed height */}
             <div style={{ height: "300px", marginBottom: "15px" }}>
               <NodeMapView
                 node={{ data: nodeData }}
@@ -116,8 +170,10 @@ export default function NodeEditor({
           </div>
 
           <div className="button-group">
-            <button type="submit">Save</button>
-            <button type="button" onClick={onClose}>
+            <button type="submit" className="save-button">
+              Save
+            </button>
+            <button type="button" onClick={onClose} className="cancel-button">
               Cancel
             </button>
             {canDelete && (

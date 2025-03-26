@@ -43,13 +43,15 @@ export async function editStep(id, data, id_scen) {
   try {
     const token = getToken();
     const form = new FormData();
+
+    // Always append these fields
     form.append("title", data.label);
     form.append("text", data.text);
     form.append("longitude", data.longitude);
     form.append("latitude", data.latitude);
 
-    // Only append photo if it exists
-    if (data.photo) {
+    // Append photo only if a new file is selected
+    if (data.photo instanceof File) {
       form.append("photo", data.photo);
     }
 
@@ -58,7 +60,7 @@ export async function editStep(id, data, id_scen) {
       body: form,
       headers: {
         Authorization: `Bearer ${token}`,
-        // Remove "Content-Type" header when using FormData
+        // Content-Type header is automatically set by FormData
       },
     });
 
@@ -66,8 +68,10 @@ export async function editStep(id, data, id_scen) {
       const errorBody = await response.text();
       throw new Error(`Failed to edit node: ${errorBody}`);
     }
+    const res = await response.json();
+    return res.photo_url;
   } catch (error) {
-    console.error(error);
+    console.error("Error in editStep:", error);
     throw error; // Re-throw to allow caller to handle the error
   }
 }
@@ -84,7 +88,7 @@ export async function deleteStep(id, id_scen) {
       throw new Error("Failed to create node");
     }
   } catch (error) {
-    console.log(error);
+    console.error("Failed to update node:", error);
   }
 }
 export async function addChoice(source, target, id_scen) {
@@ -102,7 +106,6 @@ export async function addChoice(source, target, id_scen) {
         "Content-Type": "application/json",
       },
     });
-    console.log(responseChoice);
     if (!responseChoice.ok) {
       throw new Error("Cannot connect");
     }
@@ -110,20 +113,13 @@ export async function addChoice(source, target, id_scen) {
     const res = await responseChoice.json();
     return res.id_choice;
   } catch (error) {
-    console.log(error);
+    console.error("Failed to update node:", error);
   }
 }
 export async function editChoice(edgeId, source, target, label, id_scen) {
   try {
     const token = getToken();
     // First, make sure we have the most current edges array
-    console.log(
-      JSON.stringify({
-        id_scen: id_scen,
-        text: label,
-        id_next_step: Number(target),
-      })
-    );
     const response = await fetch(`${url}/choices/${edgeId}`, {
       method: "PUT",
       body: JSON.stringify({
@@ -143,7 +139,7 @@ export async function editChoice(edgeId, source, target, label, id_scen) {
       throw new Error(`API error: ${response.status} - ${errorText}`);
     }
   } catch (error) {
-    console.log(error);
+    console.error("Failed to update node:", error);
   }
 }
 export async function deleteChoice(id, id_scen) {
@@ -156,8 +152,7 @@ export async function deleteChoice(id, id_scen) {
         "Content-Type": "application/json",
       },
     });
-    console.log(response);
   } catch (error) {
-    console.log(error);
+    console.error("Failed to update node:", error);
   }
 }

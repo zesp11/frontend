@@ -45,7 +45,6 @@ export default function FlowComponent({
 
   // Initial render
   useEffect(() => {
-    console.log("ID SCENARIUSZA: " + id_scen);
     async function fetchItem() {
       // If we want to add new scenario
       if (!scenario) {
@@ -113,26 +112,37 @@ export default function FlowComponent({
   // Function to update node data after editing
   const updateNodeData = useCallback(
     async (id, data) => {
-      await editStep(id, data, id_scen);
-      setNodes((nds) =>
-        nds.map((node) => {
-          if (node.id === id) {
-            return {
-              ...node,
-              data: {
-                ...node.data,
-                label: data.label,
-                text: data.text,
-                longitude: data.longitude,
-                latitude: data.latitude,
-              },
-            };
-          }
-          return node;
-        })
-      );
+      try {
+        // Call editStep with the full data object including photo
+        const photoUrl = await editStep(id, data, id_scen);
+        console.log("UPDATED");
+        console.log(photoUrl);
+        // Update nodes state
+        setNodes((nds) =>
+          nds.map((node) => {
+            if (node.id === id) {
+              return {
+                ...node,
+                data: {
+                  ...node.data,
+                  label: data.label,
+                  text: data.text,
+                  longitude: data.longitude,
+                  latitude: data.latitude,
+                  // Include photoUrl if present
+                  photoUrl: photoUrl,
+                },
+              };
+            }
+            return node;
+          })
+        );
+      } catch (error) {
+        console.error("Failed to update node:", error);
+        // Optionally add error handling (e.g., show error toast)
+      }
     },
-    [setNodes]
+    [setNodes, id_scen]
   );
 
   // Function to handle node click - open edit popup instead of alert
@@ -180,7 +190,6 @@ export default function FlowComponent({
   );
 
   const onEdgeClick = useCallback((event, edge) => {
-    console.log(edge);
     setSelectedEdge(edge);
   }, []);
 
@@ -317,6 +326,7 @@ export default function FlowComponent({
               onClose={closePopup}
               onDelete={deleteNode}
               canDelete={canDeleteNode(selectedNode.id)}
+              scenarioId={id_scen}
             />
           )}
           {selectedEdge && (
