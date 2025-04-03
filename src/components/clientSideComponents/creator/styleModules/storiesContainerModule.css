@@ -1,0 +1,54 @@
+.storiesContainerWrapper {
+  position: fixed; /* Changed to fixed for better mobile support */
+  top: 7vh;
+  left: 15%;
+  width: 85%; /* Full width on mobile */
+  height: auto; /* Height will adjust based on content */
+  min-height: calc(100vh - 7vh);
+  padding: clamp(10px, 2vw, 20px); /* Responsive padding */
+
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  background-color: beige;
+  border: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 100; /* Ensure it stays above other content */
+}
+.upperPanel {
+  justify-content: center;
+  width: 100%;
+  display: flex;
+  gap: 60%;
+}
+.newStoryButton {
+  background-color: green;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 20px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+}
+
+.storyWrapper {
+  padding: 20px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.pageWrapper {
+  display: flex;
+  position: fixed;
+  gap: 20px;
+  top: 93vh;
+}
+.pageButton {
+  background-color: green;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 10rem;
+  font-size: 15px;
+  text-decoration: none;
+  color: white;
+}

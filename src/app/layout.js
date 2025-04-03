@@ -1,7 +1,7 @@
-import NavBar from "@/components/navbar";
 import "./globals.css";
+import NavbarSwitcher from "@/components/clientSideComponents/creator/navBarSwitcher";
 export const metadata = {
-  title: "GoAdventure",
+  title: "GoTale",
   description: "Create your own real life adventure!",
 };
 
@@ -10,7 +10,7 @@ export default function RootLayout({ children }) {
     <html lang="pl">
       <body>
         <nav>
-          <NavBar />
+          <NavbarSwitcher />
         </nav>
         {children}
       </body>
