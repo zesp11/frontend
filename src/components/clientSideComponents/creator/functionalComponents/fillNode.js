@@ -39,7 +39,7 @@ export default async function FillNode(
         choices: currentStep.choices || [],
         longitude: currentStep.longitude || 0,
         latitude: currentStep.latitude || 0,
-        photoUrl: currentStep.photoUrl || null,
+        photo_url: currentStep.photo_url || null,
       },
       position: { x: 0, y: 0 }, // Will be calculated by layout algorithm
       style: {

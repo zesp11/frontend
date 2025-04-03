@@ -130,7 +130,7 @@ export default function FlowComponent({
                   longitude: data.longitude,
                   latitude: data.latitude,
                   // Include photoUrl if present
-                  photoUrl: photoUrl,
+                  photo_url: photoUrl,
                 },
               };
             }
