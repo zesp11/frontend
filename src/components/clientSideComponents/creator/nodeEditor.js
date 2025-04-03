@@ -16,7 +16,7 @@ export default function NodeEditor({
     longitude: node.data.longitude || 0,
     latitude: node.data.latitude || 0,
     photo: null,
-    photoPreview: node.data.photoUrl || null,
+    photoPreview: node.data.photo_url || null,
   });
 
   const fileInputRef = useRef(null);
