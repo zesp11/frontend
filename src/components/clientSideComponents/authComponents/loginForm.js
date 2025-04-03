@@ -31,6 +31,7 @@ export default function LoginForm() {
         localStorage.setItem("accessToken", data.token);
         localStorage.setItem("refreshToken", data.refreshToken);
         localStorage.setItem("user", data.user.login);
+        localStorage.setItem("userId", data.user.id_user);
         router.push("/creator");
       }
     } catch (error) {
