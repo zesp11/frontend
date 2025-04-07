@@ -1,11 +1,13 @@
 "use client";
+import { Suspense } from "react";
 import FlowComponent from "@/components/clientSideComponents/creator/flowComponent";
 import ScenarioSettings from "@/components/clientSideComponents/creator/scenarioSettings";
 import SearchField from "@/components/clientSideComponents/creator/searchField";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 
-export default function New() {
+// Create a child component that uses useSearchParams
+function ScenarioLoader() {
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [scenario, setScenario] = useState(null);
@@ -151,5 +153,14 @@ export default function New() {
         id_scen={id}
       />
     </>
+  );
+}
+
+// Main component with Suspense boundary
+export default function New() {
+  return (
+    <Suspense fallback={<div>Wczytywanie...</div>}>
+      <ScenarioLoader />
+    </Suspense>
   );
 }
