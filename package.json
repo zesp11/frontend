@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && @netlify/next",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@netlify/next": "^1.4.9",
+    "@netlify/plugin-nextjs": "^5.10.4",
     "@xyflow/react": "^12.4.3",
     "dagre": "^0.8.5",
     "http-proxy-middleware": "^3.0.3",
