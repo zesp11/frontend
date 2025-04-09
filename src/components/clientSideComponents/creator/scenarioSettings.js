@@ -79,9 +79,6 @@ export default function ScenarioSettings({ scenario, setScenario, id }) {
       return;
     }
 
-    if (!window.confirm("Are you sure you want to delete this scenario?"))
-      return;
-
     try {
       const res = await fetch(
         `https://squid-app-p63zw.ondigitalocean.app/api/scenarios/${id}`,
@@ -103,7 +100,12 @@ export default function ScenarioSettings({ scenario, setScenario, id }) {
       console.error("Error deleting scenario:", error);
     }
   };
-
+  const onSaveAndExit = () => {
+    router.push("/creator");
+  };
+  const onHelp = () => {
+    alert("Tu będzie popup z poradnikiem");
+  };
   return (
     <div className="scenarioSettingsWrapper">
       <div className="scenarioPhotoContainer">
@@ -153,6 +155,7 @@ export default function ScenarioSettings({ scenario, setScenario, id }) {
           className="settingsInput"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          maxLength="255"
         />
 
         <input
@@ -169,6 +172,7 @@ export default function ScenarioSettings({ scenario, setScenario, id }) {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={4}
+          maxLength="4096"
         />
 
         <button onClick={handleSubmit} className="actionButton">
@@ -187,7 +191,7 @@ export default function ScenarioSettings({ scenario, setScenario, id }) {
             <polyline points="17 21 17 13 7 13 7 21"></polyline>
             <polyline points="7 3 7 8 15 8"></polyline>
           </svg>
-          Save Changes
+          Zapisz zmiany
         </button>
 
         <button
@@ -210,8 +214,17 @@ export default function ScenarioSettings({ scenario, setScenario, id }) {
             <line x1="10" y1="11" x2="10" y2="17"></line>
             <line x1="14" y1="11" x2="14" y2="17"></line>
           </svg>
-          Delete Scenario
+          Usuń scenariusz
         </button>
+
+        <div className="bottomActions">
+          <button className="actionButton" onClick={onSaveAndExit}>
+            Zapisz i Wyjdź
+          </button>
+          <button className="actionButton" onClick={onHelp}>
+            Pomoc
+          </button>
+        </div>
       </div>
     </div>
   );

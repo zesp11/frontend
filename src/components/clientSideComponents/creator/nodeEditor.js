@@ -91,12 +91,13 @@ export default function NodeEditor({
               value={nodeData.label}
               onChange={handleChange}
               required
+              maxLength="255"
             />
           </div>
           <div className="form-group">
             <label htmlFor="text">Description:</label>
             <textarea
-              maxLength="255"
+              maxLength="1024"
               id="text"
               name="text"
               value={nodeData.text}

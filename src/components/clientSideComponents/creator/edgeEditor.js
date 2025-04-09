@@ -62,6 +62,7 @@ export default function EdgeEditor({ edge, onSave, onClose }) {
               value={edgeData.label}
               onChange={handleChange}
               required
+              maxLength="255"
             />
           </div>
           <div className="form-group">
@@ -73,18 +74,6 @@ export default function EdgeEditor({ edge, onSave, onClose }) {
               value={edgeData.style.stroke}
               onChange={handleChange}
             />
-          </div>
-          <div className="form-group">
-            <label htmlFor="animated">
-              <input
-                type="checkbox"
-                id="animated"
-                name="animated"
-                checked={edgeData.animated}
-                onChange={handleChange}
-              />
-              Animated Edge
-            </label>
           </div>
           <div className="button-group">
             <button type="submit">Save</button>

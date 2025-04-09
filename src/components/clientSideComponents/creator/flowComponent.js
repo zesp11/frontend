@@ -12,7 +12,6 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import "./styleModules/flowComponentModule.css";
-import { initialEdges, initialNodes } from "./initialData";
 import NodeEditor from "./nodeEditor";
 import EdgeEditor from "./edgeEditor";
 import getLayoutedElements from "./functionalComponents/dagreComponent";
@@ -48,10 +47,6 @@ export default function FlowComponent({
     async function fetchItem() {
       // If we want to add new scenario
       if (!scenario) {
-        const { nodes: layoutedNodes, edges: layoutedEdges } =
-          getLayoutedElements(initialNodes, initialEdges, "TB");
-        setNodes(layoutedNodes);
-        setEdges(layoutedEdges);
         return;
       }
 
@@ -94,10 +89,28 @@ export default function FlowComponent({
                 ...params,
                 id: edgeId,
                 animated: false,
-                style: { stroke: "#333" },
+                style: {
+                  stroke: "#ff8c42",
+                  strokeWidth: 2,
+                  opacity: 0.8,
+                },
                 label: "Continue",
+                labelStyle: {
+                  fill: "#ffffff",
+                  fontWeight: 500,
+                  fontSize: 12,
+                },
+                labelBgStyle: {
+                  fill: "rgba(26, 26, 26, 0.75)",
+                  rx: 4,
+                  ry: 4,
+                },
+                labelShowBg: true,
                 markerEnd: {
                   type: "arrowclosed",
+                  color: "#ff8c42",
+                  width: 20,
+                  height: 20,
                 },
               },
               eds
@@ -215,11 +228,15 @@ export default function FlowComponent({
       },
       position: { x: centerX, y: centerY },
       style: {
-        background: "#f0f0f0",
-        border: "1px solid red",
-        padding: 10,
-        borderRadius: 5,
-        width: nodeWidth,
+        backgroundColor: "#1a1a1a",
+        color: "#ffffff",
+        border: "2px solid #ff8c42",
+        borderRadius: "8px",
+        padding: "10px 8px",
+        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.5)",
+        fontWeight: 500,
+        fontFamily:
+          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       },
     };
 
@@ -276,7 +293,8 @@ export default function FlowComponent({
         left: "8vw",
         width: "92vw",
         height: "100vh",
-        border: "1px solid #ddd",
+        border: "1px solid #ff8c42", // Updated border color
+        backgroundColor: "#25211e", // Dark background
       }}
     >
       {loading ? (
@@ -286,6 +304,7 @@ export default function FlowComponent({
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
+            color: "#f5f5f5", // Light text color
           }}
         >
           Loading scenario tree...
@@ -304,9 +323,9 @@ export default function FlowComponent({
             fitView
             fitViewOptions={{ padding: 0.2 }}
             attributionPosition="bottom-right"
+            nodesDraggable={true}
           >
-            <Background />
-            <Controls />
+            <Background color="#ff8c42" gap={20} size={1} />
 
             {/* Add Node button at the bottom-right */}
             <Panel position="bottom-right">

@@ -1,0 +1,23 @@
+.appWrapper {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.scenarioSettings {
+  width: 320px;
+  min-width: 300px;
+  max-width: 360px;
+  box-sizing: border-box;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.flowContainer {
+  flex-grow: 1;
+  overflow: hidden;
+  position: relative;
+  box-sizing: border-box;
+  z-index: 1;
+}

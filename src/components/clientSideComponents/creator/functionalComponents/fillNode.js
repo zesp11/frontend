@@ -43,11 +43,15 @@ export default async function FillNode(
       },
       position: { x: 0, y: 0 }, // Will be calculated by layout algorithm
       style: {
-        background: "#f0f0f0",
-        border: "1px solid #ddd",
-        padding: 10,
-        borderRadius: 5,
-        width: nodeWidth,
+        backgroundColor: "#1a1a1a",
+        color: "#ffffff",
+        border: "2px solid #ff8c42",
+        borderRadius: "8px",
+        padding: "10px 8px",
+        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.5)",
+        fontWeight: 500,
+        fontFamily:
+          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       },
     });
 
@@ -74,10 +78,31 @@ export default async function FillNode(
           source: stepId.toString(),
           target: nextStepId.toString(),
           label: choice.choice_text || "Continue",
-          style: { stroke: "#333" },
+          style: {
+            stroke: "#ff8c42", // Orange color to match theme
+            strokeWidth: 2,
+            opacity: 0.8,
+          },
+          labelStyle: {
+            fill: "#ffffff",
+            fontWeight: 500,
+            fontSize: 12,
+            fontFamily:
+              "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          },
+          labelBgStyle: {
+            fill: "rgba(26, 26, 26, 0.75)", // Semi-transparent dark background
+            rx: 4, // Rounded corners
+            ry: 4,
+          },
+          labelBgPadding: [4, 2],
+          labelShowBg: true,
           animated: false,
           markerEnd: {
             type: "arrowclosed",
+            color: "#ff8c42", // Match the edge color
+            width: 20,
+            height: 20,
           },
         });
 

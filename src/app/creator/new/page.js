@@ -1,8 +1,9 @@
 "use client";
+import "./new.css";
 import { Suspense } from "react";
 import FlowComponent from "@/components/clientSideComponents/creator/flowComponent";
 import ScenarioSettings from "@/components/clientSideComponents/creator/scenarioSettings";
-import SearchField from "@/components/clientSideComponents/creator/searchField";
+
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 
@@ -144,15 +145,23 @@ function ScenarioLoader() {
   }
 
   return (
-    <>
-      <ScenarioSettings scenario={scenario} setScenario={setScenario} id={id} />
-      <FlowComponent
-        loading={loading}
-        setLoading={setLoading}
-        scenario={scenario}
-        id_scen={id}
-      />
-    </>
+    <div className="appWrapper">
+      <div className="scenarioSettings">
+        <ScenarioSettings
+          scenario={scenario}
+          setScenario={setScenario}
+          id={id}
+        />
+      </div>
+      <div className="flowContainer">
+        <FlowComponent
+          loading={loading}
+          setLoading={setLoading}
+          scenario={scenario}
+          id_scen={id}
+        />
+      </div>
+    </div>
   );
 }
 

@@ -234,3 +234,123 @@
 .button-group button.delete-button:hover {
   background-color: #c0392b;
 }
+/* Modern node styling with black background and white text */
+.react-flow__node {
+  border-radius: 8px;
+  width: 200px;
+  font-size: 13px;
+  color: #ffffff; /* White text */
+  text-align: center;
+  border: 2px solid #ff8c42; /* Orange border */
+  background-color: #1a1a1a; /* Black/dark background */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease;
+  padding: 10px 5px;
+}
+
+/* Hover effect with lighter border */
+.react-flow__node:hover {
+  border-color: #ffb07a; /* Lighter orange on hover */
+  box-shadow: 0 6px 12px rgba(255, 140, 66, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Selected node styling */
+.react-flow__node.selected {
+  border-color: #ffb07a; /* Lighter orange */
+  box-shadow: 0 0 0 2px rgba(255, 176, 122, 0.6);
+}
+
+/* Default node type specific styling */
+.react-flow__node-default {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border: 2px solid #ff8c42;
+}
+
+/* Connection handles */
+.react-flow__handle {
+  width: 4px !important; /* Larger than default */
+  height: 4px !important;
+  background-color: #ff8c42 !important;
+  border-radius: 50% !important; /* Ensure they're circular */
+  border: 2px solid #1a1a1a !important;
+  transition: transform 0.2s ease, background-color 0.2s ease !important;
+}
+
+/* Hover effect */
+.react-flow__handle:hover {
+  background-color: #ffb07a !important; /* Lighter orange on hover */
+}
+
+/* Make edges match the theme */
+.react-flow__edge-path {
+  stroke: #ff8c42;
+  stroke-width: 1.5;
+}
+
+/* Enhanced visibility for node text */
+.react-flow__node-default div {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 2px 6px;
+}
+
+/* For terminal/end nodes, add a subtle indicator */
+.react-flow__node[data-type="terminal"] {
+  border-style: double;
+  border-width: 3px;
+}
+
+/* Better handle visibility on dark nodes */
+
+/* Edge styling */
+.react-flow__edge-path {
+  stroke: #ff8c42;
+  stroke-width: 2;
+  stroke-opacity: 0.8;
+}
+
+/* Edge interaction */
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke: #ffb07a; /* Lighter orange on hover */
+  stroke-width: 3;
+  stroke-opacity: 1;
+}
+
+/* Edge text styling */
+.react-flow__edge-text {
+  fill: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  text-shadow: 0px 0px 2px #000000, 0px 0px 3px #000000; /* Text shadow for better visibility */
+}
+
+/* Edge text background for better visibility */
+.react-flow__edge-textbg {
+  fill: rgba(26, 26, 26, 0.75);
+  rx: 4;
+  ry: 4;
+}
+
+/* Edge arrows */
+.react-flow__arrowclosed {
+  fill: #ff8c42;
+}
+
+.react-flow__edge:hover .react-flow__arrowclosed {
+  fill: #ffb07a;
+}
+
+/* Fix for edge label positioning */
+.react-flow__edge-text-wrapper {
+  pointer-events: all;
+}
+.react-flow__handle-top,
+.react-flow__handle-bottom,
+.react-flow__handle-left,
+.react-flow__handle-right {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
