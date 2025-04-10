@@ -219,7 +219,7 @@ export default function ScenarioSettings({ scenario, setScenario, id }) {
 
         <div className="bottomActions">
           <button className="actionButton" onClick={onSaveAndExit}>
-            Zapisz i Wyjdź
+            Wyjdź
           </button>
           <button className="actionButton" onClick={onHelp}>
             Pomoc

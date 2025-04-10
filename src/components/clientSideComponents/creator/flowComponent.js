@@ -16,6 +16,7 @@ import NodeEditor from "./nodeEditor";
 import EdgeEditor from "./edgeEditor";
 import getLayoutedElements from "./functionalComponents/dagreComponent";
 import FillNode from "./functionalComponents/fillNode";
+import LoadingAnimation from "../creator/loadingAnimation"; // Import the LoadingAnimation component
 import {
   addChoice,
   deleteChoice,
@@ -24,22 +25,17 @@ import {
   addStep,
   editChoice,
 } from "./functionalComponents/fetchFunctions";
+
 // Define node dimensions for layout calculations
 const nodeWidth = 180;
 const nodeHeight = 80;
 
-// Function to create a proper tree layout
-
-export default function FlowComponent({
-  loading,
-  setLoading,
-  scenario,
-  id_scen,
-}) {
+export default function FlowComponent({ scenario, id_scen }) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   const [selectedEdge, setSelectedEdge] = useState(null);
+  const [initialLoading, setInitialLoading] = useState(true); // Add state for initial loading
   const reactFlowInstance = useRef(null);
 
   // Initial render
@@ -47,20 +43,23 @@ export default function FlowComponent({
     async function fetchItem() {
       // If we want to add new scenario
       if (!scenario) {
+        setInitialLoading(false);
         return;
       }
 
-      setLoading(true);
-      // Get Bearer token from localStorage
+      setInitialLoading(true);
 
       try {
         if (scenario.first_step) {
-          FillNode(scenario, setNodes, setEdges, nodeWidth, nodeHeight);
+          await FillNode(scenario, setNodes, setEdges, nodeWidth, nodeHeight);
         }
       } catch (error) {
         console.error("Error processing scenario:", error);
       } finally {
-        setLoading(false);
+        // Add a small delay to ensure smooth transition
+        setTimeout(() => {
+          setInitialLoading(false);
+        }, 300);
       }
     }
 
@@ -294,20 +293,12 @@ export default function FlowComponent({
         width: "92vw",
         height: "100vh",
         border: "1px solid #ff8c42", // Updated border color
-        backgroundColor: "#25211e", // Dark background
+        backgroundColor: "#121212", // Dark background
       }}
     >
-      {loading ? (
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            color: "#f5f5f5", // Light text color
-          }}
-        >
-          Loading scenario tree...
+      {initialLoading ? (
+        <div className="flow-loading-container">
+          <LoadingAnimation visible={initialLoading} />
         </div>
       ) : (
         <>

@@ -1,22 +1,28 @@
 "use client";
 import "./new.css";
-import { Suspense } from "react";
+import { Suspense, useState, useEffect } from "react";
 import FlowComponent from "@/components/clientSideComponents/creator/flowComponent";
 import ScenarioSettings from "@/components/clientSideComponents/creator/scenarioSettings";
-
+import LoadingAnimation from "@/components/clientSideComponents/creator/loadingAnimation";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
+import { useRef } from "react";
 
 // Create a child component that uses useSearchParams
 function ScenarioLoader() {
   const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [scenario, setScenario] = useState(null);
   const [id, setId] = useState(searchParams.get("id"));
   const requestInProgress = useRef(false);
   const isInitialMount = useRef(true);
 
   useEffect(() => {
+    // Show initial loading animation
+    const initialTimer = setTimeout(() => {
+      setInitialLoading(false);
+    }, 300);
+
     // Skip the effect on initial mount when id is null
     // We'll handle that case separately to avoid multiple creations
     if (isInitialMount.current && !id) {
@@ -29,6 +35,8 @@ function ScenarioLoader() {
     if (!requestInProgress.current && id) {
       handleScenario();
     }
+
+    return () => clearTimeout(initialTimer);
   }, [id]); // Only re-run if ID changes
 
   async function handleScenario() {
@@ -136,12 +144,20 @@ function ScenarioLoader() {
     }
   }
 
-  if (loading) {
-    return <div>Wczytywanie scenariusza...</div>;
+  if (initialLoading || loading) {
+    return <LoadingAnimation visible={loading} />;
   }
 
   if (!scenario) {
-    return <div>Nie można załadować scenariusza</div>;
+    return (
+      <div className="error-container">
+        <div className="error-message">
+          <div className="error-icon">⚠️</div>
+          <h2>Nie można załadować scenariusza</h2>
+          <p>Spróbuj odświeżyć stronę lub wróć do listy scenariuszy.</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -154,12 +170,7 @@ function ScenarioLoader() {
         />
       </div>
       <div className="flowContainer">
-        <FlowComponent
-          loading={loading}
-          setLoading={setLoading}
-          scenario={scenario}
-          id_scen={id}
-        />
+        <FlowComponent scenario={scenario} id_scen={id} />
       </div>
     </div>
   );
@@ -168,7 +179,7 @@ function ScenarioLoader() {
 // Main component with Suspense boundary
 export default function New() {
   return (
-    <Suspense fallback={<div>Wczytywanie...</div>}>
+    <Suspense fallback={<LoadingAnimation />}>
       <ScenarioLoader />
     </Suspense>
   );

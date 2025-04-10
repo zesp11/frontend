@@ -1,12 +1,13 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import "@/components/generalComponents/styleModules/styles.css";
 import { useState, useEffect } from "react";
+import "./styleModules/creatorNavBarModule.css";
 
 export default function CreatorNavBar() {
   const [username, setUsername] = useState("Zaloguj");
   const [isClient, setIsClient] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     // This code only runs on the client
@@ -18,22 +19,57 @@ export default function CreatorNavBar() {
   }, []);
 
   return (
-    <div className="navBarWrapper">
-      <div className="logoWrapper">
-        <Link href="/creator">
+    <nav className="navbar">
+      <div className="navbar-container">
+        <Link href="/creator" className="navbar-logo">
           <Image
             src="/temp-logo.png"
-            alt="Background image"
-            width={50}
-            height={50}
+            alt="Logo"
+            width={40}
+            height={40}
+            className="logo-image"
           />
+          <span className="logo-text">
+            Go <span className="logo-highlight">Tale</span>
+          </span>
         </Link>
+
+        <div className="navbar-actions">
+          <button className="navbar-button notification-button">
+            <span className="button-icon">🔔</span>
+            <span className="notification-badge">2</span>
+          </button>
+
+          <button className="navbar-button settings-button">
+            <span className="button-icon">⚙️</span>
+          </button>
+
+          <div className="user-menu" onClick={() => setMenuOpen(!menuOpen)}>
+            <div className="avatar-container">
+              <span className="avatar-text">
+                {username.charAt(0).toUpperCase()}
+              </span>
+            </div>
+            <span className="username">{username}</span>
+            <span className="dropdown-icon">{menuOpen ? "▲" : "▼"}</span>
+
+            {menuOpen && (
+              <div className="dropdown-menu">
+                <Link href="/profile" className="menu-item">
+                  Profil
+                </Link>
+                <Link href="/settings" className="menu-item">
+                  Ustawienia
+                </Link>
+                <div className="menu-divider"></div>
+                <Link href="/logout" className="menu-item logout">
+                  Wyloguj
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-      <div className="buttonWraper">
-        <div className="button">🔔</div>
-        <div className="button">⚙️</div>
-        <div className="button">{username}</div>
-      </div>
-    </div>
+    </nav>
   );
 }

@@ -1,11 +1,15 @@
-.creatorContainer {
-  background-color: beige;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -9999;
+.creator-page {
+  background-color: #121212;
+  min-height: 100vh;
+  color: #f8f8f8;
+}
+
+.creator-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.search-section {
+  margin-bottom: 2rem;
 }
