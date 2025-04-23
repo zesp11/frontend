@@ -51,34 +51,30 @@ export default function EdgeEditor({ edge, onSave, onClose }) {
   return (
     <div className="popup-overlay">
       <div className="popup-content" ref={popupRef}>
-        <h3>Edit Edge</h3>
+        <h3>Edytuj Wybór</h3>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="label">Label:</label>
-            <input
-              type="text"
-              id="label"
-              name="label"
-              value={edgeData.label}
-              onChange={handleChange}
-              required
-              maxLength="255"
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="stroke">Edge Color:</label>
-            <input
-              type="color"
-              id="stroke"
-              name="stroke"
-              value={edgeData.style.stroke}
-              onChange={handleChange}
-            />
+            <label htmlFor="text">Tekst wyboru::</label>
+            <div className="edgearea-container">
+              <input
+                style={{ width: "100%" }}
+                type="text"
+                id="label"
+                name="label"
+                value={edgeData.label}
+                onChange={handleChange}
+                required
+                maxLength="255"
+              />
+              <div className="character-counter">
+                {edgeData.label.length}/255
+              </div>
+            </div>
           </div>
           <div className="button-group">
-            <button type="submit">Save</button>
+            <button type="submit">Zapisz</button>
             <button type="button" onClick={onClose}>
-              Cancel
+              Anuluj
             </button>
           </div>
         </form>

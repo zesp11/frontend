@@ -56,6 +56,13 @@
   gap: 10px;
 }
 
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  height: 300px;
+}
+
 .settingsInput {
   background-color: #1e1e1e;
   border: 1px solid #ff6b00;
@@ -64,13 +71,25 @@
   border-radius: 8px;
   font-size: 16px;
   outline: none;
-  transition: border-color 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+  resize: none; /* Removes the resize handle */
 }
 
 .settingsInput:focus {
   border-color: #ff8c33;
 }
 
+.counter {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: rgba(30, 30, 30, 0.7);
+  color: #ff6b00;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
 .actionButton {
   background-color: #ff6b00;
   color: black;

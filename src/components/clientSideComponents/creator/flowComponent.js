@@ -68,8 +68,13 @@ export default function FlowComponent({ scenario, id_scen }) {
 
   const onConnect = useCallback(
     async (params) => {
-      // Prevent self-connections
+      if (Number(params.target) === scenario.first_step.id_step) {
+        alert("Nie możesz stworzyć ścieżki do pierwszego kroku!");
+        return;
+      }
+
       if (params.source !== params.target) {
+        // Prevent self-connections
         // Check if an edge already exists between these nodes
         const existingEdge = edges.find(
           (edge) =>
@@ -81,6 +86,10 @@ export default function FlowComponent({ scenario, id_scen }) {
           deleteChoice(existingEdge.id, id_scen);
           setEdges((eds) => eds.filter((edge) => edge.id !== existingEdge.id));
         } else {
+          if (edges.filter((e) => e.source === params.source).length >= 4) {
+            alert("Każdy krok może mieć maksymalnie cztery wybory!");
+            return;
+          }
           const edgeId = await addChoice(params.source, params.target, id_scen);
           setEdges((eds) =>
             addEdge(
@@ -159,7 +168,6 @@ export default function FlowComponent({ scenario, id_scen }) {
 
   // Function to handle node click - open edit popup instead of alert
   const onNodeClick = useCallback((event, node) => {
-    console.log(node);
     setSelectedNode(node);
   }, []);
 
@@ -214,8 +222,11 @@ export default function FlowComponent({ scenario, id_scen }) {
   // Function to add a new node
   const addNode = useCallback(async () => {
     const newNodeId = await addStep(id_scen);
-    const centerX = window.innerWidth / 2 - nodeHeight; // half node width
-    const centerY = window.innerHeight / 2 - nodeWidth; // half node height
+    const { x, y, zoom } = reactFlowInstance.current.getViewport();
+
+    // Calculate the center of the visible area
+    const centerX = (window.innerWidth / 2 - x) / zoom;
+    const centerY = (window.innerHeight / 2 - y) / zoom;
     const newNode = {
       id: newNodeId,
       data: {
@@ -248,12 +259,17 @@ export default function FlowComponent({ scenario, id_scen }) {
   // Function to check if a node can be deleted (no connected edges)
   const canDeleteNode = useCallback(
     (nodeId) => {
+      // Check if node is the first step of the scenario
+      if (scenario.first_step.id_step === Number(nodeId)) {
+        return false;
+      }
+
       // Check if node has any connected edges (either as source or target)
       return !edges.some(
         (edge) => edge.source === nodeId || edge.target === nodeId
       );
     },
-    [edges]
+    [edges, scenario?.id_first_step]
   );
 
   // Function to delete a node
@@ -321,10 +337,10 @@ export default function FlowComponent({ scenario, id_scen }) {
             {/* Add Node button at the bottom-right */}
             <Panel position="bottom-right">
               <button onClick={layoutDiagram} className="layout-button">
-                Auto Layout
+                Auto Układ
               </button>
               <button onClick={addNode} className="add-node-button">
-                Add Node
+                Dodaj Krok
               </button>
             </Panel>
           </ReactFlow>

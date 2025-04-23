@@ -45,8 +45,8 @@ export async function editStep(id, data, id_scen) {
     const form = new FormData();
 
     // Always append these fields
-    form.append("title", data.label);
-    form.append("text", data.text);
+    form.append("title", data.label ? data.label : "Tytuł kroku...");
+    form.append("text", data.text ? data.text : "Text kroku...");
     form.append("longitude", data.longitude);
     form.append("latitude", data.latitude);
 
