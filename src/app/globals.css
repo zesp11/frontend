@@ -1,92 +1,133 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --accent: 24 95% 58%;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: ##302a15;
+    --background: #302a15;
     --foreground: #ededed;
   }
-} 
+}
+
 * {
   margin: 0;
   padding: 0;
-  /* box-sizing: border-box; */
+  box-sizing: border-box;
 }
+
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
   min-width: 500px;
+  overflow-x: hidden;
 }
 
-/* .navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 16px 0;
-  text-align: center;
-  z-index: 1000;
-}
-
-.nav-links {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-
-.nav-link {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
-  transition: color 0.3s ease-in-out;
-}
-
-.nav-link:hover {
-  color: #d1d5db;
-} */
-
-
-
-/* Efekt paralaksy */
-.parallax {
-  height: 100vh;
+.section {
+  height: 100%;
+  min-height: 100vh;
   position: relative;
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  width: 100%;
+  text-align: center;
+  display: flex;
+	justify-content: center;
+	align-items: center;
+  z-index: 1;
 }
 
-/* Tła dla poszczególnych sekcji */
-.home {
-  background-image: url('/home-bg.jpg');
-}
-
-.about {
-  background-image: url('/bg.jpg');
-}
-
-.info {
-  background-image: url('/info-bg.jpg');
-}
-
-.contact {
-  background-image: url('/contact-bg.jpg');
-}
 .overlayblur {
   position: absolute;
   left: 0;
   width: 100%;
-  height: 20px; /* Wysokość strefy rozmycia */
-  /* background: repeating-linear-gradient(); */
-  /* background: rgba(255, 255, 255, 0.5); */
-  backdrop-filter: blur(3px); /* Rozmycie */
-  pointer-events: none; /* Nie blokuje interakcji */
+  height: 20px;
+  backdrop-filter: blur(3px);
+  pointer-events: none;
   z-index: 1;
+}
+
+/* 🔥 Animowane tło */
+.background-animation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 200%;
+  background:
+    radial-gradient(circle, hsla(var(--accent), 0.4) 1px, transparent 1px),
+    radial-gradient(circle, hsla(var(--accent), 0.2) 1px, transparent 1px);
+  background-size: 60px 60px, 100px 100px;
+  animation: moveBackground 80s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.2;
+}
+
+
+
+.animated-image {
+  width: 40%;
+  height: 60%;
+  margin:  auto;
+  top: 50%;
+  animation: float 6s ease-in-out infinite;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+.animated-image2 {
+  width: 70%;
+  height: 40%;
+  margin:  auto;
+  top: 50%;
+  animation: float 6s ease-in-out infinite;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+.animated-image3 {
+  width: 60%;
+  height: 60%;
+  margin:  auto;
+  top: 50%;
+  animation: float 6s ease-in-out infinite;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+.animated-image4 {
+  width: 100%;
+  height: 40%;
+  margin:  auto;
+  top: 50%;
+  animation: float 15s ease-in-out infinite;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+#secction2 {
+  background-color: aliceblue;
+  /* background: radial-gradient(circle, rgba(0, 0, 0, 0.5) 100%, #302a15 100%); */
+}
+
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes moveBackground {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-200px, -300px);
+  }
 }
