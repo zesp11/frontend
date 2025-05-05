@@ -23,7 +23,7 @@ export default function CreatorNavBar() {
       <div className="navbar-container">
         <Link href="/creator" className="navbar-logo">
           <Image
-            src="/temp-logo.png"
+            src="/logo.svg"
             alt="Logo"
             width={40}
             height={40}
@@ -35,14 +35,14 @@ export default function CreatorNavBar() {
         </Link>
 
         <div className="navbar-actions">
-          <button className="navbar-button notification-button">
+          {/* <button className="navbar-button notification-button">
             <span className="button-icon">🔔</span>
             <span className="notification-badge">2</span>
           </button>
 
           <button className="navbar-button settings-button">
             <span className="button-icon">⚙️</span>
-          </button>
+          </button> */}
 
           <div className="user-menu" onClick={() => setMenuOpen(!menuOpen)}>
             <div className="avatar-container">
@@ -57,9 +57,6 @@ export default function CreatorNavBar() {
               <div className="dropdown-menu">
                 <Link href="/profile" className="menu-item">
                   Profil
-                </Link>
-                <Link href="/settings" className="menu-item">
-                  Ustawienia
                 </Link>
                 <div className="menu-divider"></div>
                 <Link href="/logout" className="menu-item logout">
