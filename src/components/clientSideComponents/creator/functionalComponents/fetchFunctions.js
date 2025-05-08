@@ -116,7 +116,14 @@ export async function addChoice(source, target, id_scen) {
     console.error("Failed to update node:", error);
   }
 }
-export async function editChoice(edgeId, source, target, label, id_scen) {
+export async function editChoice(
+  edgeId,
+  source,
+  target,
+  label,
+  id_scen,
+  id_players
+) {
   try {
     const token = getToken();
     // First, make sure we have the most current edges array
@@ -126,6 +133,7 @@ export async function editChoice(edgeId, source, target, label, id_scen) {
         id_scen: Number(id_scen),
         text: label,
         id_next_step: Number(target),
+        id_players: id_players,
       }),
       headers: {
         Authorization: `Bearer ${token}`,

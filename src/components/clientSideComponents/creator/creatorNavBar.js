@@ -55,7 +55,7 @@ export default function CreatorNavBar() {
 
             {menuOpen && (
               <div className="dropdown-menu">
-                <Link href="/profile" className="menu-item">
+                <Link href="/creator/profile" className="menu-item">
                   Profil
                 </Link>
                 <div className="menu-divider"></div>

@@ -1,3 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -8,7 +11,7 @@
     --background: ##302a15;
     --foreground: #ededed;
   }
-} 
+}
 * {
   margin: 0;
   padding: 0;
@@ -50,8 +53,6 @@ body {
   color: #d1d5db;
 } */
 
-
-
 /* Efekt paralaksy */
 .parallax {
   height: 100vh;
@@ -65,19 +66,19 @@ body {
 
 /* Tła dla poszczególnych sekcji */
 .home {
-  background-image: url('/home-bg.jpg');
+  background-image: url("/home-bg.jpg");
 }
 
 .about {
-  background-image: url('/bg.jpg');
+  background-image: url("/bg.jpg");
 }
 
 .info {
-  background-image: url('/info-bg.jpg');
+  background-image: url("/info-bg.jpg");
 }
 
 .contact {
-  background-image: url('/contact-bg.jpg');
+  background-image: url("/contact-bg.jpg");
 }
 .overlayblur {
   position: absolute;

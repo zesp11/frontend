@@ -168,6 +168,7 @@ export default function FlowComponent({ scenario, id_scen }) {
 
   // Function to handle node click - open edit popup instead of alert
   const onNodeClick = useCallback((event, node) => {
+    console.log(node);
     setSelectedNode(node);
   }, []);
 
@@ -180,13 +181,13 @@ export default function FlowComponent({ scenario, id_scen }) {
         console.error(`Edge with ID ${edgeId} not found in the edges array`);
         return;
       }
-
       editChoice(
         edgeId,
         currentEdge.source,
         currentEdge.target,
         data.label,
-        id_scen
+        id_scen,
+        data.id_players
       );
       // Only update state if the API call was successful
       setEdges((eds) =>
@@ -195,6 +196,7 @@ export default function FlowComponent({ scenario, id_scen }) {
             return {
               ...edge,
               label: data.label,
+              id_players: data.id_players,
               animated: data.animated,
               style: {
                 ...edge.style,
@@ -210,6 +212,7 @@ export default function FlowComponent({ scenario, id_scen }) {
   );
 
   const onEdgeClick = useCallback((event, edge) => {
+    console.log(edge);
     setSelectedEdge(edge);
   }, []);
 
@@ -360,6 +363,7 @@ export default function FlowComponent({ scenario, id_scen }) {
               edge={selectedEdge}
               onSave={updateEdgeData}
               onClose={closePopup}
+              limitPlayers={scenario.limit_players}
             />
           )}
         </>
