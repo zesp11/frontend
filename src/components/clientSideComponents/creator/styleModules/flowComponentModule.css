@@ -369,3 +369,79 @@
   position: relative;
   background-color: transparent;
 }
+
+/* Player Checkbox Styles - Add to your existing CSS file */
+.player-checkbox-container {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  z-index: 50;
+  max-width: 300px;
+  justify-content: flex-end;
+}
+
+.player-checkbox {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background-color: #1a1a1a;
+  border: 2px solid #ff8c42;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.player-checkbox:hover {
+  background-color: #2a2a2a;
+  border-color: #ffb07a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 140, 66, 0.3);
+}
+
+.player-checkbox.selected {
+  background-color: #ff8c42;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.checkbox-inner {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid #ff8c42;
+}
+
+.player-checkbox.selected .checkbox-inner {
+  background-color: #ffffff;
+}
+
+.checkbox-icon {
+  width: 16px;
+  height: 16px;
+  fill: #ff8c42;
+}
+
+.player-label {
+  font-size: 14px;
+}
+
+/* Ensure the bottom panel stays at the bottom right */
+.panel.bottom-right {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

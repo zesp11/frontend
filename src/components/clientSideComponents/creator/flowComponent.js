@@ -36,6 +36,9 @@ export default function FlowComponent({ scenario, id_scen }) {
   const [selectedNode, setSelectedNode] = useState(null);
   const [selectedEdge, setSelectedEdge] = useState(null);
   const [initialLoading, setInitialLoading] = useState(true); // Add state for initial loading
+  const [selectedPlayers, setSelectedPlayers] = useState(
+    Array.from({ length: scenario.limit_players }, (_, i) => i + 1)
+  );
   const reactFlowInstance = useRef(null);
 
   // Initial render
@@ -65,7 +68,12 @@ export default function FlowComponent({ scenario, id_scen }) {
 
     fetchItem();
   }, []);
-
+  useEffect(() => {
+    async function changePlayerView() {
+      return;
+    }
+    changePlayerView();
+  }, [selectedPlayers]);
   const onConnect = useCallback(
     async (params) => {
       if (Number(params.target) === scenario.first_step.id_step) {
@@ -90,12 +98,33 @@ export default function FlowComponent({ scenario, id_scen }) {
             alert("Każdy krok może mieć maksymalnie cztery wybory!");
             return;
           }
-          const edgeId = await addChoice(params.source, params.target, id_scen);
+          var id_players;
+          if (params.source == scenario.first_step.id_step) {
+            id_players = Array.from(
+              { length: scenario.limit_players },
+              (_, i) => i + 1
+            );
+          } else {
+            id_players = [
+              ...new Set(
+                edges
+                  .filter((e) => e.target === params.source)
+                  .flatMap((e) => e.id_players)
+              ),
+            ];
+          }
+          const edgeId = await addChoice(
+            params.source,
+            params.target,
+            id_scen,
+            id_players
+          );
           setEdges((eds) =>
             addEdge(
               {
                 ...params,
                 id: edgeId,
+                id_players: id_players,
                 animated: false,
                 style: {
                   stroke: "#ff8c42",
@@ -337,6 +366,37 @@ export default function FlowComponent({ scenario, id_scen }) {
           >
             <Background color="#ff8c42" gap={20} size={1} />
 
+            <div className="player-checkbox-container">
+              {Array.from(
+                { length: scenario.limit_players },
+                (_, i) => i + 1
+              ).map((playerId) => (
+                <div
+                  key={playerId}
+                  className={`player-checkbox ${
+                    selectedPlayers.includes(playerId) ? "selected" : ""
+                  }`}
+                  onClick={() => {
+                    // This is just for view demonstration
+                    // In a real implementation, you would connect this to your state management
+                    setSelectedPlayers((prev) =>
+                      prev.includes(playerId)
+                        ? prev.filter((id) => id !== playerId)
+                        : [...prev, playerId]
+                    );
+                  }}
+                >
+                  <div className="checkbox-inner">
+                    {selectedPlayers.includes(playerId) && (
+                      <svg viewBox="0 0 24 24" className="checkbox-icon">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+                      </svg>
+                    )}
+                  </div>
+                  <span className="player-label">Gracz {playerId}</span>
+                </div>
+              ))}
+            </div>
             {/* Add Node button at the bottom-right */}
             <Panel position="bottom-right">
               <button onClick={layoutDiagram} className="layout-button">
@@ -364,6 +424,8 @@ export default function FlowComponent({ scenario, id_scen }) {
               onSave={updateEdgeData}
               onClose={closePopup}
               limitPlayers={scenario.limit_players}
+              edges={edges}
+              scenario={scenario}
             />
           )}
         </>

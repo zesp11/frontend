@@ -1,7 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import flowComponentModule from "./styleModules/flowComponentModule.css";
 
-export default function EdgeEditor({ edge, onSave, onClose, limitPlayers }) {
+export default function EdgeEditor({
+  edge,
+  onSave,
+  onClose,
+  limitPlayers,
+  edges,
+  scenario,
+}) {
   const [edgeData, setEdgeData] = useState({
     label: edge.label || "Continue",
     animated: edge.animated || false,
@@ -81,7 +88,18 @@ export default function EdgeEditor({ edge, onSave, onClose, limitPlayers }) {
         {Array.from({ length: limitPlayers }, (_, i) => {
           const playerIndex = i + 1;
           const isChecked = edgeData.id_players.includes(playerIndex);
-
+          const players_to_render = [
+            ...new Set(
+              edges
+                .filter((e) => e.target === edge.source)
+                .flatMap((e) => e.id_players)
+            ),
+          ];
+          if (
+            !players_to_render.includes(playerIndex) &&
+            !(edge.source == scenario.first_step.id_step)
+          )
+            return;
           return (
             <label
               key={`player-${playerIndex}`}

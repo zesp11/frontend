@@ -91,7 +91,7 @@ export async function deleteStep(id, id_scen) {
     console.error("Failed to update node:", error);
   }
 }
-export async function addChoice(source, target, id_scen) {
+export async function addChoice(source, target, id_scen, id_players) {
   try {
     const token = getToken();
     const responseChoice = await fetch(`${url}/choices?id_scen=${id_scen}`, {
@@ -100,6 +100,7 @@ export async function addChoice(source, target, id_scen) {
         text: "Continue",
         id_next_step: Number(target),
         id_step: Number(source),
+        id_players: id_players,
       }),
       headers: {
         Authorization: `Bearer ${token}`,
