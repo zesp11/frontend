@@ -25,6 +25,7 @@ import {
   addStep,
   editChoice,
 } from "./functionalComponents/fetchFunctions";
+import { layout } from "dagre";
 
 // Define node dimensions for layout calculations
 const nodeWidth = 180;
@@ -32,7 +33,9 @@ const nodeHeight = 80;
 
 export default function FlowComponent({ scenario, id_scen }) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [backupNodes, setBackupNodes] = useState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [backupEdges, setBackupEdges] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   const [selectedEdge, setSelectedEdge] = useState(null);
   const [initialLoading, setInitialLoading] = useState(true); // Add state for initial loading
@@ -40,8 +43,6 @@ export default function FlowComponent({ scenario, id_scen }) {
     Array.from({ length: scenario.limit_players }, (_, i) => i + 1)
   );
   const reactFlowInstance = useRef(null);
-
-  // Initial render
   useEffect(() => {
     async function fetchItem() {
       // If we want to add new scenario
@@ -54,26 +55,108 @@ export default function FlowComponent({ scenario, id_scen }) {
 
       try {
         if (scenario.first_step) {
-          await FillNode(scenario, setNodes, setEdges, nodeWidth, nodeHeight);
+          await FillNode(
+            scenario,
+            setNodes,
+            setEdges,
+            nodeWidth,
+            nodeHeight,
+            setBackupEdges,
+            setBackupNodes
+          );
         }
       } catch (error) {
         console.error("Error processing scenario:", error);
       } finally {
-        // Add a small delay to ensure smooth transition
+        // Make sure the player filter effect runs after nodes are loaded
         setTimeout(() => {
           setInitialLoading(false);
+
+          // Force player filter to run with current selection
+          // This ensures nodes appear on initial render
+          setSelectedPlayers([...selectedPlayers]);
         }, 300);
       }
     }
 
     fetchItem();
   }, []);
+
+  // Fix for the layout change issue in the useEffect for selectedPlayers
   useEffect(() => {
-    async function changePlayerView() {
+    if (!backupEdges || !backupNodes) return;
+    const selectedSet = new Set(selectedPlayers);
+
+    // If no players selected, show nothing
+    if (selectedSet.size === 0) {
+      setEdges([]);
+      // Still show first step even when no players selected
+      const firstStepNode = backupNodes.find(
+        (node) => node.id == scenario.first_step.id_step
+      );
+
+      setNodes(firstStepNode ? [firstStepNode] : []);
       return;
     }
-    changePlayerView();
+
+    // Filter edges that contain at least one selected player
+    const filteredEdges = backupEdges.filter((edge) => {
+      if (!Array.isArray(edge.id_players)) return false;
+      return edge.id_players.some((id) => selectedSet.has(id));
+    });
+
+    // Get node IDs that should be shown (converting everything to strings for consistent comparison)
+    const connectedNodeIds = new Set();
+
+    // Add all source and target node IDs from filtered edges
+    filteredEdges.forEach((edge) => {
+      if (edge.source) connectedNodeIds.add(String(edge.source));
+      if (edge.target) connectedNodeIds.add(String(edge.target));
+    });
+
+    // Always include first step
+    if (scenario.first_step && scenario.first_step.id_step) {
+      connectedNodeIds.add(String(scenario.first_step.id_step));
+    }
+
+    // We need to identify truly unconnected nodes vs connected nodes
+    // A node is "unconnected" if it has no edges connected to it in the entire graph
+    const nodesWithEdges = new Set();
+    backupEdges.forEach((edge) => {
+      nodesWithEdges.add(String(edge.source));
+      nodesWithEdges.add(String(edge.target));
+    });
+
+    // Filter nodes that are either:
+    // 1. Connected to filtered edges for selected players, OR
+    // 2. Have no connections at all (truly unconnected nodes)
+    const filteredNodes = backupNodes.filter((node) => {
+      const nodeId = String(node.id);
+      const isConnectedToSelectedPlayers = connectedNodeIds.has(nodeId);
+      const isUnconnected = !nodesWithEdges.has(nodeId);
+
+      return isConnectedToSelectedPlayers || isUnconnected;
+    });
+
+    // Preserve the positions of the nodes that are staying in the view
+    const updatedNodes = filteredNodes.map((node) => {
+      // Find the current position of this node if it exists in the current nodes
+      const existingNode = nodes.find((n) => n.id === node.id);
+      if (existingNode) {
+        // Preserve the position
+        return {
+          ...node,
+          position: existingNode.position,
+        };
+      }
+      return node;
+    });
+
+    // Update the flow with filtered elements
+    setEdges(filteredEdges);
+    setNodes(updatedNodes);
   }, [selectedPlayers]);
+
   const onConnect = useCallback(
     async (params) => {
       if (Number(params.target) === scenario.first_step.id_step) {
@@ -93,6 +176,9 @@ export default function FlowComponent({ scenario, id_scen }) {
         if (existingEdge) {
           deleteChoice(existingEdge.id, id_scen);
           setEdges((eds) => eds.filter((edge) => edge.id !== existingEdge.id));
+          setBackupEdges((eds) =>
+            eds.filter((edge) => edge.id !== existingEdge.id)
+          );
         } else {
           if (edges.filter((e) => e.source === params.source).length >= 4) {
             alert("Każdy krok może mieć maksymalnie cztery wybory!");
@@ -153,10 +239,44 @@ export default function FlowComponent({ scenario, id_scen }) {
               eds
             )
           );
+          setBackupEdges((eds) =>
+            addEdge(
+              {
+                ...params,
+                id: edgeId,
+                id_players: id_players,
+                animated: false,
+                style: {
+                  stroke: "#ff8c42",
+                  strokeWidth: 2,
+                  opacity: 0.8,
+                },
+                label: "Continue",
+                labelStyle: {
+                  fill: "#ffffff",
+                  fontWeight: 500,
+                  fontSize: 12,
+                },
+                labelBgStyle: {
+                  fill: "rgba(26, 26, 26, 0.75)",
+                  rx: 4,
+                  ry: 4,
+                },
+                labelShowBg: true,
+                markerEnd: {
+                  type: "arrowclosed",
+                  color: "#ff8c42",
+                  width: 20,
+                  height: 20,
+                },
+              },
+              eds
+            )
+          );
         }
       }
     },
-    [edges, setEdges]
+    [edges, setEdges, setBackupEdges]
   );
 
   // Function to update node data after editing
@@ -187,12 +307,31 @@ export default function FlowComponent({ scenario, id_scen }) {
             return node;
           })
         );
+        setBackupNodes((nds) =>
+          nds.map((node) => {
+            if (node.id === id) {
+              return {
+                ...node,
+                data: {
+                  ...node.data,
+                  label: data.label,
+                  text: data.text,
+                  longitude: data.longitude,
+                  latitude: data.latitude,
+                  // Include photoUrl if present
+                  photo_url: photoUrl,
+                },
+              };
+            }
+            return node;
+          })
+        );
       } catch (error) {
         console.error("Failed to update node:", error);
         // Optionally add error handling (e.g., show error toast)
       }
     },
-    [setNodes, id_scen]
+    [setNodes, id_scen, setBackupNodes]
   );
 
   // Function to handle node click - open edit popup instead of alert
@@ -236,12 +375,28 @@ export default function FlowComponent({ scenario, id_scen }) {
           return edge;
         })
       );
+      setBackupEdges((eds) =>
+        eds.map((edge) => {
+          if (edge.id === edgeId) {
+            return {
+              ...edge,
+              label: data.label,
+              id_players: data.id_players,
+              animated: data.animated,
+              style: {
+                ...edge.style,
+                stroke: data.style.stroke,
+              },
+            };
+          }
+          return edge;
+        })
+      );
     },
-    [edges, setEdges]
+    [edges, setEdges, setBackupEdges]
   );
 
   const onEdgeClick = useCallback((event, edge) => {
-    console.log(edge);
     setSelectedEdge(edge);
   }, []);
 
@@ -249,7 +404,7 @@ export default function FlowComponent({ scenario, id_scen }) {
   const closePopup = useCallback(() => {
     setSelectedNode(null);
     setSelectedEdge(null);
-  }, []);
+  }, [scenario]);
 
   // Function to add a new node
   const addNode = useCallback(async () => {
@@ -283,10 +438,10 @@ export default function FlowComponent({ scenario, id_scen }) {
     };
 
     setNodes((nds) => [...nds, newNode]);
-
+    setBackupNodes((nds) => [...nds, newNode]);
     // Immediately open the node editor for the new node
     setSelectedNode(newNode);
-  }, [setNodes, id_scen]);
+  }, [setNodes, id_scen, setBackupNodes]);
 
   // Function to check if a node can be deleted (no connected edges)
   const canDeleteNode = useCallback(
@@ -311,6 +466,7 @@ export default function FlowComponent({ scenario, id_scen }) {
       if (canDeleteNode(nodeId)) {
         deleteStep(nodeId, id_scen);
         setNodes((nds) => nds.filter((node) => node.id !== nodeId));
+        setBackupNodes((nds) => nds.filter((node) => node.id !== nodeId));
       } else {
         alert(
           "Cannot delete a node with connected edges. Remove the connections first."
@@ -331,8 +487,26 @@ export default function FlowComponent({ scenario, id_scen }) {
     );
     setNodes([...layoutedNodes]);
     setEdges([...layoutedEdges]);
+    setBackupNodes([...layoutedNodes]);
+    setBackupEdges([...layoutedEdges]);
   }, [nodes, edges, setNodes, setEdges]);
-
+  const onNodeDragStop = useCallback(
+    (event, node) => {
+      // Update the backup nodes with the new position
+      setBackupNodes((prevBackupNodes) =>
+        prevBackupNodes.map((backupNode) => {
+          if (backupNode.id === node.id) {
+            return {
+              ...backupNode,
+              position: { ...node.position },
+            };
+          }
+          return backupNode;
+        })
+      );
+    },
+    [setBackupNodes]
+  );
   return (
     <div
       style={{
@@ -363,6 +537,7 @@ export default function FlowComponent({ scenario, id_scen }) {
             fitViewOptions={{ padding: 0.2 }}
             attributionPosition="bottom-right"
             nodesDraggable={true}
+            onNodeDragStop={onNodeDragStop}
           >
             <Background color="#ff8c42" gap={20} size={1} />
 

@@ -4,7 +4,9 @@ export default async function FillNode(
   setNodes,
   setEdges,
   nodeWidth,
-  nodeHeight
+  nodeHeight,
+  setBackupEdges,
+  setBackupNodes
 ) {
   // Create a queue of steps to process
   const stepQueue = [scenario.first_step];
@@ -145,4 +147,6 @@ export default async function FillNode(
   // Update the graph with all nodes and edges at once
   setNodes(layoutedElements.nodes);
   setEdges(layoutedElements.edges);
+  setBackupNodes(layoutedElements.nodes);
+  setBackupEdges(layoutedElements.edges);
 }
