@@ -174,7 +174,12 @@
   background-color: rgba(255, 82, 82, 0.1);
 }
 
+/* Enhanced Mobile Responsiveness */
 @media (max-width: 768px) {
+  .navbar {
+    padding: 0.6rem 1rem;
+  }
+
   .username {
     display: none;
   }
@@ -185,5 +190,35 @@
 
   .navbar-logo .logo-text {
     font-size: 1.1rem;
+  }
+
+  .dropdown-menu {
+    width: 180px;
+    right: -10px; /* Adjust position for better mobile experience */
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-logo .logo-text {
+    font-size: 1rem;
+  }
+
+  .logo-image {
+    width: 32px;
+    height: 32px;
+  }
+
+  .navbar {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .dropdown-menu {
+    width: 160px;
+    right: -20px; /* Further adjust for very small screens */
+  }
+
+  /* Add a safe area for mobile touch */
+  .menu-item {
+    padding: 1rem;
   }
 }

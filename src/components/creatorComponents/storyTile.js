@@ -1,15 +1,39 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useState, useEffect } from "react";
 import "./styleModules/storyTileModule.css";
 
 export default function StoryTile({ story }) {
   const router = useRouter();
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  // Detect touch device
+  useEffect(() => {
+    setIsTouchDevice(
+      "ontouchstart" in window ||
+        navigator.maxTouchPoints > 0 ||
+        navigator.msMaxTouchPoints > 0
+    );
+  }, []);
 
   // Ensure story is an object
   const safeStory = story || {};
 
   const handleClick = () => {
     router.push(`/creator/new?id=${safeStory.id || ""}`);
+  };
+
+  // Format date properly
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString();
+    } catch (e) {
+      console.error("Invalid date format", e);
+      return "";
+    }
   };
 
   return (
@@ -20,7 +44,7 @@ export default function StoryTile({ story }) {
             src={safeStory.photo_url}
             alt={safeStory.name || "Story image"}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
             className="story-image"
             priority={false}
           />
@@ -45,7 +69,7 @@ export default function StoryTile({ story }) {
           {safeStory.creation_date && (
             <span className="creation-date">
               <span className="meta-icon">📅</span>
-              {new Date(safeStory.creation_date).toLocaleDateString()}
+              {formatDate(safeStory.creation_date)}
             </span>
           )}
         </div>

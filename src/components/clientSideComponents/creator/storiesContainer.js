@@ -9,6 +9,23 @@ export default function StoriesContainer({ search }) {
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [totalResults, setTotalResults] = useState(0);
+  const [mobileView, setMobileView] = useState(false);
+
+  // Handle responsive layout
+  useEffect(() => {
+    const checkMobileView = () => {
+      setMobileView(window.innerWidth <= 768);
+    };
+
+    // Check on initial load
+    checkMobileView();
+
+    // Set up event listener for window resize
+    window.addEventListener("resize", checkMobileView);
+
+    // Clean up
+    return () => window.removeEventListener("resize", checkMobileView);
+  }, []);
 
   useEffect(() => {
     async function fetchItems() {
@@ -75,6 +92,7 @@ export default function StoriesContainer({ search }) {
       <div className="stories-header">
         <h2 className="results-count">
           Jesteś autorem <span className="highlight">{totalResults}</span>{" "}
+          {mobileView ? <br /> : null}
           historii
         </h2>
         <Link href="/creator/new" className="new-story-button">
@@ -101,17 +119,18 @@ export default function StoriesContainer({ search }) {
             )}
           </div>
 
+          {/* Pagination component - currently commented out in the original but enhanced for responsiveness */}
           {/* <div className="pagination">
             <button
               className={`page-button ${page === 1 ? "disabled" : ""}`}
               onClick={() => page > 1 && setPage(page - 1)}
               disabled={page === 1}
             >
-              ← Poprzednia
+              {mobileView ? "←" : "← Poprzednia"}
             </button>
             <span className="page-indicator">Strona {page}</span>
             <button className="page-button" onClick={() => setPage(page + 1)}>
-              Następna →
+              {mobileView ? "→" : "Następna →"}
             </button>
           </div> */}
         </>
