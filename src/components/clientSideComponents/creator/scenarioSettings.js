@@ -27,6 +27,10 @@ export default function ScenarioSettings({ scenario, setScenario, id }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!name || !description) {
+      alert("Uzupełnij dane scenariusza!");
+      return;
+    }
     const token = localStorage.getItem("accessToken");
     if (!token) {
       console.error("No token found in localStorage");
@@ -79,9 +83,6 @@ export default function ScenarioSettings({ scenario, setScenario, id }) {
       return;
     }
 
-    if (!window.confirm("Are you sure you want to delete this scenario?"))
-      return;
-
     try {
       const res = await fetch(
         `https://squid-app-p63zw.ondigitalocean.app/api/scenarios/${id}`,
@@ -103,7 +104,12 @@ export default function ScenarioSettings({ scenario, setScenario, id }) {
       console.error("Error deleting scenario:", error);
     }
   };
-
+  const onSaveAndExit = () => {
+    router.push("/creator");
+  };
+  const onHelp = () => {
+    alert("Tu będzie popup z poradnikiem");
+  };
   return (
     <div className="scenarioSettingsWrapper">
       <div className="scenarioPhotoContainer">
@@ -153,23 +159,63 @@ export default function ScenarioSettings({ scenario, setScenario, id }) {
           className="settingsInput"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          maxLength="255"
         />
 
         <input
           type="number"
-          placeholder="Number of Players"
+          placeholder="Limit graczy"
           className="settingsInput"
           value={numPlayers}
-          onChange={(e) => setNumPlayers(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            // Allow empty string (for deletion) or values between 1 and 6
+            if (
+              value === "" ||
+              (parseInt(value) >= 1 && parseInt(value) <= 6)
+            ) {
+              setNumPlayers(value);
+            }
+          }}
+          onBlur={(e) => {
+            // When field loses focus, ensure value is between 1 and 6
+            const value = e.target.value;
+            if (value === "" || parseInt(value) < 1) {
+              setNumPlayers(1);
+            } else if (parseInt(value) > 6) {
+              setNumPlayers(6);
+            }
+          }}
+          min="1"
+          max="6"
         />
 
-        <textarea
-          placeholder="Scenario Description"
-          className="settingsInput"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          rows={4}
-        />
+        <div className="container" style={{ position: "relative" }}>
+          <textarea
+            placeholder="Opis scenariusza..."
+            className="settingsInput"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={4}
+            maxLength="4096"
+            style={{ height: "88%" }}
+          />
+          <div
+            className="counter"
+            style={{
+              position: "absolute",
+              bottom: "10px",
+              right: "10px",
+              backgroundColor: "rgba(30, 30, 30, 0.7)",
+              color: "#ff6b00",
+              padding: "2px 8px",
+              borderRadius: "4px",
+              fontSize: "12px",
+            }}
+          >
+            {description.length}/4096
+          </div>
+        </div>
 
         <button onClick={handleSubmit} className="actionButton">
           <svg
@@ -187,7 +233,7 @@ export default function ScenarioSettings({ scenario, setScenario, id }) {
             <polyline points="17 21 17 13 7 13 7 21"></polyline>
             <polyline points="7 3 7 8 15 8"></polyline>
           </svg>
-          Save Changes
+          Zapisz zmiany
         </button>
 
         <button
@@ -210,8 +256,17 @@ export default function ScenarioSettings({ scenario, setScenario, id }) {
             <line x1="10" y1="11" x2="10" y2="17"></line>
             <line x1="14" y1="11" x2="14" y2="17"></line>
           </svg>
-          Delete Scenario
+          Usuń scenariusz
         </button>
+
+        <div className="bottomActions">
+          <button className="actionButton" onClick={onSaveAndExit}>
+            Wyjdź
+          </button>
+          <button className="actionButton" onClick={onHelp}>
+            Pomoc
+          </button>
+        </div>
       </div>
     </div>
   );

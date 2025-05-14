@@ -5,14 +5,14 @@ import StoryTile from "@/components/creatorComponents/storyTile";
 import "./styleModules/storiesContainerModule.css";
 
 export default function StoriesContainer({ search }) {
-  const [story, setStory] = useState([]);
+  const [stories, setStories] = useState([]);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [totalResults, setTotalResults] = useState(0);
 
   useEffect(() => {
     async function fetchItems() {
       setIsLoading(true);
-      setStory([]);
 
       // Get token from localStorage
       const token = localStorage.getItem("accessToken");
@@ -23,17 +23,16 @@ export default function StoriesContainer({ search }) {
       }
 
       try {
-        // Build params if needed
-        const params =
-          `page=${page}&limit=50` +
-          (search && search.length !== 0 ? `&search=${search}` : "");
+        // Build params
+        const params = `page=${page}&limit=12${
+          search ? `&search=${search}` : ""
+        }`;
 
-        // Make the request to the user endpoint
+        // Make the request to the API endpoint
         const res = await fetch(
           `https://squid-app-p63zw.ondigitalocean.app/api/scenarios/user?${params}`,
           {
             method: "GET",
-            mode: "cors",
             headers: {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
@@ -49,14 +48,17 @@ export default function StoriesContainer({ search }) {
 
         const data = await res.json();
 
-        // Check if data is directly an array or has a data property
+        // Handle the response data
         if (Array.isArray(data)) {
-          setStory(data);
+          setStories(data);
+          setTotalResults(data.length);
         } else if (data && Array.isArray(data.data)) {
-          setStory(data.data);
+          setStories(data.data);
+          setTotalResults(data.data.length);
         } else {
           console.error("Unexpected data format:", data);
-          setStory([]);
+          setStories([]);
+          setTotalResults(0);
         }
       } catch (error) {
         console.error("Error fetching user stories:", error);
@@ -68,49 +70,50 @@ export default function StoriesContainer({ search }) {
     fetchItems();
   }, [page, search]);
 
-  const onPageDown = () => {
-    if (page === 1) return;
-    setPage((e) => e - 1);
-  };
-
-  const onPageUp = () => {
-    setPage((e) => e + 1);
-  };
-
   return (
-    <div className="storiesContainerWrapper">
-      <div className="upperPanel">
-        <h2>Znaleziono {Array.isArray(story) ? story.length : 0} wyników</h2>
-        <Link href="/creator/new" className="newStoryButton">
-          Dodaj Nową Opowieść
+    <div className="stories-container">
+      <div className="stories-header">
+        <h2 className="results-count">
+          Jesteś autorem <span className="highlight">{totalResults}</span>{" "}
+          historii
+        </h2>
+        <Link href="/creator/new" className="new-story-button">
+          <span className="button-icon">+</span>
+          <span className="button-text">Dodaj Nową Opowieść</span>
         </Link>
       </div>
 
       {isLoading ? (
-        <div className="loading">Ładowanie...</div>
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Ładowanie...</p>
+        </div>
       ) : (
         <>
-          <div className="storyWrapper">
-            {Array.isArray(story) && story.length > 0 ? (
-              story.map((e) => <StoryTile key={e.id} story={e} />)
+          <div className="stories-grid">
+            {stories.length > 0 ? (
+              stories.map((story) => <StoryTile key={story.id} story={story} />)
             ) : (
-              <div className="no-results">Brak wyników</div>
+              <div className="no-results">
+                <div className="no-results-icon">🔍</div>
+                <p>Brak wyników</p>
+              </div>
             )}
           </div>
 
-          <div className="pageWrapper">
+          {/* <div className="pagination">
             <button
-              className="pageButton"
-              onClick={onPageDown}
+              className={`page-button ${page === 1 ? "disabled" : ""}`}
+              onClick={() => page > 1 && setPage(page - 1)}
               disabled={page === 1}
             >
-              Poprzednia strona
+              ← Poprzednia
             </button>
             <span className="page-indicator">Strona {page}</span>
-            <button className="pageButton" onClick={onPageUp}>
-              Następna strona
+            <button className="page-button" onClick={() => setPage(page + 1)}>
+              Następna →
             </button>
-          </div>
+          </div> */}
         </>
       )}
     </div>

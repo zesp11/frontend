@@ -1,32 +1,57 @@
-import "./styleModules/storyTileModule.css";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import "./styleModules/storyTileModule.css";
 
-//Story tile: to stylize
 export default function StoryTile({ story }) {
   const router = useRouter();
-  const onTileClick = () => {
-    router.push(`/creator/new?id=${story.id}`);
+
+  // Ensure story is an object
+  const safeStory = story || {};
+
+  const handleClick = () => {
+    router.push(`/creator/new?id=${safeStory.id || ""}`);
   };
+
   return (
-    <div className="story-card" onClick={onTileClick}>
-      {/* <Image
-        src={story.photo}
-        alt={story.name}
-        width={200}
-        height={250}
-        className="story-image"
-      /> */}
-      <div className="story-info">
-        <h3 className="story-title">{story.name}</h3>
-        <h3 className="story-title">{story.id}</h3>
-        {/* <p className="story-author">Autor: {story.author}</p> */}
-        <div className="story-tags">
-          {/* {story.tags.map((tag, index) => (
-            <span key={index} className="story-tag">
-              {tag}
-            </span>
-          ))} */}
+    <div className="story-tile" onClick={handleClick}>
+      <div className="story-image-container">
+        {safeStory.photo_url ? (
+          <Image
+            src={safeStory.photo_url}
+            alt={safeStory.name || "Story image"}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="story-image"
+            priority={false}
+          />
+        ) : (
+          <div className="placeholder-image">
+            <span className="placeholder-icon">📚</span>
+          </div>
+        )}
+
+        <div className="story-overlay">
+          <div className="story-id">#{safeStory.id || "0"}</div>
         </div>
+      </div>
+      <div className="story-details">
+        <h3 className="story-title">{safeStory.name || "Untitled Story"}</h3>
+        <div className="story-meta">
+          {safeStory.limit_players && (
+            <span className="player-limit">
+              <span className="meta-icon">👥</span> {safeStory.limit_players}
+            </span>
+          )}
+          {safeStory.creation_date && (
+            <span className="creation-date">
+              <span className="meta-icon">📅</span>
+              {new Date(safeStory.creation_date).toLocaleDateString()}
+            </span>
+          )}
+        </div>
+        {safeStory.description && (
+          <p className="story-description">{safeStory.description}</p>
+        )}
       </div>
     </div>
   );
