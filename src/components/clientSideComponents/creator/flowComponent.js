@@ -31,7 +31,7 @@ import { layout } from "dagre";
 const nodeWidth = 180;
 const nodeHeight = 80;
 
-export default function FlowComponent({ scenario, id_scen }) {
+export default function FlowComponent({ scenario, id_scen, isOpen }) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [backupNodes, setBackupNodes] = useState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -509,14 +509,23 @@ export default function FlowComponent({ scenario, id_scen }) {
   );
   return (
     <div
-      style={{
-        position: "fixed",
-        left: "8vw",
-        width: "92vw",
-        height: "100vh",
-        border: "1px solid #ff8c42", // Updated border color
-        backgroundColor: "#121212", // Dark background
-      }}
+      style={
+        isOpen
+          ? {
+              position: "fixed",
+              left: "8vw",
+              width: "92vw",
+              height: "100vh",
+              backgroundColor: "#121212", // Dark background
+            }
+          : {
+              position: "fixed",
+
+              width: "100vw",
+              height: "100vh",
+              backgroundColor: "#121212", // Dark background
+            }
+      }
     >
       {initialLoading ? (
         <div className="flow-loading-container">
