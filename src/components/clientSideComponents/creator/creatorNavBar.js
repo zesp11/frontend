@@ -36,8 +36,16 @@ export default function CreatorNavBar() {
 
   async function onLogout() {
     try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        return;
+      }
       const res = await fetch(
-        "https://squid-app-p63zw.ondigitalocean.app/api/auth/logout"
+        "https://squid-app-p63zw.ondigitalocean.app/api/auth/logout",
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
       if (!res.ok) {
         throw new Error("failed to logout");

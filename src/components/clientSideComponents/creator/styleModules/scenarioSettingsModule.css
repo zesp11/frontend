@@ -30,6 +30,12 @@
   .scenarioSettingsWrapper.open {
     transform: translateX(0);
   }
+
+  .scenarioPhotoContainer {
+    aspect-ratio: auto;
+    height: 200px;
+    max-height: 35vw;
+  }
 }
 
 .mobileHeader {

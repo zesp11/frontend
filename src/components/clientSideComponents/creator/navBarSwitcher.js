@@ -6,9 +6,10 @@ import NavBar from "@/components/generalComponents/navbar";
 //Component which determines which navbar should be rendered. It has to be on client side, because of usePathname hook.
 export default function NavbarSwitcher() {
   const pathname = usePathname();
-  return pathname.endsWith("/creator") ? (
+
+  return pathname.startsWith("/creator") && !pathname.includes("/new") ? (
     <CreatorNavBar />
   ) : (
-    !pathname.startsWith("/creator") && <NavBar />
+    !pathname.includes("/new") && <NavBar />
   );
 }
