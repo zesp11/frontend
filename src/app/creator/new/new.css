@@ -1,6 +1,7 @@
 .appWrapper {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   height: 100vh;
   box-sizing: border-box;
   overflow: hidden;
