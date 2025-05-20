@@ -6,6 +6,7 @@ import "./styleModules/creatorNavBarModule.css";
 
 export default function CreatorNavBar() {
   const [username, setUsername] = useState("Zaloguj");
+  const [photoUrl, setPhotoUrl] = useState("");
   const [isClient, setIsClient] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -14,10 +15,13 @@ export default function CreatorNavBar() {
     // This code only runs on the client
     setIsClient(true);
     const user = localStorage.getItem("user");
+    const image = localStorage.getItem("photoUrl");
     if (user) {
       setUsername(user);
     }
-
+    if (image) {
+      setPhotoUrl(image);
+    }
     // Add click outside listener to close dropdown
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -66,6 +70,7 @@ export default function CreatorNavBar() {
             width={40}
             height={40}
             className="logo-image"
+            style={{ height: "auto" }} // Added this to maintain aspect ratio
           />
           <span className="logo-text">
             Go <span className="logo-highlight">Tale</span>
@@ -88,9 +93,22 @@ export default function CreatorNavBar() {
             ref={dropdownRef}
           >
             <div className="avatar-container">
-              <span className="avatar-text">
-                {username.charAt(0).toUpperCase()}
-              </span>
+              {photoUrl ? (
+                <img
+                  src={photoUrl}
+                  alt={username}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                  }}
+                />
+              ) : (
+                <span className="avatar-text">
+                  {username.charAt(0).toUpperCase()}
+                </span>
+              )}
             </div>
             <span className="username">{username}</span>
             <span className="dropdown-icon">{menuOpen ? "▲" : "▼"}</span>

@@ -46,7 +46,7 @@ export default function StoryTile({ story }) {
             fill
             sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
             className="story-image"
-            priority={false}
+            priority={true}
           />
         ) : (
           <div className="placeholder-image">
