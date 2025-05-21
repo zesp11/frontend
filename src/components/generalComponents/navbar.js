@@ -1,31 +1,47 @@
-import Link from "next/link";
-import Image from "next/image";
-import { useState } from "react";
-import "./styleModules/styles.css";
-import { Menu, X } from "lucide-react";
+'use client'
+import { useState } from 'react'
+import Link from 'next/link'
 
-export default function NavBar() {
-  const [menuOpen, setMenuOpen] = useState(false);
+export default function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen)
+  }
 
   return (
-    <nav className="navBarWrapper">
-      <div className="navContainer">
-        <div className="logoWrapper">
-          <Link href="../#section1">
-            <Image src="/temp-logo.png" alt="Logo" width={50} height={50} />
+    <nav className="navbar">
+      <div className="container">
+        <Link href="#" className="logo">
+          Orange<span>Black</span>
+        </Link>
+        <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
+          <Link href="#home" className="nav-link" onClick={() => setIsMenuOpen(false)}>
+            Home
           </Link>
+          <Link href="#about" className="nav-link" onClick={() => setIsMenuOpen(false)}>
+            O nas
+          </Link>
+          <Link href="#services" className="nav-link" onClick={() => setIsMenuOpen(false)}>
+            Usługi
+          </Link>
+          <Link href="#contact" className="nav-link" onClick={() => setIsMenuOpen(false)}>
+            Kontakt
+          </Link>
+          <Link href="/creator" className="nav-link" onClick={() => setIsMenuOpen(false)}>
+            Kreator
+          </Link>
+          <Link href="/login" className="nav-link" onClick={() => setIsMenuOpen(false)}>
+            Zaloguj
+          </Link>
+          
         </div>
-        <button className="menuToggle" onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? <X size={24} /> : <Menu size={24} />}
+        <button className={`hamburger ${isMenuOpen ? 'active' : ''}`} onClick={toggleMenu}>
+          <span></span>
+          <span></span>
+          <span></span>
         </button>
-        <div className={`navLinks ${menuOpen ? "open" : ""}`}>
-          <Link href="../#section2" className="nav-link">O nas</Link>
-          <Link href="../#section3" className="nav-link">Możliwości</Link>
-          <Link href="../#section4" className="nav-link">Kontakt</Link>
-          <Link href="creator" className="nav-link">Kreator</Link>
-          <Link href="login" className="loginButton">Zaloguj</Link>
-        </div>
       </div>
     </nav>
-  );
+  )
 }
