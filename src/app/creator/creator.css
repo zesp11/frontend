@@ -13,3 +13,12 @@
 .search-section {
   margin-bottom: 2rem;
 }
+@media (max-width: 768px) {
+  .creator-content {
+    padding: 1rem;
+  }
+
+  .search-section {
+    margin-bottom: 1rem;
+  }
+}

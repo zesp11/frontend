@@ -14,8 +14,26 @@ function ScenarioLoader() {
   const [initialLoading, setInitialLoading] = useState(true);
   const [scenario, setScenario] = useState(null);
   const [id, setId] = useState(searchParams.get("id"));
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const requestInProgress = useRef(false);
   const isInitialMount = useRef(true);
+
+  // Effect to handle screen size changes
+  useEffect(() => {
+    // Initialize settings panel state based on screen size
+    const handleResize = () => {
+      setSettingsOpen(window.innerWidth > 768);
+    };
+
+    // Set initial state
+    handleResize();
+
+    // Add listener
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     // Show initial loading animation
@@ -144,6 +162,10 @@ function ScenarioLoader() {
     }
   }
 
+  const toggleSettings = () => {
+    setSettingsOpen((prevState) => !prevState);
+  };
+
   if (initialLoading || loading) {
     return <LoadingAnimation visible={loading} />;
   }
@@ -162,15 +184,49 @@ function ScenarioLoader() {
 
   return (
     <div className="appWrapper">
+      {/* Mobile settings toggle button */}
+      {window.innerWidth <= 768 && (
+        <button
+          className={`settingsToggle ${settingsOpen ? "active" : ""}`}
+          onClick={toggleSettings}
+          aria-label="Toggle settings panel"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      )}
+
+      {/* Background overlay that appears when settings panel is open on mobile */}
+      {window.innerWidth <= 768 && (
+        <div
+          className={`settings-overlay ${settingsOpen ? "visible" : ""}`}
+          onClick={() => setSettingsOpen(false)}
+        />
+      )}
+
       <div className="scenarioSettings">
         <ScenarioSettings
           scenario={scenario}
           setScenario={setScenario}
           id={id}
+          isOpen={settingsOpen}
+          setIsOpen={setSettingsOpen}
         />
       </div>
       <div className="flowContainer">
-        <FlowComponent scenario={scenario} id_scen={id} />
+        <FlowComponent scenario={scenario} id_scen={id} isOpen={settingsOpen} />
       </div>
     </div>
   );

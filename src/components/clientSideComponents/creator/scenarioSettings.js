@@ -4,7 +4,13 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import "./styleModules/scenarioSettingsModule.css";
 
-export default function ScenarioSettings({ scenario, setScenario, id }) {
+export default function ScenarioSettings({
+  scenario,
+  setScenario,
+  id,
+  isOpen,
+  setIsOpen,
+}) {
   const [name, setName] = useState(scenario?.name || "");
   const [description, setDescription] = useState(scenario?.description || "");
   const [numPlayers, setNumPlayers] = useState(scenario?.limit_players || 1);
@@ -12,6 +18,7 @@ export default function ScenarioSettings({ scenario, setScenario, id }) {
   const [previewUrl, setPreviewUrl] = useState(scenario?.photo_url || null);
   const fileInputRef = useRef(null);
   const router = useRouter();
+  const settingsRef = useRef(null);
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
@@ -104,14 +111,42 @@ export default function ScenarioSettings({ scenario, setScenario, id }) {
       console.error("Error deleting scenario:", error);
     }
   };
+
   const onSaveAndExit = () => {
     router.push("/creator");
   };
+
   const onHelp = () => {
     alert("Tu będzie popup z poradnikiem");
   };
+
   return (
-    <div className="scenarioSettingsWrapper">
+    <div
+      className={`scenarioSettingsWrapper ${isOpen ? "open" : "closed"}`}
+      ref={settingsRef}
+      onClick={(e) => e.stopPropagation()} // Prevent clicks inside the panel from closing it
+    >
+      {/* Add mobile header with close button */}
+      <div className="mobileHeader">
+        <h2>Ustawienia scenariusza</h2>
+        <button className="closeButton" onClick={() => setIsOpen(false)}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
       <div className="scenarioPhotoContainer">
         {previewUrl && (
           <Image

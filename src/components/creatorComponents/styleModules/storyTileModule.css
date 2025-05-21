@@ -118,6 +118,7 @@
   margin-bottom: 0.8rem;
   color: #aaa;
   font-size: 0.8rem;
+  flex-wrap: wrap;
 }
 
 .meta-icon {
@@ -132,4 +133,44 @@
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   margin: 0;
+}
+
+/* Responsive improvements */
+@media (max-width: 480px) {
+  .story-image-container {
+    padding-top: 100%; /* Square aspect ratio for small screens */
+  }
+
+  .story-details {
+    padding: 1rem;
+  }
+
+  .story-id {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .story-meta {
+    gap: 0.75rem;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) {
+  .story-tile:hover {
+    transform: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .story-tile:active {
+    transform: scale(0.98);
+  }
+
+  .story-tile:hover .story-title {
+    color: #f8f8f8;
+  }
+
+  .story-title:active {
+    color: #ff7f00;
+  }
 }
