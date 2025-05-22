@@ -112,7 +112,37 @@
   transform: translateY(1px);
   box-shadow: 0 2px 8px rgba(255, 107, 0, 0.3);
 }
+.deleteButton {
+  background-color: rgb(209, 37, 37);
+  color: black;
+  border: none;
+  padding: 14px 22px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.25s ease;
+  margin-top: 20px;
+  align-self: center;
+  width: 100%;
+  max-width: 220px;
+  box-shadow: 0 4px 12px rgba(255, 107, 0, 0.3);
+}
 
+.deleteButton:hover {
+  background-color: rgb(211, 62, 62);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(255, 107, 0, 0.4);
+}
+
+.deleteButton:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(255, 107, 0, 0.3);
+}
 .loadingIndicator {
   color: #ff6b00;
   text-align: center;

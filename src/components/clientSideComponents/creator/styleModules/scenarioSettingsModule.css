@@ -1,15 +1,35 @@
 .scenarioSettingsWrapper {
-  width: 300px;
+  width: 320px;
   height: 100vh;
-  background-color: #0a0a0a;
+  background: linear-gradient(145deg, #0a0a0a 0%, #151515 100%);
   border-right: 2px solid #ff6b00;
-  padding: 20px;
+  padding: 24px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 100;
+  box-shadow: 0 0 30px rgba(255, 107, 0, 0.1);
+}
+
+/* Custom scrollbar */
+.scenarioSettingsWrapper::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scenarioSettingsWrapper::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+.scenarioSettingsWrapper::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #ff6b00, #ff8c33);
+  border-radius: 3px;
+}
+
+.scenarioSettingsWrapper::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #ff8c33, #ff6b00);
 }
 
 /* Mobile styles */
@@ -18,9 +38,10 @@
     position: fixed;
     left: 0;
     top: 0;
-    width: 85%;
-    max-width: 320px;
-    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+    width: 90%;
+    max-width: 350px;
+    box-shadow: 5px 0 25px rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
   }
 
   .scenarioSettingsWrapper.closed {
@@ -30,14 +51,9 @@
   .scenarioSettingsWrapper.open {
     transform: translateX(0);
   }
-
-  .scenarioPhotoContainer {
-    aspect-ratio: auto;
-    height: 200px;
-    max-height: 35vw;
-  }
 }
 
+/* Mobile header */
 .mobileHeader {
   display: none;
 }
@@ -47,73 +63,61 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #333;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 107, 0, 0.3);
   }
 
   .mobileHeader h2 {
     color: #ff6b00;
     margin: 0;
-    font-size: 18px;
+    font-size: 20px;
+    font-weight: 600;
+    text-shadow: 0 0 10px rgba(255, 107, 0, 0.3);
   }
 
   .closeButton {
-    background: none;
-    border: none;
+    background: rgba(255, 107, 0, 0.1);
+    border: 1px solid rgba(255, 107, 0, 0.3);
     color: white;
     cursor: pointer;
-    padding: 5px;
-  }
-
-  .closeButton:hover {
-    color: #ff6b00;
-  }
-}
-
-/* Settings toggle button */
-.settingsToggle {
-  display: none;
-}
-
-@media (max-width: 768px) {
-  .settingsToggle {
-    display: flex;
-    position: fixed;
-    left: 10px;
-    top: 10px;
-    z-index: 99;
-    background-color: #ff6b00;
-    color: black;
-    border: none;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
     transition: all 0.3s ease;
   }
 
-  .settingsToggle.active {
-    background-color: #333;
+  .closeButton:hover {
+    background: rgba(255, 107, 0, 0.2);
     color: #ff6b00;
+    transform: scale(1.05);
   }
+}
 
-  .settingsToggle:hover {
-    transform: scale(1.1);
-  }
+/* Photo section */
+.photoSection {
+  margin-bottom: 28px;
 }
 
 .scenarioPhotoContainer {
   width: 100%;
   aspect-ratio: 1/1;
   border: 2px solid #ff6b00;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-top: 12px;
   position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 107, 0, 0.1) 0%,
+    rgba(255, 140, 51, 0.05) 100%
+  );
+  transition: all 0.3s ease;
+}
+
+.scenarioPhotoContainer:hover {
+  border-color: #ff8c33;
+  box-shadow: 0 8px 25px rgba(255, 107, 0, 0.2);
+  transform: translateY(-2px);
 }
 
 .scenarioPhotoContainer img {
@@ -127,132 +131,342 @@
   transform: scale(1.05);
 }
 
+.photoPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 107, 0, 0.6);
+  text-align: center;
+  gap: 12px;
+}
+
+.photoPlaceholder span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .scenarioPhotoUpload {
   position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background-color: rgba(0, 0, 0, 0.7);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  bottom: 12px;
+  right: 12px;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.9) 100%
+  );
+  border: 1px solid rgba(255, 107, 0, 0.3);
+  border-radius: 12px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
 .scenarioPhotoUpload:hover {
-  background-color: rgba(255, 107, 0, 0.8);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 107, 0, 0.8) 0%,
+    rgba(255, 140, 51, 0.9) 100%
+  );
+  border-color: #ff8c33;
+  transform: scale(1.1);
 }
 
+/* Field labels */
+.fieldLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ff6b00;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 10px rgba(255, 107, 0, 0.3);
+}
+
+.fieldLabel svg {
+  opacity: 0.8;
+}
+
+/* Settings section */
 .settingsSection {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 24px;
   flex: 1;
 }
 
-.container-text-area {
+/* Input groups */
+.inputGroup {
+  display: flex;
+  flex-direction: column;
   position: relative;
-  width: 100%;
-  max-width: 500px;
-  height: 300px;
 }
 
 .settingsInput {
-  background-color: #1e1e1e;
-  border: 1px solid #ff6b00;
+  background: linear-gradient(145deg, #1e1e1e 0%, #252525 100%);
+  border: 2px solid rgba(255, 107, 0, 0.3);
   color: white;
-  padding: 10px;
-  border-radius: 8px;
-  font-size: 16px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-size: 15px;
   outline: none;
   width: 100%;
   box-sizing: border-box;
-  resize: none; /* Removes the resize handle */
+  resize: none;
+  transition: all 0.3s ease;
+  font-family: inherit;
 }
 
 .settingsInput:focus {
-  border-color: #ff8c33;
+  border-color: #ff6b00;
+  box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.1), 0 0 20px rgba(255, 107, 0, 0.2);
+  transform: translateY(-1px);
 }
 
-.counter {
+.settingsInput::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+}
+
+/* Textarea specific styles */
+.textareaContainer {
+  position: relative;
+}
+
+.textareaInput {
+  min-height: 120px;
+  resize: vertical;
+  padding-bottom: 40px;
+  line-height: 1.5;
+}
+
+/* Character counters */
+.charCounter {
   position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background-color: rgba(30, 30, 30, 0.7);
+  bottom: 8px;
+  right: 12px;
+  background: linear-gradient(
+    135deg,
+    rgba(30, 30, 30, 0.9) 0%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
   color: #ff6b00;
-  padding: 2px 8px;
-  border-radius: 4px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 107, 0, 0.2);
+}
+
+.inputGroup .charCounter {
+  position: static;
+  align-self: flex-end;
+  margin-top: 6px;
   font-size: 12px;
 }
+
+/* Action buttons */
+.actionButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
 .actionButton {
-  background-color: #ff6b00;
+  background: linear-gradient(135deg, #ff6b00 0%, #ff8c33 100%);
   color: black;
   border: none;
-  padding: 12px 20px;
-  border-radius: 8px;
-  font-weight: bold;
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  margin-top: 10px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
 }
 
 .actionButton:hover {
-  background-color: #ff8c33;
-  transform: scale(1.05);
+  background: linear-gradient(135deg, #ff8c33 0%, #ff6b00 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 0, 0.4);
+}
+
+.actionButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(255, 107, 0, 0.3);
+}
+
+.primaryButton {
+  background: linear-gradient(135deg, #ff6b00 0%, #ff8c33 100%);
+}
+
+.secondaryButton {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 107, 0, 0.15) 0%,
+    rgba(255, 140, 51, 0.1) 100%
+  );
+  color: #ff6b00;
+  border: 2px solid rgba(255, 107, 0, 0.3);
+  box-shadow: none;
+}
+
+.secondaryButton:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 107, 0, 0.25) 0%,
+    rgba(255, 140, 51, 0.2) 100%
+  );
+  border-color: #ff6b00;
+  color: #ff8c33;
+  box-shadow: 0 4px 15px rgba(255, 107, 0, 0.2);
 }
 
 .deleteButton {
-  background-color: #ff3333;
+  background: linear-gradient(135deg, #ff3333 0%, #ff5555 100%);
   color: white;
+  box-shadow: 0 4px 15px rgba(255, 51, 51, 0.3);
 }
 
 .deleteButton:hover {
-  background-color: #ff5555;
+  background: linear-gradient(135deg, #ff5555 0%, #ff3333 100%);
+  box-shadow: 0 6px 20px rgba(255, 51, 51, 0.4);
 }
 
-.fileInputWrapper {
-  position: relative;
-  overflow: hidden;
-  display: inline-block;
-}
-
-.fileInputWrapper input[type="file"] {
-  font-size: 100px;
-  position: absolute;
-  left: 0;
-  top: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.iconButton {
-  background: none;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+/* Bottom actions */
 .bottomActions {
   margin-top: auto;
   display: flex;
-  gap: 10px;
+  gap: 12px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 107, 0, 0.2);
 }
 
 .bottomActions .actionButton {
   flex: 1;
-  margin-top: 0;
+  font-size: 13px;
+  padding: 12px 16px;
+}
+
+/* Settings toggle button for mobile */
+.settingsToggle {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .settingsToggle {
+    display: flex;
+    position: fixed;
+    left: 15px;
+    top: 15px;
+    z-index: 99;
+    background: linear-gradient(135deg, #ff6b00 0%, #ff8c33 100%);
+    color: black;
+    border: none;
+    border-radius: 50%;
+    width: 54px;
+    height: 54px;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(255, 107, 0, 0.4);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .settingsToggle.active {
+    background: linear-gradient(135deg, #333 0%, #444 100%);
+    color: #ff6b00;
+  }
+
+  .settingsToggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(255, 107, 0, 0.5);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .scenarioSettingsWrapper {
+    width: 95%;
+    max-width: none;
+    padding: 20px;
+  }
+
+  .textareaInput {
+    min-height: 100px;
+  }
+
+  .actionButtons {
+    gap: 10px;
+  }
+
+  .bottomActions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .bottomActions .actionButton {
+    flex: none;
+  }
 }
 
 @media (max-height: 700px) {
-  .container-text-area {
-    height: 150px;
+  .textareaInput {
+    min-height: 80px;
   }
+
+  .settingsSection {
+    gap: 18px;
+  }
+
+  .scenarioPhotoContainer {
+    aspect-ratio: 16/9;
+  }
+
+  .photoSection {
+    margin-bottom: 20px;
+  }
+}
+
+/* Additional modern touches */
+@media (prefers-reduced-motion: reduce) {
+  .scenarioSettingsWrapper,
+  .actionButton,
+  .settingsInput,
+  .scenarioPhotoContainer {
+    transition: none;
+  }
+}
+
+/* Focus indicators for accessibility */
+.actionButton:focus-visible {
+  outline: 2px solid #ff6b00;
+  outline-offset: 2px;
+}
+
+.settingsInput:focus-visible {
+  outline: none;
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid #ff6b00;
+  outline-offset: 2px;
 }

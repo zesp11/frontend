@@ -16,17 +16,20 @@ export default function RegisterForm() {
       return;
     }
     try {
-      const res = await fetch(`/api/proxy/auth/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          login: login,
-          email: email,
-          password: password,
-        }),
-      });
+      const res = await fetch(
+        `https://squid-app-p63zw.ondigitalocean.app/api/auth/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            login: login,
+            email: email,
+            password: password,
+          }),
+        }
+      );
 
       if (!res.ok) {
         console.error("Failed to fetch data", res.status);

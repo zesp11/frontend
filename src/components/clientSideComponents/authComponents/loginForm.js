@@ -12,13 +12,16 @@ export default function LoginForm() {
     event.preventDefault();
 
     try {
-      const res = await fetch(`/api/proxy/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ login: login, password: password }),
-      });
+      const res = await fetch(
+        `https://squid-app-p63zw.ondigitalocean.app/api/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ login: login, password: password }),
+        }
+      );
       if (!res.ok) {
         console.error("Failed to fetch data", res.status);
         return;
@@ -33,6 +36,7 @@ export default function LoginForm() {
         localStorage.setItem("user", data.user.login);
         localStorage.setItem("userId", data.user.id_user);
         localStorage.setItem("photoUrl", data.user.photo_url);
+        localStorage.setItem("role", data.user.role);
         router.push("/creator");
       }
     } catch (error) {

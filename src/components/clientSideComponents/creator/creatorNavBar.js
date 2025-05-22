@@ -10,12 +10,24 @@ export default function CreatorNavBar() {
   const [isClient, setIsClient] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
+  useEffect(() => {
+    const refresh = () => {
+      const user = localStorage.getItem("user");
+      const image = localStorage.getItem("photoUrl");
 
+      if (user) setUsername(user);
+      if (image) setPhotoUrl(image);
+    };
+
+    window.addEventListener("localStorageUpdated", refresh);
+    return () => window.removeEventListener("localStorageUpdated", refresh);
+  }, []);
   useEffect(() => {
     // This code only runs on the client
     setIsClient(true);
     const user = localStorage.getItem("user");
     const image = localStorage.getItem("photoUrl");
+
     if (user) {
       setUsername(user);
     }

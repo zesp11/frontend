@@ -80,16 +80,45 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.add-node-button {
-  background-color: #27ae60; /* Green color for add button */
+.layout-button {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 107, 0, 0.15) 0%,
+    rgba(255, 140, 51, 0.1) 100%
+  );
+  color: #ff6b00;
+  border: 2px solid rgba(255, 107, 0, 0.3);
+  box-shadow: none;
 }
-
-.add-node-button:hover {
-  background-color: #219653;
-}
-
 .layout-button:hover {
-  background-color: #357ab8;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 107, 0, 0.25) 0%,
+    rgba(255, 140, 51, 0.2) 100%
+  );
+  border-color: #ff6b00;
+  color: #ff8c33;
+  box-shadow: 0 4px 15px rgba(255, 107, 0, 0.2);
+}
+.add-node-button {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 107, 0, 0.15) 0%,
+    rgba(255, 140, 51, 0.1) 100%
+  );
+  color: #ff6b00;
+  border: 2px solid rgba(255, 107, 0, 0.3);
+  box-shadow: none;
+}
+.add-node-button:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 107, 0, 0.25) 0%,
+    rgba(255, 140, 51, 0.2) 100%
+  );
+  border-color: #ff6b00;
+  color: #ff8c33;
+  box-shadow: 0 4px 15px rgba(255, 107, 0, 0.2);
 }
 /* Map styles */
 .map-container {
