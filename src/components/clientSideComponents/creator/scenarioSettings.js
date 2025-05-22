@@ -225,7 +225,7 @@ export default function ScenarioSettings({
           max="6"
         />
 
-        <div className="container" style={{ position: "relative" }}>
+        <div className="container-text-area" style={{ position: "relative" }}>
           <textarea
             placeholder="Opis scenariusza..."
             className="settingsInput"
