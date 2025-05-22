@@ -1,10 +1,18 @@
 import { useState, useRef, useEffect } from "react";
 import flowComponentModule from "./styleModules/flowComponentModule.css";
 
-export default function EdgeEditor({ edge, onSave, onClose }) {
+export default function EdgeEditor({
+  edge,
+  onSave,
+  onClose,
+  limitPlayers,
+  edges,
+  scenario,
+}) {
   const [edgeData, setEdgeData] = useState({
     label: edge.label || "Continue",
     animated: edge.animated || false,
+    id_players: edge.id_players || [],
     style: {
       stroke: edge.style?.stroke || "#333",
     },
@@ -22,7 +30,22 @@ export default function EdgeEditor({ edge, onSave, onClose }) {
         },
       }));
     } else if (type === "checkbox") {
-      setEdgeData((prev) => ({ ...prev, [name]: checked }));
+      if (name.startsWith("player_")) {
+        const playerIndex = parseInt(name.split("_")[1], 10);
+
+        setEdgeData((prev) => {
+          const updatedPlayers = checked
+            ? [...prev.id_players, playerIndex]
+            : prev.id_players.filter((id) => id !== playerIndex);
+
+          return {
+            ...prev,
+            id_players: updatedPlayers,
+          };
+        });
+      } else {
+        setEdgeData((prev) => ({ ...prev, [name]: checked }));
+      }
     } else {
       setEdgeData((prev) => ({ ...prev, [name]: value }));
     }
@@ -47,49 +70,114 @@ export default function EdgeEditor({ edge, onSave, onClose }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [onClose]);
+  const renderPlayerCheckboxes = () => {
+    const handlePlayerToggle = (playerIndex) => {
+      setEdgeData((prev) => {
+        const isAlreadySelected = prev.id_players.includes(playerIndex);
+        return {
+          ...prev,
+          id_players: isAlreadySelected
+            ? prev.id_players.filter((id) => id !== playerIndex)
+            : [...prev.id_players, playerIndex],
+        };
+      });
+    };
+
+    return (
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        {Array.from({ length: limitPlayers }, (_, i) => {
+          const playerIndex = i + 1;
+          const isChecked = edgeData.id_players.includes(playerIndex);
+          const players_to_render = [
+            ...new Set(
+              edges
+                .filter((e) => e.target === edge.source)
+                .flatMap((e) => e.id_players)
+            ),
+          ];
+          if (
+            !players_to_render.includes(playerIndex) &&
+            !(edge.source == scenario.first_step.id_step)
+          )
+            return;
+          return (
+            <label
+              key={`player-${playerIndex}`}
+              htmlFor={`player_${playerIndex}`}
+              className={`
+                group relative flex flex-col items-center justify-center rounded-xl p-4
+                border-2 transition-all cursor-pointer select-none
+                ${
+                  isChecked
+                    ? "bg-orange-500 border-orange-500 text-white shadow-md"
+                    : "bg-zinc-800 border-zinc-700 text-orange-400 hover:bg-zinc-700"
+                }
+              `}
+              onClick={() => handlePlayerToggle(playerIndex)}
+            >
+              <input
+                type="checkbox"
+                id={`player_${playerIndex}`}
+                name={`player_${playerIndex}`}
+                checked={isChecked}
+                readOnly
+                className="absolute opacity-0 w-0 h-0"
+              />
+              {isChecked ? (
+                <span className="text-sm font-semibold text-black">
+                  Gracz {playerIndex}
+                </span>
+              ) : (
+                <span className="text-sm font-semibold">
+                  Gracz {playerIndex}
+                </span>
+              )}
+              {isChecked && (
+                <span className="absolute top-3 right-2 text-white text-lg">
+                  ✓
+                </span>
+              )}
+            </label>
+          );
+        })}
+      </div>
+    );
+  };
 
   return (
     <div className="popup-overlay">
       <div className="popup-content" ref={popupRef}>
-        <h3>Edit Edge</h3>
+        <h3>Edytuj Wybór</h3>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="label">Label:</label>
-            <input
-              type="text"
-              id="label"
-              name="label"
-              value={edgeData.label}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="stroke">Edge Color:</label>
-            <input
-              type="color"
-              id="stroke"
-              name="stroke"
-              value={edgeData.style.stroke}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="animated">
+            <label htmlFor="text">Tekst wyboru:</label>
+            <div className="edgearea-container">
               <input
-                type="checkbox"
-                id="animated"
-                name="animated"
-                checked={edgeData.animated}
+                style={{ width: "100%" }}
+                type="text"
+                id="label"
+                name="label"
+                value={edgeData.label}
                 onChange={handleChange}
+                required
+                maxLength="255"
               />
-              Animated Edge
-            </label>
+              <div className="character-counter">
+                {edgeData.label.length}/255
+              </div>
+            </div>
           </div>
-          <div className="button-group">
-            <button type="submit">Save</button>
+          <div className="form-group">
+            <label>Wybrani gracze:</label>
+            <div className="mt-2">{renderPlayerCheckboxes()}</div>
+          </div>
+
+          <div className="button-group mt-4">
+            <button type="submit" className="mr-2">
+              Zapisz
+            </button>
             <button type="button" onClick={onClose}>
-              Cancel
+              Anuluj
             </button>
           </div>
         </form>

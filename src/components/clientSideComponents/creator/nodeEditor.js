@@ -80,33 +80,46 @@ export default function NodeEditor({
   return (
     <div className="popup-overlay">
       <div className="popup-content" ref={popupRef}>
-        <h3>Edit Node</h3>
+        <h3>Edytuj Krok Opowieści</h3>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="label">Label:</label>
-            <input
-              type="text"
-              id="label"
-              name="label"
-              value={nodeData.label}
-              onChange={handleChange}
-              required
-            />
+            <label htmlFor="label">Tytuł:</label>
+
+            <div className="edgearea-container">
+              <input
+                style={{ width: "100%" }}
+                type="text"
+                id="label"
+                name="label"
+                value={nodeData.label}
+                onChange={handleChange}
+                required
+                maxLength="255"
+              />
+              <div className="character-counter">
+                {nodeData.label.length}/255
+              </div>
+            </div>
           </div>
           <div className="form-group">
-            <label htmlFor="text">Description:</label>
-            <textarea
-              maxLength="255"
-              id="text"
-              name="text"
-              value={nodeData.text}
-              onChange={handleChange}
-              rows={4}
-            />
+            <label htmlFor="text">Opis:</label>
+            <div className="textarea-container">
+              <textarea
+                maxLength="1024"
+                id="text"
+                name="text"
+                value={nodeData.text}
+                onChange={handleChange}
+                rows={4}
+              />
+              <div className="character-counter">
+                {nodeData.text.length}/1024
+              </div>
+            </div>
           </div>
 
           <div className="form-group">
-            <label>Image:</label>
+            <label>Zdjęcie:</label>
             <input
               type="file"
               ref={fileInputRef}
@@ -133,33 +146,7 @@ export default function NodeEditor({
           </div>
 
           <div className="location-section">
-            <h4>Location</h4>
-            <div className="form-row">
-              <div className="form-group half">
-                <label htmlFor="longitude">Longitude:</label>
-                <input
-                  type="number"
-                  step="0.000001"
-                  id="longitude"
-                  name="longitude"
-                  value={nodeData.longitude}
-                  onChange={handleChange}
-                  placeholder="-180 to 180"
-                />
-              </div>
-              <div className="form-group half">
-                <label htmlFor="latitude">Latitude:</label>
-                <input
-                  type="number"
-                  step="0.000001"
-                  id="latitude"
-                  name="latitude"
-                  value={nodeData.latitude}
-                  onChange={handleChange}
-                  placeholder="-90 to 90"
-                />
-              </div>
-            </div>
+            <h4>Lokalizacja</h4>
 
             <div style={{ height: "300px", marginBottom: "15px" }}>
               <NodeMapView
@@ -171,10 +158,10 @@ export default function NodeEditor({
 
           <div className="button-group">
             <button type="submit" className="save-button">
-              Save
+              Zapisz
             </button>
             <button type="button" onClick={onClose} className="cancel-button">
-              Cancel
+              Anuluj
             </button>
             {canDelete && (
               <button
@@ -182,7 +169,7 @@ export default function NodeEditor({
                 onClick={handleDelete}
                 className="delete-button"
               >
-                Delete Node
+                Usuń Krok
               </button>
             )}
           </div>

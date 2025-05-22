@@ -7,5 +7,9 @@ import NavBar from "@/components/generalComponents/navbar";
 export default function NavbarSwitcher() {
   const pathname = usePathname();
 
-  return pathname.startsWith("/creator") ? <CreatorNavBar /> : <NavBar />;
+  return pathname.startsWith("/creator") && !pathname.includes("/new") ? (
+    <CreatorNavBar />
+  ) : (
+    !pathname.includes("/new") && <NavBar />
+  );
 }

@@ -45,8 +45,8 @@ export async function editStep(id, data, id_scen) {
     const form = new FormData();
 
     // Always append these fields
-    form.append("title", data.label);
-    form.append("text", data.text);
+    form.append("title", data.label ? data.label : "Tytuł kroku...");
+    form.append("text", data.text ? data.text : "Text kroku...");
     form.append("longitude", data.longitude);
     form.append("latitude", data.latitude);
 
@@ -91,7 +91,7 @@ export async function deleteStep(id, id_scen) {
     console.error("Failed to update node:", error);
   }
 }
-export async function addChoice(source, target, id_scen) {
+export async function addChoice(source, target, id_scen, id_players) {
   try {
     const token = getToken();
     const responseChoice = await fetch(`${url}/choices?id_scen=${id_scen}`, {
@@ -100,6 +100,7 @@ export async function addChoice(source, target, id_scen) {
         text: "Continue",
         id_next_step: Number(target),
         id_step: Number(source),
+        id_players: id_players,
       }),
       headers: {
         Authorization: `Bearer ${token}`,
@@ -116,7 +117,14 @@ export async function addChoice(source, target, id_scen) {
     console.error("Failed to update node:", error);
   }
 }
-export async function editChoice(edgeId, source, target, label, id_scen) {
+export async function editChoice(
+  edgeId,
+  source,
+  target,
+  label,
+  id_scen,
+  id_players
+) {
   try {
     const token = getToken();
     // First, make sure we have the most current edges array
@@ -126,6 +134,7 @@ export async function editChoice(edgeId, source, target, label, id_scen) {
         id_scen: Number(id_scen),
         text: label,
         id_next_step: Number(target),
+        id_players: id_players,
       }),
       headers: {
         Authorization: `Bearer ${token}`,
