@@ -342,58 +342,154 @@ export default function FlowComponent({ scenario, id_scen, isOpen }) {
 
   const updateEdgeData = useCallback(
     async (edgeId, data) => {
-      //   // First, make sure we have the most current edges array
+      // First, make sure we have the most current edges array
       const currentEdge = edges.find((e) => e.id === edgeId);
 
       if (!currentEdge) {
         console.error(`Edge with ID ${edgeId} not found in the edges array`);
         return;
       }
-      editChoice(
-        edgeId,
-        currentEdge.source,
-        currentEdge.target,
-        data.label,
-        id_scen,
-        data.id_players
+
+      // Determine which players were removed
+      const originalPlayers = currentEdge.id_players || [];
+      const newPlayers = data.id_players || [];
+      const removedPlayers = originalPlayers.filter(
+        (player) => !newPlayers.includes(player)
       );
-      // Only update state if the API call was successful
-      setEdges((eds) =>
-        eds.map((edge) => {
-          if (edge.id === edgeId) {
-            return {
-              ...edge,
-              label: data.label,
-              id_players: data.id_players,
-              animated: data.animated,
-              style: {
-                ...edge.style,
-                stroke: data.style.stroke,
-              },
-            };
+
+      // Helper function to find all descendant edges and remove specified players
+      const propagatePlayerRemoval = (
+        startNodeId,
+        playersToRemove,
+        visitedEdges = new Set()
+      ) => {
+        const edgesToUpdate = [];
+
+        // Find all edges that start from the current node
+        const childEdges = edges.filter(
+          (edge) => edge.source === startNodeId && !visitedEdges.has(edge.id)
+        );
+
+        for (const childEdge of childEdges) {
+          // Mark this edge as visited to prevent cycles
+          visitedEdges.add(childEdge.id);
+
+          // Check if this edge has any of the players to remove
+          const currentPlayers = childEdge.id_players || [];
+          const updatedPlayers = currentPlayers.filter(
+            (player) => !playersToRemove.includes(player)
+          );
+
+          // Only update if there's actually a change
+          if (currentPlayers.length !== updatedPlayers.length) {
+            edgesToUpdate.push({
+              ...childEdge,
+              id_players: updatedPlayers,
+            });
           }
-          return edge;
-        })
-      );
-      setBackupEdges((eds) =>
-        eds.map((edge) => {
-          if (edge.id === edgeId) {
-            return {
-              ...edge,
-              label: data.label,
-              id_players: data.id_players,
-              animated: data.animated,
-              style: {
-                ...edge.style,
-                stroke: data.style.stroke,
-              },
-            };
-          }
-          return edge;
-        })
-      );
+
+          // Recursively process descendants
+          const descendantUpdates = propagatePlayerRemoval(
+            childEdge.target,
+            playersToRemove,
+            visitedEdges
+          );
+          edgesToUpdate.push(...descendantUpdates);
+        }
+
+        return edgesToUpdate;
+      };
+
+      try {
+        // Update the current edge via API
+        await editChoice(
+          edgeId,
+          currentEdge.source,
+          currentEdge.target,
+          data.label,
+          id_scen,
+          data.id_players
+        );
+
+        // Get all edges that need to be updated (descendants with removed players)
+        const edgesToUpdate =
+          removedPlayers.length > 0
+            ? propagatePlayerRemoval(currentEdge.target, removedPlayers)
+            : [];
+
+        // Update the current edge and all affected descendant edges
+        setEdges((eds) =>
+          eds.map((edge) => {
+            // Update the current edge
+            if (edge.id === edgeId) {
+              return {
+                ...edge,
+                label: data.label,
+                id_players: data.id_players,
+                animated: data.animated,
+                style: {
+                  ...edge.style,
+                  stroke: data.style.stroke,
+                },
+              };
+            }
+
+            // Update descendant edges that had players removed
+            const updatedEdge = edgesToUpdate.find((e) => e.id === edge.id);
+            if (updatedEdge) {
+              return {
+                ...edge,
+                id_players: updatedEdge.id_players,
+              };
+            }
+
+            return edge;
+          })
+        );
+
+        setBackupEdges((eds) =>
+          eds.map((edge) => {
+            // Update the current edge
+            if (edge.id === edgeId) {
+              return {
+                ...edge,
+                label: data.label,
+                id_players: data.id_players,
+                animated: data.animated,
+                style: {
+                  ...edge.style,
+                  stroke: data.style.stroke,
+                },
+              };
+            }
+
+            // Update descendant edges that had players removed
+            const updatedEdge = edgesToUpdate.find((e) => e.id === edge.id);
+            if (updatedEdge) {
+              return {
+                ...edge,
+                id_players: updatedEdge.id_players,
+              };
+            }
+
+            return edge;
+          })
+        );
+
+        // Optional: Log the propagation for debugging
+        if (edgesToUpdate.length > 0) {
+          console.log(
+            `Propagated removal of players [${removedPlayers.join(", ")}] to ${
+              edgesToUpdate.length
+            } descendant edges`
+          );
+        }
+      } catch (error) {
+        console.error("Failed to update edge:", error);
+        // Handle error appropriately - maybe revert changes or show user notification
+      }
     },
-    [edges, setEdges, setBackupEdges]
+    [edges, setEdges, setBackupEdges, id_scen]
   );
 
   const onEdgeClick = useCallback((event, edge) => {
