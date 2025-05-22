@@ -22,10 +22,7 @@ export default function LoginForm() {
           body: JSON.stringify({ login: login, password: password }),
         }
       );
-      if (!res.ok) {
-        console.error("Failed to fetch data", res.status);
-        return;
-      }
+
       const data = await res.json();
       if (data.error === "Invalid credentials.") {
         alert("Niepoprawny login lub hasło");

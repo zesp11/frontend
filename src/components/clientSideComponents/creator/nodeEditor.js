@@ -139,7 +139,7 @@ export default function NodeEditor({
                   onClick={handleRemoveImage}
                   className="remove-image-button"
                 >
-                  Remove Image
+                  Usuń zdjęcie
                 </button>
               </div>
             )}
@@ -157,10 +157,74 @@ export default function NodeEditor({
           </div>
 
           <div className="button-group">
-            <button type="submit" className="save-button">
+            <button
+              type="submit"
+              className="mr-2"
+              style={{
+                margin: "8px",
+                padding: "10px 20px",
+                background:
+                  "linear-gradient(135deg, rgba(34, 197, 94, 0.9) 0%, rgba(16, 185, 129, 0.85) 100%)",
+                color: "white",
+                border: "2px solid rgba(34, 197, 94, 0.4)",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontSize: "14px",
+                fontWeight: "600",
+                boxShadow: "0 3px 8px rgba(34, 197, 94, 0.3)",
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background =
+                  "linear-gradient(135deg, rgba(34, 197, 94, 1) 0%, rgba(16, 185, 129, 0.95) 100%)";
+                e.target.style.borderColor = "rgba(34, 197, 94, 0.6)";
+                e.target.style.boxShadow = "0 5px 15px rgba(34, 197, 94, 0.4)";
+                e.target.style.transform = "translateY(-1px)";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background =
+                  "linear-gradient(135deg, rgba(34, 197, 94, 0.9) 0%, rgba(16, 185, 129, 0.85) 100%)";
+                e.target.style.borderColor = "rgba(34, 197, 94, 0.4)";
+                e.target.style.boxShadow = "0 3px 8px rgba(34, 197, 94, 0.3)";
+                e.target.style.transform = "translateY(0)";
+              }}
+            >
               Zapisz
             </button>
-            <button type="button" onClick={onClose} className="cancel-button">
+            <button
+              type="button"
+              onClick={onClose}
+              style={{
+                margin: "8px",
+                padding: "10px 20px",
+                background:
+                  "linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.1) 100%)",
+                color: "#dc2626",
+                border: "2px solid rgba(239, 68, 68, 0.3)",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontSize: "14px",
+                fontWeight: "500",
+                boxShadow: "0 2px 6px rgba(239, 68, 68, 0.2)",
+                transition: "all 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background =
+                  "linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(220, 38, 38, 0.2) 100%)";
+                e.target.style.borderColor = "#dc2626";
+                e.target.style.color = "#b91c1c";
+                e.target.style.boxShadow = "0 4px 12px rgba(239, 68, 68, 0.3)";
+                e.target.style.transform = "translateY(-1px)";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background =
+                  "linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.1) 100%)";
+                e.target.style.borderColor = "rgba(239, 68, 68, 0.3)";
+                e.target.style.color = "#dc2626";
+                e.target.style.boxShadow = "0 2px 6px rgba(239, 68, 68, 0.2)";
+                e.target.style.transform = "translateY(0)";
+              }}
+            >
               Anuluj
             </button>
             {canDelete && (

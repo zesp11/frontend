@@ -1,5 +1,8 @@
 .scenarioSettingsWrapper {
   width: 320px;
+  /* Use dynamic viewport height instead of fixed vh */
+  height: 100dvh;
+  /* Fallback for browsers that don't support dvh */
   height: 100vh;
   background: linear-gradient(145deg, #0a0a0a 0%, #151515 100%);
   border-right: 2px solid #ff6b00;
@@ -11,6 +14,87 @@
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 100;
   box-shadow: 0 0 30px rgba(255, 107, 0, 0.1);
+}
+@media (max-width: 768px) {
+  .scenarioSettingsWrapper {
+    position: fixed;
+    left: 0;
+    top: 0;
+    /* Use dynamic viewport units for mobile */
+    width: 90%;
+    max-width: 350px;
+    /* Critical fix: Use dynamic viewport height */
+    height: 100dvh;
+    /* Fallback for older browsers */
+    height: 100vh;
+    /* Ensure it never gets cut off */
+    min-height: 100%;
+    max-height: 100dvh;
+    max-height: 100vh;
+    box-shadow: 5px 0 25px rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    /* Ensure proper stacking */
+    z-index: 9999;
+  }
+  .scenarioSettingsWrapper.closed {
+    transform: translateX(-100%);
+  }
+
+  .scenarioSettingsWrapper.open {
+    transform: translateX(0);
+    /* Force visibility */
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Handle keyboard visibility - when keyboard is shown */
+  .scenarioSettingsWrapper.keyboard-visible {
+    /* Adjust height when keyboard is visible */
+    height: 100vh;
+    max-height: 100vh;
+    /* Ensure content stays accessible */
+    padding-bottom: 20px;
+  }
+
+  /* Ensure scrolling works properly on mobile */
+  .scenarioSettingsWrapper {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    /* Prevent horizontal scroll */
+    overflow-x: hidden;
+  }
+}
+/* Fix for very small screens and short viewports */
+@media (max-width: 480px) {
+  .scenarioSettingsWrapper {
+    width: 95%;
+    max-width: none;
+    padding: 20px;
+    /* Ensure it works on very small screens */
+    height: 100dvh;
+    height: 100vh;
+    min-height: 500px; /* Minimum usable height */
+  }
+}
+
+/* Specific fix for landscape orientation on mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .scenarioSettingsWrapper {
+    /* In landscape, browser bars take more space */
+    height: 100vh;
+    max-height: 100vh;
+    /* Reduce padding to fit more content */
+    padding: 16px;
+  }
+
+  .textareaInput {
+    min-height: 60px;
+  }
+
+  .scenarioPhotoContainer {
+    aspect-ratio: 16/9;
+  }
 }
 
 /* Custom scrollbar */
@@ -240,6 +324,8 @@
 
 /* Textarea specific styles */
 .textareaContainer {
+  display: flex;
+  flex-direction: column;
   position: relative;
 }
 

@@ -16,7 +16,8 @@ export default function CreatorNavBar() {
       const image = localStorage.getItem("photoUrl");
 
       if (user) setUsername(user);
-      if (image) setPhotoUrl(image);
+      if (image && image !== "null") setPhotoUrl(image);
+      else setPhotoUrl(null);
     };
 
     window.addEventListener("localStorageUpdated", refresh);
@@ -31,7 +32,7 @@ export default function CreatorNavBar() {
     if (user) {
       setUsername(user);
     }
-    if (image) {
+    if (image && image !== "null") {
       setPhotoUrl(image);
     }
     // Add click outside listener to close dropdown

@@ -307,7 +307,11 @@ export default function Profile() {
               />
             </svg>
           </button>
-          <button className={styles.deleteButton} onClick={handleAccoutDelete}>
+          <button
+            className={styles.deleteButton}
+            onClick={handleAccoutDelete}
+            type="button"
+          >
             Usuń konto
           </button>
         </form>
