@@ -1,31 +1,37 @@
-import "./globals.css";
-import PlainText from "@/components/generalComponents/PlainText";
+"use client";
+import { useEffect } from "react";
+import Navbar from "../components/generalComponents/navbar";
+import HomeSection from "../components/generalComponents/HomeSection";
+import AboutSection from "../components/generalComponents/AboutSection";
+import ServicesSection from "../components/generalComponents/ServicesSection";
+import ContactSection from "../components/generalComponents/ContactSection";
+import Fade from "../components/generalComponents/fade";
 
 export default function Home() {
+  useEffect(() => {
+    const handleScroll = () => {
+      const navbar = document.querySelector(".navbar");
+      if (window.scrollY > 50) {
+        navbar.style.padding = "15px 0";
+        navbar.style.backgroundColor = "rgba(26, 26, 26, 0.95)";
+      } else {
+        navbar.style.padding = "20px 0";
+        navbar.style.backgroundColor = "rgba(26, 26, 26, 0.9)";
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <>
-      <div className="section1" id="section1">
-      <PlainText headerText="GoTale" bodyText="Nasz projekt ułatwia integrację w zespole dzięki wspólnemu odkrywaniu opowieści, poznawaniu nowych miejsc i budowie świata na podstawie podejmowanych decyzji." /></div>
-      <div className="parallax home">
-      </div>
-      <div className="overlayblur" style={{ top: "99%" }}></div>
-      <div className="section2" id="section2">
-      <PlainText headerText=""bodyText="Projekt GoTale to innowacyjne rozwiązanie, które łączy miłośników przygód i gier miejskich w jednym interaktywnym systemie.
-       Naszym celem jest stworzenie aplikacji umożliwiającej graczom odkrywanie świata poprzez wspólne tworzenie i przeżywanie interaktywnych książek
-        przygodowych (gamebooków). Gracze mogą tworzyć zespoły, podejmować decyzje w grze, a ich działania będą wymagały fizycznego przemieszczania
-         się po mieście przy użyciu GPS." /></div>
-      <div className="parallax about">
-      </div>
-      <div className="overlayblur" style={{ top: "199%" }}></div>
-      <div className="section3" id="section3">
-      <PlainText headerText="Możliwości projektu"bodyText="GoTale umożliwia tworzenie i edytowanie interaktywnych historii, określanie decyzji graczy, ich konsekwencji, a także lokalizacji, które gracze muszą odwiedzić w trakcie rozgrywki. Aplikacja mobilna Gamebook Explorer pozwala na odtwarzanie stworzonych historii w czasie rzeczywistym, umożliwiając zespołom dynamiczne podejmowanie decyzji i śledzenie ich postępów w grze." /></div>
-      <div className="parallax info">
-      </div>
-      <div className="overlayblur"style={{ top: "299%" }}></div>
-      <div className="section4" id="section4">
-      <PlainText headerText=""bodyText="Kontakt" /></div>
-      <div className="parallax contact">
-      </div>
-    </>
+    <main>
+      <HomeSection />
+      <AboutSection />
+      <Fade id="first" />
+      <ServicesSection />
+      <Fade id="second" />
+      <ContactSection />
+    </main>
   );
 }
