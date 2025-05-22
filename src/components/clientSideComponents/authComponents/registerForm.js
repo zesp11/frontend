@@ -31,11 +31,6 @@ export default function RegisterForm() {
         }
       );
 
-      if (!res.ok) {
-        console.error("Failed to fetch data", res.status);
-        return;
-      }
-
       const data = await res.json();
       alert(data.message);
     } catch (error) {

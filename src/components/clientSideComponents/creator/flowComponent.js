@@ -645,38 +645,39 @@ export default function FlowComponent({ scenario, id_scen, isOpen }) {
             onNodeDragStop={onNodeDragStop}
           >
             <Background color="#ff8c42" gap={20} size={1} />
-
-            <div className="player-checkbox-container">
-              {Array.from(
-                { length: scenario.limit_players },
-                (_, i) => i + 1
-              ).map((playerId) => (
-                <div
-                  key={playerId}
-                  className={`player-checkbox ${
-                    selectedPlayers.includes(playerId) ? "selected" : ""
-                  }`}
-                  onClick={() => {
-                    // This is just for view demonstration
-                    // In a real implementation, you would connect this to your state management
-                    setSelectedPlayers((prev) =>
-                      prev.includes(playerId)
-                        ? prev.filter((id) => id !== playerId)
-                        : [...prev, playerId]
-                    );
-                  }}
-                >
-                  <div className="checkbox-inner">
-                    {selectedPlayers.includes(playerId) && (
-                      <svg viewBox="0 0 24 24" className="checkbox-icon">
-                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
-                      </svg>
-                    )}
+            {scenario.limit_players > 1 && (
+              <div className="player-checkbox-container">
+                {Array.from(
+                  { length: scenario.limit_players },
+                  (_, i) => i + 1
+                ).map((playerId) => (
+                  <div
+                    key={playerId}
+                    className={`player-checkbox ${
+                      selectedPlayers.includes(playerId) ? "selected" : ""
+                    }`}
+                    onClick={() => {
+                      // This is just for view demonstration
+                      // In a real implementation, you would connect this to your state management
+                      setSelectedPlayers((prev) =>
+                        prev.includes(playerId)
+                          ? prev.filter((id) => id !== playerId)
+                          : [...prev, playerId]
+                      );
+                    }}
+                  >
+                    <div className="checkbox-inner">
+                      {selectedPlayers.includes(playerId) && (
+                        <svg viewBox="0 0 24 24" className="checkbox-icon">
+                          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
+                        </svg>
+                      )}
+                    </div>
+                    <span className="player-label">Gracz {playerId}</span>
                   </div>
-                  <span className="player-label">Gracz {playerId}</span>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
             {/* Add Node button at the bottom-right */}
             <Panel position="bottom-right">
               <button onClick={layoutDiagram} className="layout-button">

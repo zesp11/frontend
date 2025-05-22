@@ -1,5 +1,7 @@
+// Enhanced scenarioSettings.js with complete mobile fixes
+
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import "./styleModules/scenarioSettingsModule.css";
@@ -16,9 +18,137 @@ export default function ScenarioSettings({
   const [numPlayers, setNumPlayers] = useState(scenario?.limit_players || 1);
   const [photo, setPhoto] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(scenario?.photo_url || null);
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
   const fileInputRef = useRef(null);
   const router = useRouter();
   const settingsRef = useRef(null);
+
+  // Handle body scroll lock and keyboard detection
+  useEffect(() => {
+    if (isOpen) {
+      // Lock body scroll when settings are open
+      document.body.classList.add("settings-open");
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
+      document.body.style.height = "100%";
+    } else {
+      // Unlock body scroll when settings are closed
+      document.body.classList.remove("settings-open");
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.height = "";
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.classList.remove("settings-open");
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.height = "";
+    };
+  }, [isOpen]);
+
+  // Mobile keyboard and viewport detection
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    let initialViewportHeight = window.innerHeight;
+    let initialScreenHeight = window.screen?.height || window.innerHeight;
+
+    const handleViewportChange = () => {
+      if (window.innerWidth <= 768) {
+        const currentHeight = window.innerHeight;
+        const heightDifference = initialViewportHeight - currentHeight;
+
+        // If viewport shrunk by more than 150px, likely keyboard is visible
+        const keyboardThreshold = 150;
+        const isKeyboardVisible = heightDifference > keyboardThreshold;
+
+        setKeyboardVisible(isKeyboardVisible);
+
+        // Update the settings wrapper class
+        if (settingsRef.current) {
+          if (isKeyboardVisible) {
+            settingsRef.current.classList.add("keyboard-visible");
+          } else {
+            settingsRef.current.classList.remove("keyboard-visible");
+          }
+        }
+      }
+    };
+
+    // Use Visual Viewport API if available (better detection)
+    if (window.visualViewport) {
+      const handleVisualViewportChange = () => {
+        const viewport = window.visualViewport;
+        const heightDifference = initialViewportHeight - viewport.height;
+        const isKeyboardVisible = heightDifference > 100;
+
+        setKeyboardVisible(isKeyboardVisible);
+
+        if (settingsRef.current) {
+          if (isKeyboardVisible) {
+            settingsRef.current.classList.add("keyboard-visible");
+          } else {
+            settingsRef.current.classList.remove("keyboard-visible");
+          }
+        }
+      };
+
+      window.visualViewport.addEventListener(
+        "resize",
+        handleVisualViewportChange
+      );
+
+      return () => {
+        if (window.visualViewport) {
+          window.visualViewport.removeEventListener(
+            "resize",
+            handleVisualViewportChange
+          );
+        }
+      };
+    } else {
+      // Fallback for browsers without Visual Viewport API
+      window.addEventListener("resize", handleViewportChange);
+
+      return () => {
+        window.removeEventListener("resize", handleViewportChange);
+      };
+    }
+  }, []);
+
+  // Handle input focus to ensure proper scrolling and prevent zoom
+  const handleInputFocus = (e) => {
+    // Prevent zoom on iOS by ensuring font-size is at least 16px
+    if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") {
+      e.target.style.fontSize = "16px";
+
+      // Small delay to ensure keyboard is shown, then scroll input into view
+      setTimeout(() => {
+        if (e.target && typeof e.target.scrollIntoView === "function") {
+          e.target.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "nearest",
+          });
+        }
+      }, 300);
+    }
+  };
+
+  const handleInputBlur = () => {
+    // Small delay to detect if keyboard is closing
+    setTimeout(() => {
+      setKeyboardVisible(false);
+      if (settingsRef.current) {
+        settingsRef.current.classList.remove("keyboard-visible");
+      }
+    }, 300);
+  };
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
@@ -125,7 +255,9 @@ export default function ScenarioSettings({
 
   return (
     <div
-      className={`scenarioSettingsWrapper ${isOpen ? "open" : "closed"}`}
+      className={`scenarioSettingsWrapper ${isOpen ? "open" : "closed"} ${
+        keyboardVisible ? "keyboard-visible" : ""
+      }`}
       ref={settingsRef}
       onClick={(e) => e.stopPropagation()}
     >
@@ -259,7 +391,10 @@ export default function ScenarioSettings({
             className="settingsInput"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            onFocus={handleInputFocus}
+            onBlur={handleInputBlur}
             maxLength="255"
+            style={{ fontSize: "16px" }} // Prevent zoom on iOS
           />
           <div className="charCounter">{name.length}/255</div>
         </div>
@@ -306,9 +441,12 @@ export default function ScenarioSettings({
               } else if (parseInt(value) > 6) {
                 setNumPlayers(6);
               }
+              handleInputBlur();
             }}
+            onFocus={handleInputFocus}
             min="1"
             max="6"
+            style={{ fontSize: "16px" }} // Prevent zoom on iOS
           />
         </div>
 
@@ -339,8 +477,11 @@ export default function ScenarioSettings({
               className="settingsInput textareaInput"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
               rows={4}
               maxLength="4096"
+              style={{ fontSize: "16px" }} // Prevent zoom on iOS
             />
             <div className="charCounter">{description.length}/4096</div>
           </div>
