@@ -41,13 +41,16 @@ export default function StoriesContainer({ search }) {
 
       try {
         // Build params
-        const params = `page=${page}&limit=12${
+        const params = `page=${page}&limit=1000${
           search ? `&search=${search}` : ""
         }`;
 
+        const role = localStorage.getItem("role");
         // Make the request to the API endpoint
         const res = await fetch(
-          `https://squid-app-p63zw.ondigitalocean.app/api/scenarios/user?${params}`,
+          role === "admin"
+            ? `https://squid-app-p63zw.ondigitalocean.app/api/scenarios?${params}`
+            : `https://squid-app-p63zw.ondigitalocean.app/api/scenarios/user?${params}`,
           {
             method: "GET",
             headers: {

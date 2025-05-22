@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import styles from "./profile.module.css";
+import setLocalStorageItem from "@/components/clientSideComponents/creator/functionalComponents/localStorageSetItem";
 
 export default function Profile() {
   const [login, setLogin] = useState("");
@@ -16,7 +18,7 @@ export default function Profile() {
   const [isLoading, setIsLoading] = useState(true);
   const [fileName, setFileName] = useState("Wybierz plik");
   const fileInputRef = useRef(null);
-
+  const router = useRouter();
   useEffect(() => {
     async function fetchUser() {
       try {
@@ -79,7 +81,6 @@ export default function Profile() {
       if (profileData.photo instanceof File) {
         formData.append("photo", profileData.photo);
       }
-
       setIsLoading(true);
       const response = await fetch(
         `https://squid-app-p63zw.ondigitalocean.app/api/users/profile`,
@@ -94,7 +95,12 @@ export default function Profile() {
       setIsLoading(false);
 
       if (!response.ok) alert("Coś poszło nie tak...");
-      else alert("Profil zaktualizowany!");
+      else {
+        const r = await response.json();
+        setLocalStorageItem("user", r.login);
+        setLocalStorageItem("photoUrl", r.photo_url);
+        alert("Profil zaktualizowany!");
+      }
     } catch (error) {
       setIsLoading(false);
       console.error(error);
@@ -132,6 +138,33 @@ export default function Profile() {
       </div>
     );
   }
+  const handleAccoutDelete = async () => {
+    const confirmed = confirm("Czy na pewno chcesz usunąć konto?");
+    if (!confirmed) return;
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      console.error("Brak tokenu jwt");
+      return;
+    }
+    const userId = localStorage.getItem("userId");
+    try {
+      const res = await fetch(
+        `https://squid-app-p63zw.ondigitalocean.app/api/users/${userId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res.ok) {
+        alert("Twoje konto zostało pomyślnie usunięte.");
+        router.push("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className={styles.profileWrapper}>
@@ -273,6 +306,9 @@ export default function Profile() {
                 strokeLinejoin="round"
               />
             </svg>
+          </button>
+          <button className={styles.deleteButton} onClick={handleAccoutDelete}>
+            Usuń konto
           </button>
         </form>
       </div>
