@@ -114,9 +114,6 @@ body {
 .nav-link:hover {
   color: #d1d5db;
 }
-*/ .nav-link:hover {
-  color: var(--primary);
-}
 
 .nav-link::after {
   content: "";
