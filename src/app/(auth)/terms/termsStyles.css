@@ -1,0 +1,155 @@
+.policyContainer {
+  position: relative;
+  min-height: 100vh;
+  background-color: #0f0f0f;
+  background-image: linear-gradient(
+    to top,
+    rgba(255, 127, 0, 0.05),
+    transparent
+  );
+  padding: 120px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.policyBackground {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.08;
+  background: radial-gradient(
+      600px circle at 20% 30%,
+      rgba(255, 127, 0, 0.15),
+      transparent 40%
+    ),
+    radial-gradient(
+      800px circle at 80% 70%,
+      rgba(255, 127, 0, 0.1),
+      transparent 40%
+    );
+}
+
+.policyWrapper {
+  position: relative;
+  max-width: 900px;
+  width: 100%;
+  background-color: rgba(255, 127, 0, 0.03);
+  border: 1px solid rgba(255, 127, 0, 0.1);
+  border-radius: 16px;
+  padding: 48px;
+  z-index: 2;
+  box-shadow: 0 0 24px rgba(255, 127, 0, 0.05);
+}
+
+.policyHeader {
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: #ff7f00;
+  margin-bottom: 16px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.backButton:hover {
+  color: #ffa94d;
+}
+
+.policyTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #ff7f00, #ffb366);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 8px;
+}
+
+.policySubtitle {
+  font-size: 1rem;
+  color: #d1d5db;
+}
+
+.policyContent {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.policySection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ff7f00;
+}
+
+.sectionText {
+  font-size: 1rem;
+  color: #d1d5db;
+  line-height: 1.6;
+}
+
+.policyList {
+  list-style: disc inside;
+  color: #d1d5db;
+  font-size: 1rem;
+  line-height: 1.6;
+  padding-left: 1em;
+}
+
+.dataList {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dataItem h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f8f8f8;
+}
+
+.dataItem p {
+  color: #d1d5db;
+  margin: 4px 0 0 0;
+}
+
+.contactInfo {
+  font-size: 1rem;
+  color: #d1d5db;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .policyWrapper {
+    padding: 32px 20px;
+  }
+
+  .policyTitle {
+    font-size: 2rem;
+  }
+
+  .policyContent {
+    gap: 32px;
+  }
+
+  .sectionTitle {
+    font-size: 1.3rem;
+  }
+}

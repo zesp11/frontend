@@ -1,36 +1,36 @@
 "use client";
+import AboutSection from "@/components/generalComponents/aboutSection";
+import ContactSection from "@/components/generalComponents/ContactSection";
+import FeaturesSection from "@/components/generalComponents/featuresSection";
+import HeroSection from "@/components/generalComponents/heroSection";
+import Navbar from "@/components/generalComponents/navBar";
 import { useEffect } from "react";
-import Navbar from "../components/generalComponents/navbar";
-import HomeSection from "../components/generalComponents/HomeSection";
-import AboutSection from "../components/generalComponents/AboutSection";
-import ServicesSection from "../components/generalComponents/ServicesSection";
-import ContactSection from "../components/generalComponents/ContactSection";
-import Fade from "../components/generalComponents/fade";
 
 export default function Home() {
   useEffect(() => {
-    const handleScroll = () => {
-      const navbar = document.querySelector(".navbar");
-      if (window.scrollY > 50) {
-        navbar.style.padding = "15px 0";
-        navbar.style.backgroundColor = "rgba(26, 26, 26, 0.95)";
-      } else {
-        navbar.style.padding = "20px 0";
-        navbar.style.backgroundColor = "rgba(26, 26, 26, 0.9)";
+    // Smooth scrolling behavior for anchor links
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const element = document.querySelector(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("hashchange", handleHashChange);
+    handleHashChange(); // Handle initial hash
+
+    return () => window.removeEventListener("hashchange", handleHashChange);
   }, []);
 
   return (
     <main>
-      <HomeSection />
+      <Navbar />
+      <HeroSection />
       <AboutSection />
-      <Fade id="first" />
-      <ServicesSection />
-      <Fade id="second" />
+      <FeaturesSection />
       <ContactSection />
     </main>
   );

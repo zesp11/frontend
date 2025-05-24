@@ -19,9 +19,6 @@ export default function RootLayout({ children }) {
     <html lang="pl">
       <head>{/* Any additional head elements can go here if needed */}</head>
       <body>
-        <nav>
-          <NavbarSwitcher />
-        </nav>
         <main className="app-main">{children}</main>
       </body>
     </html>

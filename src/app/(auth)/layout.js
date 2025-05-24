@@ -1,8 +1,10 @@
-export const metadata = {
-  title: "Modern OnePage",
-  description: "Nowoczesna strona one-page w Next.js",
-};
+import Navbar from "@/components/generalComponents/navBar";
 
-export default function RootLayout({ children }) {
-  return <div>{children}</div>;
+export default function Layout({ children }) {
+  return (
+    <>
+      <Navbar />
+      {children}
+    </>
+  );
 }
