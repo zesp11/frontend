@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import "./styleModules/searchFieldModule.css";
 
 export default function SearchField({ setSearch }) {

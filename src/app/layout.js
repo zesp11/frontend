@@ -1,5 +1,4 @@
 import "./globals.css";
-import NavbarSwitcher from "@/components/clientSideComponents/creator/navBarSwitcher";
 
 // Separate viewport export as per Next.js recommendation
 export const viewport = {

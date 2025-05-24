@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import flowComponentModule from "./styleModules/flowComponentModule.css";
 
 export default function EdgeEditor({
   edge,
