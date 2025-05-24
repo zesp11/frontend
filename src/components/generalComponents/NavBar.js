@@ -7,7 +7,7 @@ import Image from "next/image";
 import styles from "./styleModules/navBar.module.css";
 import { usePathname, useRouter } from "next/navigation";
 
-export default function Navbar() {
+export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const router = useRouter();

@@ -4,7 +4,7 @@ import HeroSection from "@/components/generalComponents/HeroSection";
 import AboutSection from "@/components/generalComponents/AboutSection";
 import ContactSection from "@/components/generalComponents/ContactSection";
 import FeaturesSection from "@/components/generalComponents/FeaturesSection";
-import Navbar from "@/components/generalComponents/NavBar";
+import NavBar from "@/components/generalComponents/NavBar";
 import { useEffect } from "react";
 
 export default function Home() {
@@ -33,7 +33,7 @@ export default function Home() {
       <AboutSection />
       <FeaturesSection />
       <ContactSection /> */}
-      <Navbar />
+      <NavBar />
       <HeroSection />
       <AboutSection />
       <FeaturesSection />
