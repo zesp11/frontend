@@ -1,7 +1,7 @@
 "use client";
-import AboutSection from "../components/generalComponents/navBar";
 import ContactSection from "../components/generalComponents/contactSection";
 import FeaturesSection from "../components/generalComponents/featuresSection";
+import AboutSection from "../components/generalComponents/aboutSection";
 import HeroSection from "../components/generalComponents/heroSection";
 import Navbar from "../components/generalComponents/navBar";
 import { useEffect } from "react";

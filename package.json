@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@babel/runtime": "^7.27.1",
     "@netlify/next": "^1.4.9",
     "@netlify/plugin-nextjs": "^5.10.4",
     "@xyflow/react": "^12.4.3",

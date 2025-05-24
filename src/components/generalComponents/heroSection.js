@@ -2,8 +2,16 @@
 import { Pencil, ArrowDownToLineIcon, MapPin } from "lucide-react";
 import styles from "./styleModules/heroSection.module.css";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function HeroSection() {
+  const router = useRouter();
+  const onNewStory = () => {
+    router.push("/login");
+  };
+  const onDownload = () => {
+    alert("Obecnie aplikacja mobilna jest niedostępna dla użytkowników.");
+  };
   return (
     <section id="hero" className={styles.heroSection}>
       <div className={styles.heroBackground}></div>
@@ -15,11 +23,11 @@ export default function HeroSection() {
             zapomnianymi ścieżkami i ożywiaj historie wpisane w rzeczywistość.
           </p>
           <div className={styles.heroButtons}>
-            <button className={styles.primaryButton}>
+            <button className={styles.primaryButton} onClick={onNewStory}>
               <Pencil size={20} />
               Stwórz przygodę
             </button>
-            <button className={styles.secondaryButton}>
+            <button className={styles.secondaryButton} onClick={onDownload}>
               <ArrowDownToLineIcon size={20} />
               Pobierz aplikację
             </button>
