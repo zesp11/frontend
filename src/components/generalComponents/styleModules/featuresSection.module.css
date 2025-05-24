@@ -1,0 +1,99 @@
+.featuresSection {
+  padding: 120px 0;
+  position: relative;
+  background-color: #0a0a0a;
+}
+
+.sectionContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.sectionTitle {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #ff7f00 0%, #ffb366 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.sectionSubtitle {
+  font-size: 1.2rem;
+  color: #d1d5db;
+  text-align: center;
+  margin: 0 auto 64px;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+  margin-top: 64px;
+}
+
+.featureCard {
+  background-color: #111111;
+  padding: 32px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 127, 0, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.featureCard:hover {
+  transform: translateY(-8px);
+  border-color: rgba(255, 127, 0, 0.3);
+  box-shadow: 0 12px 40px rgba(255, 127, 0, 0.1);
+}
+
+.featureCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #ff7f00, #ffb366);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.featureCard:hover::before {
+  transform: scaleX(1);
+}
+
+.featureIcon {
+  width: 48px;
+  height: 48px;
+  background-color: rgba(255, 127, 0, 0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  transition: all 0.3s ease;
+}
+
+.featureCard:hover .featureIcon {
+  background-color: rgba(255, 127, 0, 0.2);
+  transform: scale(1.1);
+}
+
+.featureTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #f8f8f8;
+}
+
+.featureDescription {
+  color: #d1d5db;
+  line-height: 1.6;
+}

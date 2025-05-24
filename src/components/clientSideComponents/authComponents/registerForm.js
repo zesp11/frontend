@@ -2,13 +2,15 @@
 import Link from "next/link";
 import "./styleModules/authStyles.css";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRetype, setPasswordRetype] = useState("");
-
+  const [mess, setMess] = useState("");
+  const router = useRouter();
   async function fetchData(event) {
     event.preventDefault();
     if (password !== passwordRetype) {
@@ -32,91 +34,98 @@ export default function RegisterForm() {
       );
 
       const data = await res.json();
-      alert(data.message);
+      if (!res.ok) setMess(data.message);
+      else {
+        alert("Pomyślnie założono konto. Możesz się teraz zalogować.");
+        router.push("/login");
+      }
     } catch (error) {
       console.error("Error:", error);
     }
   }
 
   return (
-    <div className="register-container">
-      <div className="register-wrapper">
-        <div className="back-div">
-          <div className="form-container">
-            <h1 className="form-title">Zarejestruj się!</h1>
-            <form onSubmit={fetchData} className="form">
-              <div className="form-group">
-                <label className="form-label">Nazwa Użytkownika</label>
-                <input
-                  id="username"
-                  className="form-input"
-                  type="text"
-                  placeholder="Nazwa Użytkownika"
-                  value={login}
-                  onChange={(e) => setLogin(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Email</label>
-                <input
-                  id="email"
-                  className="form-input"
-                  type="email"
-                  placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Hasło</label>
-                <input
-                  id="password"
-                  className="form-input"
-                  type="password"
-                  placeholder="Hasło"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Powtórz Hasło</label>
-                <input
-                  id="password-retype"
-                  className="form-input"
-                  type="password"
-                  placeholder="Powtórz Hasło"
-                  value={passwordRetype}
-                  onChange={(e) => setPasswordRetype(e.target.value)}
-                  required
-                />
-              </div>
-              <button className="submit-button" type="submit">
-                UTWÓRZ KONTO
-              </button>
-            </form>
-            <div className="login-link">
-              <h3>
-                Masz konto?&nbsp;
-                <Link className="login-link-text" href="/login">
-                  Zaloguj się!
-                </Link>
-              </h3>
+    <div className="authContainer">
+      <div className="authBackground"></div>
+      <div className="authWrapper">
+        <div className="authCard">
+          <h1 className="authTitle">Zarejestruj się!</h1>
+          <form onSubmit={fetchData} className="authForm">
+            <div className="formGroup">
+              <label className="formLabel">Nazwa Użytkownika</label>
+              <input
+                id="username"
+                className="formInput"
+                type="text"
+                placeholder="Wprowadź nazwę użytkownika"
+                value={login}
+                onChange={(e) => setLogin(e.target.value)}
+                autoComplete="username"
+                required
+              />
             </div>
-            <div className="terms">
-              <p>
-                Tworząc konto, zgadzasz się z&nbsp;
-                <a className="terms-link" href="#">
-                  Regulaminem
-                </a>
-                &nbsp;oraz&nbsp;
-                <a className="terms-link" href="#">
-                  Polityką Prywatności
-                </a>
-              </p>
+            <div className="formGroup">
+              <label className="formLabel">Email</label>
+              <input
+                id="email"
+                className="formInput"
+                type="email"
+                placeholder="Wprowadź swój email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
+            <div className="formGroup">
+              <label className="formLabel">Hasło</label>
+              <input
+                id="password"
+                className="formInput"
+                type="password"
+                placeholder="Wprowadź hasło"
+                autoComplete="new-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <div className="formGroup">
+              <label className="formLabel">Powtórz Hasło</label>
+              <input
+                id="password-retype"
+                className="formInput"
+                type="password"
+                placeholder="Powtórz hasło"
+                autoComplete="new-password"
+                value={passwordRetype}
+                onChange={(e) => setPasswordRetype(e.target.value)}
+                required
+              />
+            </div>
+            <button className="submitButton" type="submit">
+              UTWÓRZ KONTO
+            </button>
+          </form>
+          <div style={{ color: "red" }}>{mess}</div>
+          <div className="authLink">
+            <h3>
+              Masz już konto?&nbsp;
+              <Link className="authLinkText" href="/login">
+                Zaloguj się!
+              </Link>
+            </h3>
+          </div>
+          <div className="terms">
+            <p>
+              Tworząc konto, zgadzasz się z&nbsp;
+              <Link className="termsLink" href="/terms">
+                Regulaminem
+              </Link>
+              &nbsp;oraz&nbsp;
+              <Link className="termsLink" href="/privacy">
+                Polityką Prywatności
+              </Link>
+            </p>
           </div>
         </div>
       </div>
