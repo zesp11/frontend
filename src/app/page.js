@@ -1,9 +1,9 @@
 "use client";
-import AboutSection from "@/components/generalComponents/aboutSection";
-import ContactSection from "@/components/generalComponents/ContactSection";
-import FeaturesSection from "@/components/generalComponents/featuresSection";
-import HeroSection from "@/components/generalComponents/heroSection";
-import Navbar from "@/components/generalComponents/navBar";
+import AboutSection from "../components/generalComponents/navBar";
+import ContactSection from "../components/generalComponents/contactSection";
+import FeaturesSection from "../components/generalComponents/featuresSection";
+import HeroSection from "../components/generalComponents/heroSection";
+import Navbar from "../components/generalComponents/navBar";
 import { useEffect } from "react";
 
 export default function Home() {
