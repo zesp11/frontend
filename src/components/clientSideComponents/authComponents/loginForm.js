@@ -4,7 +4,7 @@ import "./styleModules/authStyles.css";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import isTokenValid from "@/components/generalComponents/TokenValidation";
-
+const url = process.env.NEXT_PUBLIC_API_URL;
 export default function LoginForm() {
   const router = useRouter();
   const [login, setLogin] = useState("");
@@ -23,16 +23,13 @@ export default function LoginForm() {
     event.preventDefault();
 
     try {
-      const res = await fetch(
-        `https://squid-app-p63zw.ondigitalocean.app/api/auth/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ login: login, password: password }),
-        }
-      );
+      const res = await fetch(`${url}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ login: login, password: password }),
+      });
 
       const data = await res.json();
       if (data.error === "Invalid credentials.") {

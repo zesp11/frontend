@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import "./styleModules/scenarioSettingsModule.css";
 import { useFlow } from "./functionalComponents/flowContext";
-
+const url = process.env.NEXT_PUBLIC_API_URL;
 export default function ScenarioSettings({
   scenario,
   setScenario,
@@ -238,16 +238,13 @@ export default function ScenarioSettings({
         form.append("photo", photo);
       }
 
-      const res = await fetch(
-        `https://squid-app-p63zw.ondigitalocean.app/api/scenarios/${id}`,
-        {
-          method: "PUT",
-          body: form,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await fetch(`${url}/api/scenarios/${id}`, {
+        method: "PUT",
+        body: form,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (res.ok) {
         setScenario((s) => ({
@@ -283,15 +280,12 @@ export default function ScenarioSettings({
     }
 
     try {
-      const res = await fetch(
-        `https://squid-app-p63zw.ondigitalocean.app/api/scenarios/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await fetch(`${url}/api/scenarios/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (res.ok) {
         router.push("/creator");

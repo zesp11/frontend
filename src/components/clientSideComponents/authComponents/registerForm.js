@@ -3,7 +3,7 @@ import Link from "next/link";
 import "./styleModules/authStyles.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
+const url = process.env.NEXT_PUBLIC_API_URL;
 export default function RegisterForm() {
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
@@ -18,20 +18,17 @@ export default function RegisterForm() {
       return;
     }
     try {
-      const res = await fetch(
-        `https://squid-app-p63zw.ondigitalocean.app/api/auth/register`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            login: login,
-            email: email,
-            password: password,
-          }),
-        }
-      );
+      const res = await fetch(`${url}/api/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          login: login,
+          email: email,
+          password: password,
+        }),
+      });
 
       const data = await res.json();
       if (!res.ok) setMess(data.message);
