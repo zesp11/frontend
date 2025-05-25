@@ -24,6 +24,7 @@ import {
   addStep,
   editChoice,
 } from "./functionalComponents/fetchFunctions";
+import { useFlow } from "./functionalComponents/flowContext";
 
 // Define node dimensions for layout calculations
 const nodeWidth = 180;
@@ -32,7 +33,7 @@ const nodeHeight = 80;
 export default function FlowComponent({ scenario, id_scen, isOpen }) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [backupNodes, setBackupNodes] = useState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const { edges, setEdges, onEdgesChange } = useFlow();
   const [backupEdges, setBackupEdges] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   const [selectedEdge, setSelectedEdge] = useState(null);
@@ -290,8 +291,9 @@ export default function FlowComponent({ scenario, id_scen, isOpen }) {
     async (id, data) => {
       try {
         // Call editStep with the full data object including photo
-        const photoUrl = await editStep(id, data, id_scen);
-        if (!photoUrl) return;
+        const v = await editStep(id, data, id_scen);
+        if (!v.resCode) return;
+        const photoUrl = v.photo;
         // Update nodes state
         setNodes((nds) =>
           nds.map((node) => {

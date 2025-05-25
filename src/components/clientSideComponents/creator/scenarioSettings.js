@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import "./styleModules/scenarioSettingsModule.css";
+import { useFlow } from "./functionalComponents/flowContext";
 
 export default function ScenarioSettings({
   scenario,
@@ -12,7 +13,6 @@ export default function ScenarioSettings({
   id,
   isOpen,
   setIsOpen,
-  visibleHelp,
   onVisibleHelp,
 }) {
   const [name, setName] = useState(scenario?.name || "");
@@ -24,11 +24,18 @@ export default function ScenarioSettings({
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [saveFailed, setSaveFailed] = useState(false);
   const fileInputRef = useRef(null);
   const router = useRouter();
   const settingsRef = useRef(null);
-
+  const { edges } = useFlow();
   // Handle body scroll lock and keyboard detection
+  const canModify = () => {
+    for (const edge of edges) {
+      if (edge.id_players?.some((id) => id > numPlayers)) return false;
+    }
+    return true;
+  };
   useEffect(() => {
     if (isOpen) {
       // Lock body scroll when settings are open
@@ -134,7 +141,13 @@ export default function ScenarioSettings({
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [saveSuccess]);
+    if (saveFailed) {
+      const timer = setTimeout(() => {
+        setSaveFailed(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [saveSuccess, saveFailed]);
 
   // Handle input focus to ensure proper scrolling and prevent zoom
   const handleInputFocus = (e) => {
@@ -179,6 +192,10 @@ export default function ScenarioSettings({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!canModify()) {
+      setSaveFailed(true);
+      return;
+    }
     if (!name || !description) {
       // Show validation error without alert
       const nameInput = document.querySelector('input[type="text"]');
@@ -203,7 +220,7 @@ export default function ScenarioSettings({
 
     setIsLoading(true);
     setSaveSuccess(false);
-
+    setSaveFailed(false);
     const token = localStorage.getItem("accessToken");
     if (!token) {
       console.error("No token found in localStorage");
@@ -345,7 +362,25 @@ export default function ScenarioSettings({
           Scenariusz został zaktualizowany!
         </div>
       )}
-
+      {saveFailed && (
+        <div className="failedMessage">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Nie możesz zmienić liczby graczy. Zweryfikuj numery graczy w
+          scenariuszu!
+        </div>
+      )}
       {/* Photo section */}
       <div className="photoSection">
         <div className="fieldLabel">

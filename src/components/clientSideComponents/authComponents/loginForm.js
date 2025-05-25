@@ -14,7 +14,6 @@ export default function LoginForm() {
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (token) {
-      console.log(token);
       if (isTokenValid(token)) {
         router.push("/creator");
       }

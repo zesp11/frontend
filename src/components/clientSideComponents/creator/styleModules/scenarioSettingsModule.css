@@ -173,6 +173,28 @@
 .successMessage svg {
   flex-shrink: 0;
 }
+.failedMessage {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(
+    135deg,
+    rgba(197, 34, 34, 0.1) 0%,
+    rgba(197, 34, 34, 0.05) 100%
+  );
+  border: 1px solid rgba(197, 34, 34, 0.3);
+  color: #c52245;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  animation: slideInFromTop 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.failedMessage svg {
+  flex-shrink: 0;
+}
 
 /* Photo section */
 .photoSection {
