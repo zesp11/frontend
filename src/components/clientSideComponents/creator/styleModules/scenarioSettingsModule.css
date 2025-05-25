@@ -1,90 +1,78 @@
+/* Modern Scenario Settings Styles - Complete with Loading Animations */
 .scenarioSettingsWrapper {
   width: 320px;
-  /* Use dynamic viewport height instead of fixed vh */
   height: 100dvh;
-  /* Fallback for browsers that don't support dvh */
   height: 100vh;
   background: linear-gradient(145deg, #0a0a0a 0%, #151515 100%);
-  border-right: 2px solid #ff6b00;
+  border-right: 2px solid #ff7f00;
   padding: 24px;
+
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 100;
-  box-shadow: 0 0 30px rgba(255, 107, 0, 0.1);
+  box-shadow: 0 0 30px rgba(255, 127, 0, 0.1);
+  position: relative;
 }
+
 @media (max-width: 768px) {
   .scenarioSettingsWrapper {
     position: fixed;
     left: 0;
     top: 0;
-    /* Use dynamic viewport units for mobile */
     width: 90%;
     max-width: 350px;
-    /* Critical fix: Use dynamic viewport height */
     height: 100dvh;
-    /* Fallback for older browsers */
     height: 100vh;
-    /* Ensure it never gets cut off */
     min-height: 100%;
     max-height: 100dvh;
     max-height: 100vh;
     box-shadow: 5px 0 25px rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(10px);
-    /* Ensure proper stacking */
     z-index: 9999;
   }
+
   .scenarioSettingsWrapper.closed {
     transform: translateX(-100%);
   }
 
   .scenarioSettingsWrapper.open {
     transform: translateX(0);
-    /* Force visibility */
     display: flex !important;
     visibility: visible !important;
     opacity: 1 !important;
   }
 
-  /* Handle keyboard visibility - when keyboard is shown */
   .scenarioSettingsWrapper.keyboard-visible {
-    /* Adjust height when keyboard is visible */
     height: 100vh;
     max-height: 100vh;
-    /* Ensure content stays accessible */
     padding-bottom: 20px;
   }
 
-  /* Ensure scrolling works properly on mobile */
   .scenarioSettingsWrapper {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    /* Prevent horizontal scroll */
     overflow-x: hidden;
   }
 }
-/* Fix for very small screens and short viewports */
+
 @media (max-width: 480px) {
   .scenarioSettingsWrapper {
     width: 95%;
     max-width: none;
     padding: 20px;
-    /* Ensure it works on very small screens */
     height: 100dvh;
     height: 100vh;
-    min-height: 500px; /* Minimum usable height */
+    min-height: 500px;
   }
 }
 
-/* Specific fix for landscape orientation on mobile */
 @media (max-width: 768px) and (orientation: landscape) {
   .scenarioSettingsWrapper {
-    /* In landscape, browser bars take more space */
     height: 100vh;
     max-height: 100vh;
-    /* Reduce padding to fit more content */
     padding: 16px;
   }
 
@@ -108,33 +96,12 @@
 }
 
 .scenarioSettingsWrapper::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #ff6b00, #ff8c33);
+  background: linear-gradient(to bottom, #ff7f00, #ffb366);
   border-radius: 3px;
 }
 
 .scenarioSettingsWrapper::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #ff8c33, #ff6b00);
-}
-
-/* Mobile styles */
-@media (max-width: 768px) {
-  .scenarioSettingsWrapper {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 90%;
-    max-width: 350px;
-    box-shadow: 5px 0 25px rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(10px);
-  }
-
-  .scenarioSettingsWrapper.closed {
-    transform: translateX(-100%);
-  }
-
-  .scenarioSettingsWrapper.open {
-    transform: translateX(0);
-  }
+  background: linear-gradient(to bottom, #ffb366, #ff7f00);
 }
 
 /* Mobile header */
@@ -147,60 +114,91 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid rgba(255, 107, 0, 0.3);
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 127, 0, 0.2);
   }
 
   .mobileHeader h2 {
-    color: #ff6b00;
+    color: #ff7f00;
     margin: 0;
-    font-size: 20px;
-    font-weight: 600;
-    text-shadow: 0 0 10px rgba(255, 107, 0, 0.3);
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ff7f00 0%, #ffb366 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 
   .closeButton {
-    background: rgba(255, 107, 0, 0.1);
-    border: 1px solid rgba(255, 107, 0, 0.3);
-    color: white;
+    background: rgba(255, 127, 0, 0.1);
+    border: 1px solid rgba(255, 127, 0, 0.3);
+    color: #ff7f00;
     cursor: pointer;
-    padding: 8px;
-    border-radius: 8px;
+    padding: 10px;
+    border-radius: 12px;
     transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .closeButton:hover {
-    background: rgba(255, 107, 0, 0.2);
-    color: #ff6b00;
+    background: rgba(255, 127, 0, 0.2);
+    border-color: #ff7f00;
     transform: scale(1.05);
   }
 }
 
+/* Success Message */
+.successMessage {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(
+    135deg,
+    rgba(34, 197, 94, 0.1) 0%,
+    rgba(34, 197, 94, 0.05) 100%
+  );
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  animation: slideInFromTop 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.successMessage svg {
+  flex-shrink: 0;
+}
+
 /* Photo section */
 .photoSection {
-  margin-bottom: 28px;
+  margin-bottom: 32px;
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .scenarioPhotoContainer {
   width: 100%;
   aspect-ratio: 1/1;
-  border: 2px solid #ff6b00;
-  border-radius: 16px;
+  border: 2px solid rgba(255, 127, 0, 0.3);
+  border-radius: 20px;
   overflow: hidden;
   margin-top: 12px;
   position: relative;
   background: linear-gradient(
     135deg,
-    rgba(255, 107, 0, 0.1) 0%,
-    rgba(255, 140, 51, 0.05) 100%
+    rgba(255, 127, 0, 0.08) 0%,
+    rgba(255, 179, 102, 0.05) 100%
   );
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .scenarioPhotoContainer:hover {
-  border-color: #ff8c33;
-  box-shadow: 0 8px 25px rgba(255, 107, 0, 0.2);
+  border-color: #ff7f00;
+  box-shadow: 0 12px 30px rgba(255, 127, 0, 0.15);
   transform: translateY(-2px);
 }
 
@@ -222,13 +220,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 107, 0, 0.6);
+  color: rgba(255, 127, 0, 0.6);
   text-align: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 .photoPlaceholder span {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
 }
 
@@ -236,15 +234,11 @@
   position: absolute;
   bottom: 12px;
   right: 12px;
-  background: linear-gradient(
-    135deg,
-    rgba(0, 0, 0, 0.8) 0%,
-    rgba(0, 0, 0, 0.9) 100%
-  );
-  border: 1px solid rgba(255, 107, 0, 0.3);
-  border-radius: 12px;
-  width: 44px;
-  height: 44px;
+  background: rgba(255, 127, 0, 0.9);
+  border: 2px solid #111;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -254,27 +248,21 @@
 }
 
 .scenarioPhotoUpload:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 107, 0, 0.8) 0%,
-    rgba(255, 140, 51, 0.9) 100%
-  );
-  border-color: #ff8c33;
+  background: #ff7f00;
   transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(255, 127, 0, 0.3);
 }
 
 /* Field labels */
 .fieldLabel {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: #ff6b00;
-  font-size: 14px;
+  gap: 10px;
+  color: #ff7f00;
+  font-size: 0.95rem;
   font-weight: 600;
-  margin-bottom: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  text-shadow: 0 0 10px rgba(255, 107, 0, 0.3);
+  margin-bottom: 12px;
+  margin-left: 4px;
 }
 
 .fieldLabel svg {
@@ -285,8 +273,9 @@
 .settingsSection {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
   flex: 1;
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
 }
 
 /* Input groups */
@@ -297,12 +286,12 @@
 }
 
 .settingsInput {
-  background: linear-gradient(145deg, #1e1e1e 0%, #252525 100%);
-  border: 2px solid rgba(255, 107, 0, 0.3);
-  color: white;
-  padding: 14px 16px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(255, 127, 0, 0.2);
+  color: #f8f8f8;
+  padding: 16px;
   border-radius: 12px;
-  font-size: 15px;
+  font-size: 1rem;
   outline: none;
   width: 100%;
   box-sizing: border-box;
@@ -312,14 +301,14 @@
 }
 
 .settingsInput:focus {
-  border-color: #ff6b00;
-  box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.1), 0 0 20px rgba(255, 107, 0, 0.2);
+  border-color: #ff7f00;
+  background: rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 0 4px rgba(255, 127, 0, 0.1);
   transform: translateY(-1px);
 }
 
 .settingsInput::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-  font-style: italic;
+  color: rgba(248, 248, 248, 0.4);
 }
 
 /* Textarea specific styles */
@@ -346,19 +335,19 @@
     rgba(30, 30, 30, 0.9) 0%,
     rgba(0, 0, 0, 0.8) 100%
   );
-  color: #ff6b00;
+  color: #ff7f00;
   padding: 4px 8px;
   border-radius: 6px;
   font-size: 11px;
   font-weight: 500;
   backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 107, 0, 0.2);
+  border: 1px solid rgba(255, 127, 0, 0.2);
 }
 
 .inputGroup .charCounter {
   position: static;
   align-self: flex-end;
-  margin-top: 6px;
+  margin-top: 8px;
   font-size: 12px;
 }
 
@@ -366,75 +355,89 @@
 .actionButtons {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 8px;
+  gap: 16px;
+  margin-top: 20px;
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
 }
 
 .actionButton {
-  background: linear-gradient(135deg, #ff6b00 0%, #ff8c33 100%);
-  color: black;
-  border: none;
-  padding: 14px 20px;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
   transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  min-height: 52px;
 }
 
-.actionButton:hover {
-  background: linear-gradient(135deg, #ff8c33 0%, #ff6b00 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 107, 0, 0.4);
+.actionButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
 }
 
-.actionButton:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 10px rgba(255, 107, 0, 0.3);
-}
-
+/* Primary button styles */
 .primaryButton {
-  background: linear-gradient(135deg, #ff6b00 0%, #ff8c33 100%);
+  background: #ff7f00;
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 127, 0, 0.3);
 }
 
+.primaryButton:hover:not(:disabled) {
+  background: #e06600;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 127, 0, 0.4);
+}
+
+.primaryButton:disabled {
+  background: rgba(255, 127, 0, 0.6);
+  box-shadow: 0 2px 8px rgba(255, 127, 0, 0.2);
+}
+
+/* Delete button styles */
+.deleteButton {
+  background: rgba(207, 34, 46, 0.1);
+  border: 2px solid rgba(207, 34, 46, 0.3);
+  color: #cf222e;
+}
+
+.deleteButton:hover:not(:disabled) {
+  background: rgba(207, 34, 46, 0.2);
+  border-color: #cf222e;
+  transform: translateY(-2px);
+}
+
+.deleteButton:disabled {
+  background: rgba(207, 34, 46, 0.05);
+  border-color: rgba(207, 34, 46, 0.2);
+  color: rgba(207, 34, 46, 0.6);
+}
+
+/* Secondary button styles */
 .secondaryButton {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 107, 0, 0.15) 0%,
-    rgba(255, 140, 51, 0.1) 100%
-  );
-  color: #ff6b00;
-  border: 2px solid rgba(255, 107, 0, 0.3);
+  background: rgba(255, 127, 0, 0.1);
+  border: 2px solid rgba(255, 127, 0, 0.3);
+  color: #ff7f00;
   box-shadow: none;
 }
 
-.secondaryButton:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 107, 0, 0.25) 0%,
-    rgba(255, 140, 51, 0.2) 100%
-  );
-  border-color: #ff6b00;
-  color: #ff8c33;
-  box-shadow: 0 4px 15px rgba(255, 107, 0, 0.2);
+.secondaryButton:hover:not(:disabled) {
+  background: rgba(255, 127, 0, 0.2);
+  border-color: #ff7f00;
+  transform: translateY(-1px);
 }
 
-.deleteButton {
-  background: linear-gradient(135deg, #ff3333 0%, #ff5555 100%);
-  color: white;
-  box-shadow: 0 4px 15px rgba(255, 51, 51, 0.3);
-}
-
-.deleteButton:hover {
-  background: linear-gradient(135deg, #ff5555 0%, #ff3333 100%);
-  box-shadow: 0 6px 20px rgba(255, 51, 51, 0.4);
+.secondaryButton:disabled {
+  background: rgba(255, 127, 0, 0.05);
+  border-color: rgba(255, 127, 0, 0.2);
+  color: rgba(255, 127, 0, 0.6);
 }
 
 /* Bottom actions */
@@ -442,14 +445,193 @@
   margin-top: auto;
   display: flex;
   gap: 12px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255, 107, 0, 0.2);
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 127, 0, 0.15);
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
 }
 
 .bottomActions .actionButton {
   flex: 1;
-  font-size: 13px;
+  font-size: 0.9rem;
   padding: 12px 16px;
+  min-height: 44px;
+}
+
+/* ========== LOADING ANIMATIONS - COMPLETE IMPLEMENTATION ========== */
+
+/* Button Spinner */
+.buttonSpinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+/* Button Loading States */
+.actionButton:disabled .buttonSpinner {
+  display: inline-block;
+}
+
+.actionButton:not(:disabled) .buttonSpinner {
+  display: none;
+}
+
+/* Specific spinner colors for different button types */
+.deleteButton .buttonSpinner {
+  border-color: rgba(207, 34, 46, 0.3);
+  border-top-color: #cf222e;
+}
+
+.secondaryButton .buttonSpinner {
+  border-color: rgba(255, 127, 0, 0.3);
+  border-top-color: #ff7f00;
+}
+
+.primaryButton .buttonSpinner {
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+}
+
+/* Loading text fade effect */
+.actionButton:disabled {
+  position: relative;
+}
+
+.actionButton:disabled > *:not(.buttonSpinner) {
+  opacity: 0.7;
+}
+
+/* Photo upload loading state */
+.scenarioPhotoUpload.loading {
+  pointer-events: none;
+  opacity: 0.7;
+  position: relative;
+}
+
+.scenarioPhotoUpload.loading svg {
+  opacity: 0;
+}
+
+.scenarioPhotoUpload.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  transform: translate(-50%, -50%);
+}
+
+/* Input loading states */
+.settingsInput.loading {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 127, 0, 0.1);
+  color: rgba(248, 248, 248, 0.6);
+  pointer-events: none;
+  position: relative;
+}
+
+.settingsInput.loading::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 127, 0, 0.3);
+  border-top-color: #ff7f00;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Form submission loading overlay */
+.scenarioSettingsWrapper.submitting {
+  position: relative;
+  pointer-events: none;
+}
+
+.scenarioSettingsWrapper.submitting::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scenarioSettingsWrapper.submitting::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 127, 0, 0.3);
+  border-top-color: #ff7f00;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  transform: translate(-50%, -50%);
+  z-index: 11;
+}
+
+/* Progress indicator for file uploads */
+.uploadProgress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #ff7f00, #ffb366);
+  border-radius: 0 0 20px 20px;
+  transition: width 0.3s ease;
+  z-index: 2;
+}
+
+.scenarioPhotoContainer.uploading {
+  pointer-events: none;
+  position: relative;
+}
+
+.scenarioPhotoContainer.uploading::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(1px);
+  z-index: 1;
+  border-radius: 18px;
+}
+
+/* Success/Error button states */
+.actionButton.success {
+  background: #22c55e !important;
+  color: white !important;
+  border-color: #22c55e !important;
+  animation: successPulse 0.6s ease-out;
+}
+
+.actionButton.error {
+  background: #ef4444 !important;
+  color: white !important;
+  border-color: #ef4444 !important;
+  animation: errorShake 0.6s ease-out;
 }
 
 /* Settings toggle button for mobile */
@@ -464,27 +646,47 @@
     left: 15px;
     top: 15px;
     z-index: 99;
-    background: linear-gradient(135deg, #ff6b00 0%, #ff8c33 100%);
-    color: black;
+    background: #ff7f00;
+    color: white;
     border: none;
     border-radius: 50%;
     width: 54px;
     height: 54px;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 20px rgba(255, 107, 0, 0.4);
+    box-shadow: 0 4px 20px rgba(255, 127, 0, 0.4);
     cursor: pointer;
     transition: all 0.3s ease;
   }
 
   .settingsToggle.active {
     background: linear-gradient(135deg, #333 0%, #444 100%);
-    color: #ff6b00;
+    color: #ff7f00;
   }
 
   .settingsToggle:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 25px rgba(255, 107, 0, 0.5);
+    box-shadow: 0 6px 25px rgba(255, 127, 0, 0.5);
+  }
+
+  .settingsToggle.loading {
+    pointer-events: none;
+    position: relative;
+  }
+
+  .settingsToggle.loading svg {
+    opacity: 0;
+  }
+
+  .settingsToggle.loading::after {
+    content: "";
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
   }
 }
 
@@ -501,16 +703,21 @@
   }
 
   .actionButtons {
-    gap: 10px;
+    gap: 12px;
   }
 
   .bottomActions {
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
   }
 
   .bottomActions .actionButton {
     flex: none;
+  }
+
+  .buttonSpinner {
+    width: 18px;
+    height: 18px;
   }
 }
 
@@ -520,7 +727,7 @@
   }
 
   .settingsSection {
-    gap: 18px;
+    gap: 20px;
   }
 
   .scenarioPhotoContainer {
@@ -528,23 +735,108 @@
   }
 
   .photoSection {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
   }
 }
 
-/* Additional modern touches */
+/* ========== ANIMATIONS ========== */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromTop {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes successPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes errorShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes fadeInOut {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* ========== ACCESSIBILITY ========== */
 @media (prefers-reduced-motion: reduce) {
   .scenarioSettingsWrapper,
   .actionButton,
   .settingsInput,
   .scenarioPhotoContainer {
     transition: none;
+    animation: none;
+  }
+
+  .buttonSpinner,
+  .scenarioPhotoUpload.loading::after,
+  .settingsInput.loading::after,
+  .scenarioSettingsWrapper.submitting::after,
+  .settingsToggle.loading::after {
+    animation: spin 2s linear infinite;
   }
 }
 
-/* Focus indicators for accessibility */
 .actionButton:focus-visible {
-  outline: 2px solid #ff6b00;
+  outline: 2px solid #ff7f00;
   outline-offset: 2px;
 }
 
@@ -553,6 +845,55 @@
 }
 
 .closeButton:focus-visible {
-  outline: 2px solid #ff6b00;
+  outline: 2px solid #ff7f00;
   outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .buttonSpinner,
+  .scenarioPhotoUpload.loading::after,
+  .settingsInput.loading::after,
+  .scenarioSettingsWrapper.submitting::after,
+  .settingsToggle.loading::after {
+    border-width: 3px;
+  }
+
+  .actionButton:disabled {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Loading state utility classes */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(255, 127, 0, 0.3);
+  border-top-color: #ff7f00;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Prevent text selection during loading states */
+.actionButton:disabled,
+.scenarioSettingsWrapper.submitting,
+.scenarioPhotoContainer.uploading,
+.settingsInput.loading {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }

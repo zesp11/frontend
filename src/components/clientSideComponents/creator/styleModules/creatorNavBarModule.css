@@ -21,12 +21,17 @@
   align-items: center;
   text-decoration: none;
   color: #f8f8f8;
+  transition: transform 0.2s ease;
 }
 
 .logo-image {
-  margin-right: 0.8rem;
+  position: relative;
+  width: 40px;
+  height: 40px;
 }
-
+.navbar-logo:hover {
+  transform: scale(1.05);
+}
 .logo-text {
   font-size: 1.3rem;
   font-weight: 700;

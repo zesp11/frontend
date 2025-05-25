@@ -77,16 +77,16 @@ export default function CreatorNavBar() {
     <nav className="navbar">
       <div className="navbar-container">
         <Link href="/creator" className="navbar-logo">
-          <Image
-            src="/logo.svg"
-            alt="Logo"
-            width={40}
-            height={40}
-            className="logo-image"
-            style={{ height: "auto" }} // Added this to maintain aspect ratio
-          />
+          <div className="logo-image">
+            <Image
+              src="/logo.svg"
+              alt="Logo"
+              fill
+              style={{ objectFit: "contain" }}
+            />
+          </div>
           <span className="logo-text">
-            Go <span className="logo-highlight">Tale</span>
+            Go<span className="logo-highlight">Tale</span>
           </span>
         </Link>
 

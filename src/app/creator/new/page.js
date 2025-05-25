@@ -6,6 +6,7 @@ import ScenarioSettings from "@/components/clientSideComponents/creator/scenario
 import LoadingAnimation from "@/components/clientSideComponents/creator/loadingAnimation";
 import { useSearchParams } from "next/navigation";
 import { useRef } from "react";
+import HelpComponent from "@/components/clientSideComponents/creator/helpComponent";
 
 // Create a child component that uses useSearchParams
 function ScenarioLoader() {
@@ -15,9 +16,9 @@ function ScenarioLoader() {
   const [scenario, setScenario] = useState(null);
   const [id, setId] = useState(searchParams.get("id"));
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [visibleHelp, setVisibleHelp] = useState(false);
   const requestInProgress = useRef(false);
   const isInitialMount = useRef(true);
-
   // Effect to handle screen size changes
   useEffect(() => {
     // Initialize settings panel state based on screen size
@@ -223,11 +224,14 @@ function ScenarioLoader() {
           id={id}
           isOpen={settingsOpen}
           setIsOpen={setSettingsOpen}
+          visibleHelp={visibleHelp}
+          onVisibleHelp={setVisibleHelp}
         />
       </div>
       <div className="flowContainer">
         <FlowComponent scenario={scenario} id_scen={id} isOpen={settingsOpen} />
       </div>
+      {visibleHelp && <HelpComponent onVisibleHelp={setVisibleHelp} />}
     </div>
   );
 }

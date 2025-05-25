@@ -1,4 +1,4 @@
-// Enhanced scenarioSettings.js with complete mobile fixes
+// Enhanced scenarioSettings.js with loading animation and improved feedback
 
 "use client";
 import { useState, useRef, useEffect } from "react";
@@ -12,6 +12,8 @@ export default function ScenarioSettings({
   id,
   isOpen,
   setIsOpen,
+  visibleHelp,
+  onVisibleHelp,
 }) {
   const [name, setName] = useState(scenario?.name || "");
   const [description, setDescription] = useState(scenario?.description || "");
@@ -19,6 +21,9 @@ export default function ScenarioSettings({
   const [photo, setPhoto] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(scenario?.photo_url || null);
   const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
   const fileInputRef = useRef(null);
   const router = useRouter();
   const settingsRef = useRef(null);
@@ -121,6 +126,16 @@ export default function ScenarioSettings({
     }
   }, []);
 
+  // Clear success message after 3 seconds
+  useEffect(() => {
+    if (saveSuccess) {
+      const timer = setTimeout(() => {
+        setSaveSuccess(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [saveSuccess]);
+
   // Handle input focus to ensure proper scrolling and prevent zoom
   const handleInputFocus = (e) => {
     // Prevent zoom on iOS by ensuring font-size is at least 16px
@@ -165,12 +180,34 @@ export default function ScenarioSettings({
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name || !description) {
-      alert("Uzupełnij dane scenariusza!");
+      // Show validation error without alert
+      const nameInput = document.querySelector('input[type="text"]');
+      const descriptionInput = document.querySelector("textarea");
+
+      if (!name && nameInput) {
+        nameInput.style.borderColor = "#cf222e";
+        nameInput.focus();
+      }
+      if (!description && descriptionInput) {
+        descriptionInput.style.borderColor = "#cf222e";
+        if (!name) descriptionInput.focus();
+      }
+
+      setTimeout(() => {
+        if (nameInput) nameInput.style.borderColor = "";
+        if (descriptionInput) descriptionInput.style.borderColor = "";
+      }, 3000);
+
       return;
     }
+
+    setIsLoading(true);
+    setSaveSuccess(false);
+
     const token = localStorage.getItem("accessToken");
     if (!token) {
       console.error("No token found in localStorage");
+      setIsLoading(false);
       return;
     }
 
@@ -196,7 +233,6 @@ export default function ScenarioSettings({
       );
 
       if (res.ok) {
-        alert("Zaktualizowano dane scenariusza!");
         setScenario((s) => ({
           ...s,
           name: name,
@@ -204,12 +240,15 @@ export default function ScenarioSettings({
           description: description,
           photo_url: previewUrl,
         }));
+        setSaveSuccess(true);
       } else {
         const errorText = await res.text();
         console.error("Failed to update scenario:", errorText);
       }
     } catch (error) {
       console.error("Error updating scenario:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -217,9 +256,12 @@ export default function ScenarioSettings({
     const confirmed = confirm("Czy na pewno chcesz usunąć ten scenariusz?");
     if (!confirmed) return;
 
+    setIsDeleting(true);
+
     const token = localStorage.getItem("accessToken");
     if (!token) {
       console.error("No token found in localStorage");
+      setIsDeleting(false);
       return;
     }
 
@@ -242,6 +284,8 @@ export default function ScenarioSettings({
       }
     } catch (error) {
       console.error("Error deleting scenario:", error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -250,7 +294,7 @@ export default function ScenarioSettings({
   };
 
   const onHelp = () => {
-    alert("Tu będzie popup z poradnikiem");
+    onVisibleHelp(true);
   };
 
   return (
@@ -281,6 +325,26 @@ export default function ScenarioSettings({
           </svg>
         </button>
       </div>
+
+      {/* Success message */}
+      {saveSuccess && (
+        <div className="successMessage">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Scenariusz został zaktualizowany!
+        </div>
+      )}
 
       {/* Photo section */}
       <div className="photoSection">
@@ -489,46 +553,69 @@ export default function ScenarioSettings({
 
         {/* Action Buttons */}
         <div className="actionButtons">
-          <button onClick={handleSubmit} className="actionButton primaryButton">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-              <polyline points="17 21 17 13 7 13 7 21"></polyline>
-              <polyline points="7 3 7 8 15 8"></polyline>
-            </svg>
-            Zapisz zmiany
+          <button
+            onClick={handleSubmit}
+            className="actionButton primaryButton"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <div className="buttonSpinner"></div>
+                Zapisywanie...
+              </>
+            ) : (
+              <>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                  <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                  <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+                Zapisz zmiany
+              </>
+            )}
           </button>
 
           <button
             onClick={onDeleteScenario}
             className="actionButton deleteButton"
+            disabled={isDeleting}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="3 6 5 6 21 6"></polyline>
-              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-              <line x1="10" y1="11" x2="10" y2="17"></line>
-              <line x1="14" y1="11" x2="14" y2="17"></line>
-            </svg>
-            Usuń scenariusz
+            {isDeleting ? (
+              <>
+                <div className="buttonSpinner"></div>
+                Usuwanie...
+              </>
+            ) : (
+              <>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  <line x1="10" y1="11" x2="10" y2="17"></line>
+                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+                Usuń scenariusz
+              </>
+            )}
           </button>
         </div>
 
@@ -548,7 +635,7 @@ export default function ScenarioSettings({
               strokeLinecap="round"
               strokeLinejoin="round"
             >
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4l2 2h4a2 2 0 0 1 2 2v1"></path>
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1-2-2h4l2 2h4a2 2 0 0 1 2 2v1"></path>
               <path d="M15 13l3-3 3 3"></path>
               <path d="M21 10v9a2 2 0 0 1-2 2h-4"></path>
             </svg>
