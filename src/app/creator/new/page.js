@@ -9,7 +9,7 @@ import { useRef } from "react";
 import HelpComponent from "@/components/clientSideComponents/creator/helpComponent";
 import FlowContext from "@/components/clientSideComponents/creator/functionalComponents/flowContext";
 import { useEdgesState } from "@xyflow/react";
-
+const url = process.env.NEXT_PUBLIC_API_URL;
 // Create a child component that uses useSearchParams
 function ScenarioLoader() {
   const searchParams = useSearchParams();
@@ -90,18 +90,15 @@ function ScenarioLoader() {
           // Optional: Add a default photo if you have one
           // formData.append('photo', photoFile);
 
-          const createRes = await fetch(
-            `https://squid-app-p63zw.ondigitalocean.app/api/scenarios`,
-            {
-              method: "POST",
-              body: formData,
-              headers: {
-                Authorization: `Bearer ${token}`,
-                // Do NOT set Content-Type header when using FormData
-                // The browser will set the correct multipart/form-data boundary
-              },
-            }
-          );
+          const createRes = await fetch(`${url}/api/scenarios`, {
+            method: "POST",
+            body: formData,
+            headers: {
+              Authorization: `Bearer ${token}`,
+              // Do NOT set Content-Type header when using FormData
+              // The browser will set the correct multipart/form-data boundary
+            },
+          });
 
           if (!createRes.ok) {
             const errorText = await createRes.text();
@@ -137,15 +134,12 @@ function ScenarioLoader() {
 
   async function fetchScenario(scenarioId, token) {
     try {
-      const fetchRes = await fetch(
-        `https://squid-app-p63zw.ondigitalocean.app/api/scenarios/${scenarioId}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const fetchRes = await fetch(`${url}/api/scenarios/${scenarioId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (!fetchRes.ok) {
         const errorText = await fetchRes.text();

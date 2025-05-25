@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./profile.module.css";
 import setLocalStorageItem from "@/components/clientSideComponents/creator/functionalComponents/localStorageSetItem";
-
+const url = process.env.NEXT_PUBLIC_API_URL;
 export default function Profile() {
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
@@ -29,13 +29,10 @@ export default function Profile() {
           return;
         }
 
-        const response = await fetch(
-          `https://squid-app-p63zw.ondigitalocean.app/api/users/profile`,
-          {
-            method: "GET",
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const response = await fetch(`${url}/api/users/profile`, {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        });
         if (!response.ok) {
           setIsLoading(false);
           return;
@@ -82,16 +79,13 @@ export default function Profile() {
         formData.append("photo", profileData.photo);
       }
       setIsLoading(true);
-      const response = await fetch(
-        `https://squid-app-p63zw.ondigitalocean.app/api/users/profile`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        }
-      );
+      const response = await fetch(`${url}/api/users/profile`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
       setIsLoading(false);
 
       if (!response.ok) alert("Coś poszło nie tak...");
@@ -142,15 +136,12 @@ export default function Profile() {
     }
     const userId = localStorage.getItem("userId");
     try {
-      const res = await fetch(
-        `https://squid-app-p63zw.ondigitalocean.app/api/users/${userId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await fetch(`${url}/api/users/${userId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (res.ok) {
         alert("Twoje konto zostało pomyślnie usunięte.");
         router.push("/");

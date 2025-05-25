@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import "./styleModules/creatorNavBarModule.css";
-
+const url = process.env.NEXT_PUBLIC_API_URL;
 export default function CreatorNavBar() {
   const [username, setUsername] = useState("Zaloguj");
   const [photoUrl, setPhotoUrl] = useState("");
@@ -57,13 +57,10 @@ export default function CreatorNavBar() {
       if (!token) {
         return;
       }
-      const res = await fetch(
-        "https://squid-app-p63zw.ondigitalocean.app/api/auth/logout",
-        {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await fetch(`${url}/api/auth/logout`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
       if (!res.ok) {
         throw new Error("failed to logout");
       }

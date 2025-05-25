@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import StoryTile from "@/components/creatorComponents/storyTile";
 import "./styleModules/storiesContainerModule.css";
-
+const url = process.env.NEXT_PUBLIC_API_URL;
 export default function StoriesContainer({ search }) {
   const [stories, setStories] = useState([]);
   const [page, setPage] = useState(1);
@@ -49,8 +49,8 @@ export default function StoriesContainer({ search }) {
         // Make the request to the API endpoint
         const res = await fetch(
           role === "admin"
-            ? `https://squid-app-p63zw.ondigitalocean.app/api/scenarios?${params}`
-            : `https://squid-app-p63zw.ondigitalocean.app/api/scenarios/user?${params}`,
+            ? `${url}/api/scenarios?${params}`
+            : `${url}/api/scenarios/user?${params}`,
           {
             method: "GET",
             headers: {
