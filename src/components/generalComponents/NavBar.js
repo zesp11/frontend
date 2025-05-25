@@ -41,15 +41,19 @@ export default function NavBar() {
             onClick={() => scrollToSection("hero")}
           >
             <div className={styles.logoImage}>
-              <Image
-                src="/logo.svg"
-                alt="Logo"
-                fill
-                style={{ objectFit: "contain" }}
-              />
+              <div
+                style={{ position: "relative", width: "40px", height: "40px" }}
+              >
+                <Image
+                  src="/logo.svg"
+                  alt="Logo"
+                  fill
+                  style={{ objectFit: "contain" }}
+                />
+              </div>
             </div>
             <span className={styles.logoText}>
-              Go <span className={styles.logoHighlight}>Tale</span>
+              Go<span className={styles.logoHighlight}>Tale</span>
             </span>
           </button>
 

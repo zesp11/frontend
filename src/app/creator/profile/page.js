@@ -16,9 +16,9 @@ export default function Profile() {
   });
   const [creationDate, setCreationDate] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [fileName, setFileName] = useState("Wybierz plik");
   const fileInputRef = useRef(null);
   const router = useRouter();
+
   useEffect(() => {
     async function fetchUser() {
       try {
@@ -99,7 +99,6 @@ export default function Profile() {
         const r = await response.json();
         setLocalStorageItem("user", r.login);
         setLocalStorageItem("photoUrl", r.photo_url);
-        alert("Profil zaktualizowany!");
       }
     } catch (error) {
       setIsLoading(false);
@@ -115,7 +114,6 @@ export default function Profile() {
         photo: file,
         photoPreview: URL.createObjectURL(file),
       }));
-      setFileName(file.name);
     }
   };
 
@@ -125,20 +123,16 @@ export default function Profile() {
       photo: null,
       photoPreview: null,
     }));
-    setFileName("Wybierz plik");
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className={styles.profileWrapper}>
-        <div className={styles.loadingIndicator}>Loading</div>
-      </div>
-    );
-  }
-  const handleAccoutDelete = async () => {
+  const handleBackToCreator = () => {
+    router.push("/creator");
+  };
+
+  const handleAccountDelete = async () => {
     const confirmed = confirm("Czy na pewno chcesz usunąć konto?");
     if (!confirmed) return;
     const token = localStorage.getItem("accessToken");
@@ -166,164 +160,259 @@ export default function Profile() {
     }
   };
 
-  return (
-    <div className={styles.profileWrapper}>
-      <h1 className={styles.profileTitle}>Edycja Profilu</h1>
+  if (isLoading) {
+    return (
+      <div className={styles.profileWrapper}>
+        <div className={styles.loadingIndicator}>
+          <div className={styles.spinner}></div>
+          <span>Ładowanie profilu...</span>
+        </div>
+      </div>
+    );
+  }
 
-      <div className={styles.settingsSection}>
-        <form onSubmit={handleUpdate} className={styles.profileForm}>
-          <div className={styles.formGroup}>
-            <label>Zdjęcie profilowe:</label>
-            <div className={styles.fileInputContainer}>
-              <div className={styles.fileInputButton}>
-                <span>{fileName}</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="17 8 12 3 7 8" />
-                  <line x1="12" y1="3" x2="12" y2="15" />
-                </svg>
+  return (
+    <div className={styles.profileBackground}>
+      <div className={styles.profileContainer}>
+        <div className={styles.profileWrapper}>
+          {/* Header with back button */}
+          <div className={styles.profileHeader}>
+            <button onClick={handleBackToCreator} className={styles.backButton}>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+              </svg>
+              Powrót
+            </button>
+            <h1 className={styles.profileTitle}>Edycja Profilu</h1>
+          </div>
+
+          <form onSubmit={handleUpdate} className={styles.profileForm}>
+            {/* Avatar Section */}
+            <div className={styles.avatarSection}>
+              <div className={styles.avatarContainer}>
+                <div className={styles.avatarWrapper}>
+                  {profileData.photoPreview ? (
+                    <img
+                      src={profileData.photoPreview}
+                      alt="Avatar"
+                      className={styles.avatar}
+                    />
+                  ) : (
+                    <div className={styles.avatarPlaceholder}>
+                      <svg
+                        width="48"
+                        height="48"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      >
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                      </svg>
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    className={styles.avatarEditButton}
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                      <circle cx="12" cy="13" r="4" />
+                    </svg>
+                  </button>
+                </div>
+                {profileData.photoPreview && (
+                  <button
+                    type="button"
+                    onClick={handleRemoveImage}
+                    className={styles.removeAvatarButton}
+                  >
+                    Usuń zdjęcie
+                  </button>
+                )}
               </div>
               <input
                 type="file"
                 ref={fileInputRef}
                 accept="image/*"
                 onChange={handleImageChange}
-                className={styles.fileInput}
+                className={styles.hiddenFileInput}
               />
             </div>
 
-            {profileData.photoPreview && (
-              <div className={styles.imagePreviewContainer}>
-                <img
-                  src={profileData.photoPreview}
-                  alt="Preview"
-                  className={styles.imagePreview}
-                />
-                <button
-                  type="button"
-                  onClick={handleRemoveImage}
-                  className={styles.removeImageButton}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M3 6h18" />
-                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                  </svg>
-                  Usuń
-                </button>
+            {/* Form Fields Grid */}
+            <div className={styles.formGrid}>
+              <div className={styles.formColumn}>
+                <div className={styles.inputGroup}>
+                  <label htmlFor="login" className={styles.formLabel}>
+                    Login
+                  </label>
+                  <input
+                    id="login"
+                    className={styles.formInput}
+                    value={login}
+                    onChange={(e) => setLogin(e.target.value)}
+                    autoComplete="username"
+                  />
+                </div>
+
+                <div className={styles.inputGroup}>
+                  <label htmlFor="email" className={styles.formLabel}>
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    className={styles.formInput}
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    autoComplete="email"
+                  />
+                </div>
               </div>
-            )}
-          </div>
 
-          <div className={styles.inputGroup}>
-            <label htmlFor="login">Login</label>
-            <input
-              id="login"
-              className={styles.settingsInput}
-              value={login}
-              onChange={(e) => setLogin(e.target.value)}
-              autoComplete="username"
-            />
-          </div>
+              <div className={styles.formColumn}>
+                <div className={styles.inputGroup}>
+                  <label htmlFor="password" className={styles.formLabel}>
+                    Nowe hasło
+                  </label>
+                  <input
+                    id="password"
+                    className={styles.formInput}
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Zostaw puste, aby nie zmieniać"
+                    autoComplete="new-password"
+                  />
+                </div>
 
-          <div className={styles.inputGroup}>
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              className={styles.settingsInput}
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="email"
-            />
-          </div>
+                <div className={styles.inputGroup}>
+                  <label htmlFor="retypePassword" className={styles.formLabel}>
+                    Powtórz hasło
+                  </label>
+                  <input
+                    id="retypePassword"
+                    className={styles.formInput}
+                    type="password"
+                    value={retypePassword}
+                    onChange={(e) => setRetypePassword(e.target.value)}
+                    placeholder="Powtórz nowe hasło"
+                    autoComplete="new-password"
+                  />
+                </div>
+              </div>
+            </div>
 
-          <div className={styles.inputGroup}>
-            <label htmlFor="password">Hasło</label>
-            <input
-              id="password"
-              className={styles.settingsInput}
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Zostaw puste, jeśli nie chcesz zmieniać hasła"
-              autoComplete="new-password"
-            />
-          </div>
-
-          <div className={styles.inputGroup}>
-            <label htmlFor="retypePassword">Powtórz Hasło</label>
-            <input
-              id="retypePassword"
-              className={styles.settingsInput}
-              type="password"
-              value={retypePassword}
-              onChange={(e) => setRetypePassword(e.target.value)}
-              autoComplete="new-password"
-            />
-          </div>
-
-          <div className={styles.inputGroup}>
-            <label htmlFor="bio">Biogram</label>
-            <textarea
-              id="bio"
-              className={`${styles.settingsInput} ${styles.bioInput}`}
-              value={bio}
-              onChange={(e) => setBio(e.target.value)}
-            />
-          </div>
-
-          <button className={styles.actionButton} type="submit">
-            Zapisz zmiany
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M5 12H19M19 12L12 5M19 12L12 19"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+            {/* Bio Section */}
+            <div className={styles.inputGroup}>
+              <label htmlFor="bio" className={styles.formLabel}>
+                Biogram
+              </label>
+              <textarea
+                id="bio"
+                className={`${styles.formInput} ${styles.bioTextarea}`}
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                placeholder="Opowiedz coś o sobie..."
+                rows={4}
               />
-            </svg>
-          </button>
-          <button
-            className={styles.deleteButton}
-            onClick={handleAccoutDelete}
-            type="button"
-          >
-            Usuń konto
-          </button>
-        </form>
-      </div>
+            </div>
 
-      {creationDate && (
-        <div className={styles.creationDateContainer}>
-          <p className={styles.creationDate}>
-            Konto stworzone: {new Date(creationDate).toLocaleDateString()}
-          </p>
+            {/* Action Buttons */}
+            <div className={styles.actionButtons}>
+              <button
+                className={styles.saveButton}
+                type="submit"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <div className={styles.buttonSpinner}></div>
+                    Zapisywanie...
+                  </>
+                ) : (
+                  <>
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                      <polyline points="17,21 17,13 7,13 7,21" />
+                      <polyline points="7,3 7,8 15,8" />
+                    </svg>
+                    Zapisz zmiany
+                  </>
+                )}
+              </button>
+
+              <button
+                className={styles.deleteButton}
+                onClick={handleAccountDelete}
+                type="button"
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <polyline points="3,6 5,6 21,6" />
+                  <path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6" />
+                  <line x1="10" y1="11" x2="10" y2="17" />
+                  <line x1="14" y1="11" x2="14" y2="17" />
+                </svg>
+                Usuń konto
+              </button>
+            </div>
+          </form>
+
+          {/* Account Info Footer */}
+          {creationDate && (
+            <div className={styles.accountInfo}>
+              <div className={styles.creationDate}>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                Konto utworzone:{" "}
+                {new Date(creationDate).toLocaleDateString("pl-PL")}
+              </div>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

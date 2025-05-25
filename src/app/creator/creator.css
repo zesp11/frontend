@@ -1,5 +1,9 @@
 .creator-page {
-  background-color: #121212;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 128, 0, 0.116),
+    transparent
+  );
   min-height: 100vh;
   color: #f8f8f8;
 }

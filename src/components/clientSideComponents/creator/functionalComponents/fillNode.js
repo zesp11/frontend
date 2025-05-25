@@ -112,12 +112,15 @@ export default async function FillNode(
         // Fetch next step if not processed yet
         if (!processedSteps.has(nextStepId)) {
           try {
-            const nextStepRes = await fetch(`/api/proxy/steps/${nextStepId}`, {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            });
+            const nextStepRes = await fetch(
+              `https://squid-app-p63zw.ondigitalocean.app/api/steps/${nextStepId}`,
+              {
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
 
             if (nextStepRes.ok) {
               const nextStepData = await nextStepRes.json();

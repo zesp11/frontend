@@ -53,10 +53,6 @@ export default function StoryTile({ story }) {
             <span className="placeholder-icon">📚</span>
           </div>
         )}
-
-        <div className="story-overlay">
-          <div className="story-id">#{safeStory.id || "0"}</div>
-        </div>
       </div>
       <div className="story-details">
         <h3 className="story-title">{safeStory.name || "Untitled Story"}</h3>

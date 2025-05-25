@@ -35,7 +35,7 @@ export async function addStep(id_scen) {
     return String(r.id_step);
   } catch (error) {
     console.error(error);
-    throw error; // Re-throw to allow caller to handle the error
+    return false;
   }
 }
 
@@ -72,7 +72,7 @@ export async function editStep(id, data, id_scen) {
     return res.photo_url;
   } catch (error) {
     console.error("Error in editStep:", error);
-    throw error; // Re-throw to allow caller to handle the error
+    return false;
   }
 }
 export async function deleteStep(id, id_scen) {
@@ -87,8 +87,10 @@ export async function deleteStep(id, id_scen) {
     if (!response.ok) {
       throw new Error("Failed to create node");
     }
+    return true;
   } catch (error) {
     console.error("Failed to update node:", error);
+    return false;
   }
 }
 export async function addChoice(source, target, id_scen, id_players) {
@@ -115,6 +117,7 @@ export async function addChoice(source, target, id_scen, id_players) {
     return res.id_choice;
   } catch (error) {
     console.error("Failed to update node:", error);
+    return false;
   }
 }
 export async function editChoice(
@@ -147,8 +150,10 @@ export async function editChoice(
       const errorText = await response.text();
       throw new Error(`API error: ${response.status} - ${errorText}`);
     }
+    return true;
   } catch (error) {
     console.error("Failed to update node:", error);
+    return false;
   }
 }
 export async function deleteChoice(id, id_scen) {
@@ -161,7 +166,12 @@ export async function deleteChoice(id, id_scen) {
         "Content-Type": "application/json",
       },
     });
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status} - ${errorText}`);
+    }
+    return true;
   } catch (error) {
     console.error("Failed to update node:", error);
+    return false;
   }
 }

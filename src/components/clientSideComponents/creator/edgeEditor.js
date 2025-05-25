@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { Loader2, X, Save, Users } from "lucide-react";
 
 export default function EdgeEditor({
   edge,
@@ -16,6 +17,10 @@ export default function EdgeEditor({
       stroke: edge.style?.stroke || "#333",
     },
   });
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [saveError, setSaveError] = useState(null);
+  const popupRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -50,17 +55,42 @@ export default function EdgeEditor({
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSave(edge.id, edgeData);
-    onClose();
+    setIsLoading(true);
+    setSaveError(null);
+
+    try {
+      if (typeof onSave === "function") {
+        await onSave(edge.id, edgeData);
+        // Add a small delay for better UX
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        onClose();
+      } else {
+        throw new Error("onSave function is not available");
+      }
+    } catch (error) {
+      console.error("Save failed:", error);
+      setSaveError(error.message || "Wystąpił błąd podczas zapisywania");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleClose = () => {
+    if (!isLoading) {
+      onClose();
+    }
   };
 
   // Handle clicks outside the popup to close it
-  const popupRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (popupRef.current && !popupRef.current.contains(event.target)) {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target) &&
+        !isLoading
+      ) {
         onClose();
       }
     };
@@ -68,22 +98,25 @@ export default function EdgeEditor({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [onClose]);
-  const renderPlayerCheckboxes = () => {
-    const handlePlayerToggle = (playerIndex) => {
-      setEdgeData((prev) => {
-        const isAlreadySelected = prev.id_players.includes(playerIndex);
-        return {
-          ...prev,
-          id_players: isAlreadySelected
-            ? prev.id_players.filter((id) => id !== playerIndex)
-            : [...prev.id_players, playerIndex],
-        };
-      });
-    };
+  }, [onClose, isLoading]);
 
+  const handlePlayerToggle = (playerIndex) => {
+    if (isLoading) return;
+
+    setEdgeData((prev) => {
+      const isAlreadySelected = prev.id_players.includes(playerIndex);
+      return {
+        ...prev,
+        id_players: isAlreadySelected
+          ? prev.id_players.filter((id) => id !== playerIndex)
+          : [...prev.id_players, playerIndex],
+      };
+    });
+  };
+
+  const renderPlayerCheckboxes = () => {
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {Array.from({ length: limitPlayers }, (_, i) => {
           const playerIndex = i + 1;
           const isChecked = edgeData.id_players.includes(playerIndex);
@@ -94,49 +127,39 @@ export default function EdgeEditor({
                 .flatMap((e) => e.id_players)
             ),
           ];
+
           if (
             !players_to_render.includes(playerIndex) &&
             !(edge.source == scenario.first_step.id_step)
-          )
-            return;
+          ) {
+            return null;
+          }
+
           return (
-            <label
+            <button
               key={`player-${playerIndex}`}
-              htmlFor={`player_${playerIndex}`}
+              type="button"
+              onClick={() => handlePlayerToggle(playerIndex)}
+              disabled={isLoading}
               className={`
                 group relative flex flex-col items-center justify-center rounded-xl p-4
-                border-2 transition-all cursor-pointer select-none
+                border-2 transition-all duration-200 cursor-pointer select-none transform hover:scale-105
+                ${isLoading ? "opacity-50 cursor-not-allowed scale-100" : ""}
                 ${
                   isChecked
-                    ? "bg-orange-500 border-orange-500 text-white shadow-md"
-                    : "bg-zinc-800 border-zinc-700 text-orange-400 hover:bg-zinc-700"
+                    ? "bg-gradient-to-br from-orange-500 to-orange-600 border-orange-500 text-white shadow-lg shadow-orange-500/25"
+                    : "bg-zinc-800 border-zinc-700 text-orange-400 hover:bg-zinc-700 hover:border-orange-500/50"
                 }
               `}
-              onClick={() => handlePlayerToggle(playerIndex)}
             >
-              <input
-                type="checkbox"
-                id={`player_${playerIndex}`}
-                name={`player_${playerIndex}`}
-                checked={isChecked}
-                readOnly
-                className="absolute opacity-0 w-0 h-0"
-              />
-              {isChecked ? (
-                <span className="text-sm font-semibold text-black">
-                  Gracz {playerIndex}
-                </span>
-              ) : (
-                <span className="text-sm font-semibold">
-                  Gracz {playerIndex}
-                </span>
-              )}
+              <Users size={18} className="mb-1" />
+              <span className="text-sm font-semibold">Gracz {playerIndex}</span>
               {isChecked && (
-                <span className="absolute top-3 right-2 text-white text-lg">
+                <div className="absolute -top-1 -right-1 bg-white text-orange-500 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-lg">
                   ✓
-                </span>
+                </div>
               )}
-            </label>
+            </button>
           );
         })}
       </div>
@@ -144,109 +167,112 @@ export default function EdgeEditor({
   };
 
   return (
-    <div className="popup-overlay">
-      <div className="popup-content" ref={popupRef}>
-        <h3>Edytuj Wybór</h3>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="text">Tekst wyboru:</label>
-            <div className="edgearea-container">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <form
+        ref={popupRef}
+        onSubmit={handleSubmit}
+        className="relative bg-zinc-900 border border-orange-500/20 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl"
+      >
+        {/* Header */}
+        <div className="p-6 border-b border-orange-500/10">
+          <div className="flex items-center justify-between">
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
+              Edytuj Wybór
+            </h3>
+            <button
+              type="button"
+              onClick={handleClose}
+              disabled={isLoading}
+              className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <X size={20} />
+            </button>
+          </div>
+        </div>
+
+        <div className="p-6 space-y-6">
+          {/* Error Message */}
+          {saveError && (
+            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4">
+              <p className="text-red-400 text-sm">{saveError}</p>
+            </div>
+          )}
+
+          {/* Choice Text Field */}
+          <div className="space-y-2">
+            <label className="block text-orange-400 font-medium">
+              Tekst wyboru
+            </label>
+            <div className="relative">
               <input
-                style={{ width: "100%" }}
                 type="text"
-                id="label"
                 name="label"
                 value={edgeData.label}
                 onChange={handleChange}
                 required
                 maxLength="255"
+                disabled={isLoading}
+                className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 text-white placeholder-zinc-400 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                placeholder="Wprowadź tekst wyboru..."
               />
-              <div className="character-counter">
+              <div className="absolute bottom-2 right-3 text-xs text-orange-400/60">
                 {edgeData.label.length}/255
               </div>
             </div>
           </div>
+
+          {/* Player Selection */}
           {scenario.limit_players > 1 && (
-            <div className="form-group">
-              <label>Wybrani gracze:</label>
-              <div className="mt-2">{renderPlayerCheckboxes()}</div>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2 text-orange-400 font-medium">
+                <Users size={20} />
+                <span>Wybrani gracze</span>
+              </div>
+              <div className="bg-zinc-800 rounded-xl p-4 border border-zinc-700">
+                {renderPlayerCheckboxes()}
+              </div>
             </div>
           )}
 
-          <div className="button-group mt-4">
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-zinc-700/50">
             <button
               type="submit"
-              className="mr-2"
-              style={{
-                margin: "8px",
-                padding: "10px 20px",
-                background:
-                  "linear-gradient(135deg, rgba(34, 197, 94, 0.9) 0%, rgba(16, 185, 129, 0.85) 100%)",
-                color: "white",
-                border: "2px solid rgba(34, 197, 94, 0.4)",
-                borderRadius: "6px",
-                cursor: "pointer",
-                fontSize: "14px",
-                fontWeight: "600",
-                boxShadow: "0 3px 8px rgba(34, 197, 94, 0.3)",
-                transition: "all 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.background =
-                  "linear-gradient(135deg, rgba(34, 197, 94, 1) 0%, rgba(16, 185, 129, 0.95) 100%)";
-                e.target.style.borderColor = "rgba(34, 197, 94, 0.6)";
-                e.target.style.boxShadow = "0 5px 15px rgba(34, 197, 94, 0.4)";
-                e.target.style.transform = "translateY(-1px)";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.background =
-                  "linear-gradient(135deg, rgba(34, 197, 94, 0.9) 0%, rgba(16, 185, 129, 0.85) 100%)";
-                e.target.style.borderColor = "rgba(34, 197, 94, 0.4)";
-                e.target.style.boxShadow = "0 3px 8px rgba(34, 197, 94, 0.3)";
-                e.target.style.transform = "translateY(0)";
-              }}
+              disabled={isLoading}
+              className="flex items-center justify-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 disabled:from-green-500/50 disabled:to-emerald-600/50 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 transform hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed shadow-lg flex-1"
             >
-              Zapisz
+              {isLoading ? (
+                <Loader2 size={18} className="animate-spin" />
+              ) : (
+                <Save size={18} />
+              )}
+              <span>{isLoading ? "Zapisywanie..." : "Zapisz"}</span>
             </button>
+
             <button
               type="button"
-              onClick={onClose}
-              style={{
-                margin: "8px",
-                padding: "10px 20px",
-                background:
-                  "linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.1) 100%)",
-                color: "#dc2626",
-                border: "2px solid rgba(239, 68, 68, 0.3)",
-                borderRadius: "6px",
-                cursor: "pointer",
-                fontSize: "14px",
-                fontWeight: "500",
-                boxShadow: "0 2px 6px rgba(239, 68, 68, 0.2)",
-                transition: "all 0.2s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.background =
-                  "linear-gradient(135deg, rgba(239, 68, 68, 0.25) 0%, rgba(220, 38, 38, 0.2) 100%)";
-                e.target.style.borderColor = "#dc2626";
-                e.target.style.color = "#b91c1c";
-                e.target.style.boxShadow = "0 4px 12px rgba(239, 68, 68, 0.3)";
-                e.target.style.transform = "translateY(-1px)";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.background =
-                  "linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.1) 100%)";
-                e.target.style.borderColor = "rgba(239, 68, 68, 0.3)";
-                e.target.style.color = "#dc2626";
-                e.target.style.boxShadow = "0 2px 6px rgba(239, 68, 68, 0.2)";
-                e.target.style.transform = "translateY(0)";
-              }}
+              onClick={handleClose}
+              disabled={isLoading}
+              className="flex items-center justify-center space-x-2 bg-zinc-700 hover:bg-zinc-600 disabled:bg-zinc-700/50 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 disabled:cursor-not-allowed flex-1"
             >
-              Anuluj
+              <X size={18} />
+              <span>Anuluj</span>
             </button>
           </div>
-        </form>
-      </div>
+        </div>
+
+        {/* Loading Overlay */}
+        {isLoading && (
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm rounded-2xl flex items-center justify-center z-10">
+            <div className="bg-zinc-800 p-6 rounded-xl border border-orange-500/20 flex items-center space-x-3 shadow-2xl">
+              <Loader2 size={24} className="animate-spin text-orange-400" />
+              <span className="text-white font-medium">
+                Zapisywanie zmian...
+              </span>
+            </div>
+          </div>
+        )}
+      </form>
     </div>
   );
 }

@@ -4,7 +4,6 @@ import StoriesContainer from "@/components/clientSideComponents/creator/storiesC
 import LoadingAnimation from "@/components/clientSideComponents/creator/loadingAnimation";
 import { useState, useEffect } from "react";
 import "./creator.css";
-import NavbarSwitcher from "@/components/clientSideComponents/creator/navBarSwitcher";
 
 export default function Creator() {
   const [search, setSearch] = useState("");
@@ -24,9 +23,6 @@ export default function Creator() {
 
   return (
     <div>
-      <nav>
-        <NavbarSwitcher />
-      </nav>
       <div className="creator-page">
         {isLoading && <LoadingAnimation visible={isLoading} />}
         <div className="creator-content">

@@ -7,7 +7,6 @@ import {
   useEdgesState,
   addEdge,
   Background,
-  Controls,
   Panel,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
@@ -25,7 +24,6 @@ import {
   addStep,
   editChoice,
 } from "./functionalComponents/fetchFunctions";
-
 
 // Define node dimensions for layout calculations
 const nodeWidth = 180;
@@ -163,117 +161,125 @@ export default function FlowComponent({ scenario, id_scen, isOpen }) {
         alert("Nie możesz stworzyć ścieżki do pierwszego kroku!");
         return;
       }
-
-      if (params.source !== params.target) {
-        // Prevent self-connections
-        // Check if an edge already exists between these nodes
-        const existingEdge = edges.find(
-          (edge) =>
-            (edge.source === params.source && edge.target === params.target) ||
-            (edge.source === params.target && edge.target === params.source)
-        );
-
-        if (existingEdge) {
-          deleteChoice(existingEdge.id, id_scen);
-          setEdges((eds) => eds.filter((edge) => edge.id !== existingEdge.id));
-          setBackupEdges((eds) =>
-            eds.filter((edge) => edge.id !== existingEdge.id)
+      try {
+        if (params.source !== params.target) {
+          // Prevent self-connections
+          // Check if an edge already exists between these nodes
+          const existingEdge = edges.find(
+            (edge) =>
+              (edge.source === params.source &&
+                edge.target === params.target) ||
+              (edge.source === params.target && edge.target === params.source)
           );
-        } else {
-          if (edges.filter((e) => e.source === params.source).length >= 4) {
-            alert("Każdy krok może mieć maksymalnie cztery wybory!");
-            return;
-          }
-          var id_players;
-          if (params.source == scenario.first_step.id_step) {
-            id_players = Array.from(
-              { length: scenario.limit_players },
-              (_, i) => i + 1
+
+          if (existingEdge) {
+            var succeded = await deleteChoice(existingEdge.id, id_scen);
+            if (!succeded) return;
+            setEdges((eds) =>
+              eds.filter((edge) => edge.id !== existingEdge.id)
+            );
+            setBackupEdges((eds) =>
+              eds.filter((edge) => edge.id !== existingEdge.id)
             );
           } else {
-            id_players = [
-              ...new Set(
-                edges
-                  .filter((e) => e.target === params.source)
-                  .flatMap((e) => e.id_players)
-              ),
-            ];
+            if (edges.filter((e) => e.source === params.source).length >= 4) {
+              alert("Każdy krok może mieć maksymalnie cztery wybory!");
+              return;
+            }
+            var id_players;
+            if (params.source == scenario.first_step.id_step) {
+              id_players = Array.from(
+                { length: scenario.limit_players },
+                (_, i) => i + 1
+              );
+            } else {
+              id_players = [
+                ...new Set(
+                  edges
+                    .filter((e) => e.target === params.source)
+                    .flatMap((e) => e.id_players)
+                ),
+              ];
+            }
+            const edgeId = await addChoice(
+              params.source,
+              params.target,
+              id_scen,
+              id_players
+            );
+            if (!edgeId) return;
+            setEdges((eds) =>
+              addEdge(
+                {
+                  ...params,
+                  id: edgeId,
+                  id_players: id_players,
+                  animated: false,
+                  style: {
+                    stroke: "#ff8c42",
+                    strokeWidth: 2,
+                    opacity: 0.8,
+                  },
+                  label: "Continue",
+                  labelStyle: {
+                    fill: "#ffffff",
+                    fontWeight: 500,
+                    fontSize: 12,
+                  },
+                  labelBgStyle: {
+                    fill: "rgba(26, 26, 26, 0.75)",
+                    rx: 4,
+                    ry: 4,
+                  },
+                  labelShowBg: true,
+                  markerEnd: {
+                    type: "arrowclosed",
+                    color: "#ff8c42",
+                    width: 20,
+                    height: 20,
+                  },
+                },
+                eds
+              )
+            );
+            setBackupEdges((eds) =>
+              addEdge(
+                {
+                  ...params,
+                  id: edgeId,
+                  id_players: id_players,
+                  animated: false,
+                  style: {
+                    stroke: "#ff8c42",
+                    strokeWidth: 2,
+                    opacity: 0.8,
+                  },
+                  label: "Continue",
+                  labelStyle: {
+                    fill: "#ffffff",
+                    fontWeight: 500,
+                    fontSize: 12,
+                  },
+                  labelBgStyle: {
+                    fill: "rgba(26, 26, 26, 0.75)",
+                    rx: 4,
+                    ry: 4,
+                  },
+                  labelShowBg: true,
+                  markerEnd: {
+                    type: "arrowclosed",
+                    color: "#ff8c42",
+                    width: 20,
+                    height: 20,
+                  },
+                },
+                eds
+              )
+            );
           }
-          const edgeId = await addChoice(
-            params.source,
-            params.target,
-            id_scen,
-            id_players
-          );
-          setEdges((eds) =>
-            addEdge(
-              {
-                ...params,
-                id: edgeId,
-                id_players: id_players,
-                animated: false,
-                style: {
-                  stroke: "#ff8c42",
-                  strokeWidth: 2,
-                  opacity: 0.8,
-                },
-                label: "Continue",
-                labelStyle: {
-                  fill: "#ffffff",
-                  fontWeight: 500,
-                  fontSize: 12,
-                },
-                labelBgStyle: {
-                  fill: "rgba(26, 26, 26, 0.75)",
-                  rx: 4,
-                  ry: 4,
-                },
-                labelShowBg: true,
-                markerEnd: {
-                  type: "arrowclosed",
-                  color: "#ff8c42",
-                  width: 20,
-                  height: 20,
-                },
-              },
-              eds
-            )
-          );
-          setBackupEdges((eds) =>
-            addEdge(
-              {
-                ...params,
-                id: edgeId,
-                id_players: id_players,
-                animated: false,
-                style: {
-                  stroke: "#ff8c42",
-                  strokeWidth: 2,
-                  opacity: 0.8,
-                },
-                label: "Continue",
-                labelStyle: {
-                  fill: "#ffffff",
-                  fontWeight: 500,
-                  fontSize: 12,
-                },
-                labelBgStyle: {
-                  fill: "rgba(26, 26, 26, 0.75)",
-                  rx: 4,
-                  ry: 4,
-                },
-                labelShowBg: true,
-                markerEnd: {
-                  type: "arrowclosed",
-                  color: "#ff8c42",
-                  width: 20,
-                  height: 20,
-                },
-              },
-              eds
-            )
-          );
         }
+      } catch (error) {
+        console.error(error);
       }
     },
     [edges, setEdges, setBackupEdges]
@@ -285,8 +291,7 @@ export default function FlowComponent({ scenario, id_scen, isOpen }) {
       try {
         // Call editStep with the full data object including photo
         const photoUrl = await editStep(id, data, id_scen);
-        console.log("UPDATED");
-        console.log(photoUrl);
+        if (!photoUrl) return;
         // Update nodes state
         setNodes((nds) =>
           nds.map((node) => {
@@ -336,7 +341,6 @@ export default function FlowComponent({ scenario, id_scen, isOpen }) {
 
   // Function to handle node click - open edit popup instead of alert
   const onNodeClick = useCallback((event, node) => {
-    console.log(node);
     setSelectedNode(node);
   }, []);
 
@@ -402,7 +406,7 @@ export default function FlowComponent({ scenario, id_scen, isOpen }) {
 
       try {
         // Update the current edge via API
-        await editChoice(
+        var succed = await editChoice(
           edgeId,
           currentEdge.source,
           currentEdge.target,
@@ -410,7 +414,7 @@ export default function FlowComponent({ scenario, id_scen, isOpen }) {
           id_scen,
           data.id_players
         );
-
+        if (!succed) return;
         // Get all edges that need to be updated (descendants with removed players)
         const edgesToUpdate =
           removedPlayers.length > 0
@@ -477,13 +481,6 @@ export default function FlowComponent({ scenario, id_scen, isOpen }) {
         );
 
         // Optional: Log the propagation for debugging
-        if (edgesToUpdate.length > 0) {
-          console.log(
-            `Propagated removal of players [${removedPlayers.join(", ")}] to ${
-              edgesToUpdate.length
-            } descendant edges`
-          );
-        }
       } catch (error) {
         console.error("Failed to update edge:", error);
         // Handle error appropriately - maybe revert changes or show user notification
@@ -505,6 +502,7 @@ export default function FlowComponent({ scenario, id_scen, isOpen }) {
   // Function to add a new node
   const addNode = useCallback(async () => {
     const newNodeId = await addStep(id_scen);
+    if (!newNodeId) return;
     const { x, y, zoom } = reactFlowInstance.current.getViewport();
 
     // Calculate the center of the visible area
@@ -560,7 +558,8 @@ export default function FlowComponent({ scenario, id_scen, isOpen }) {
     async (nodeId) => {
       // Only delete if the node has no connected edges
       if (canDeleteNode(nodeId)) {
-        deleteStep(nodeId, id_scen);
+        var succed = await deleteStep(nodeId, id_scen);
+        if (!succed) return;
         setNodes((nds) => nds.filter((node) => node.id !== nodeId));
         setBackupNodes((nds) => nds.filter((node) => node.id !== nodeId));
       } else {
