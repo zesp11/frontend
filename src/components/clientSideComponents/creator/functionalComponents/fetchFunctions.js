@@ -69,10 +69,10 @@ export async function editStep(id, data, id_scen) {
       throw new Error(`Failed to edit node: ${errorBody}`);
     }
     const res = await response.json();
-    return res.photo_url;
+    return { photo: res.photo_url, resCode: true };
   } catch (error) {
     console.error("Error in editStep:", error);
-    return false;
+    return { resCode: false };
   }
 }
 export async function deleteStep(id, id_scen) {

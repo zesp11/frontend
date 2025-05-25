@@ -7,6 +7,8 @@ import LoadingAnimation from "@/components/clientSideComponents/creator/loadingA
 import { useSearchParams } from "next/navigation";
 import { useRef } from "react";
 import HelpComponent from "@/components/clientSideComponents/creator/helpComponent";
+import FlowContext from "@/components/clientSideComponents/creator/functionalComponents/flowContext";
+import { useEdgesState } from "@xyflow/react";
 
 // Create a child component that uses useSearchParams
 function ScenarioLoader() {
@@ -17,6 +19,7 @@ function ScenarioLoader() {
   const [id, setId] = useState(searchParams.get("id"));
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [visibleHelp, setVisibleHelp] = useState(false);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const requestInProgress = useRef(false);
   const isInitialMount = useRef(true);
   // Effect to handle screen size changes
@@ -216,21 +219,25 @@ function ScenarioLoader() {
           onClick={() => setSettingsOpen(false)}
         />
       )}
-
-      <div className="scenarioSettings">
-        <ScenarioSettings
-          scenario={scenario}
-          setScenario={setScenario}
-          id={id}
-          isOpen={settingsOpen}
-          setIsOpen={setSettingsOpen}
-          visibleHelp={visibleHelp}
-          onVisibleHelp={setVisibleHelp}
-        />
-      </div>
-      <div className="flowContainer">
-        <FlowComponent scenario={scenario} id_scen={id} isOpen={settingsOpen} />
-      </div>
+      <FlowContext.Provider value={{ edges, setEdges, onEdgesChange }}>
+        <div className="scenarioSettings">
+          <ScenarioSettings
+            scenario={scenario}
+            setScenario={setScenario}
+            id={id}
+            isOpen={settingsOpen}
+            setIsOpen={setSettingsOpen}
+            onVisibleHelp={setVisibleHelp}
+          />
+        </div>
+        <div className="flowContainer">
+          <FlowComponent
+            scenario={scenario}
+            id_scen={id}
+            isOpen={settingsOpen}
+          />
+        </div>
+      </FlowContext.Provider>
       {visibleHelp && <HelpComponent onVisibleHelp={setVisibleHelp} />}
     </div>
   );
