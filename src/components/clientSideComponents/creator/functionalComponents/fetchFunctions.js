@@ -101,7 +101,7 @@ export async function addChoice(source, target, id_scen, id_players) {
       {
         method: "POST",
         body: JSON.stringify({
-          text: "Continue",
+          text: "Kontynuuj",
           id_next_step: Number(target),
           id_step: Number(source),
           id_players: id_players,

@@ -26,7 +26,7 @@ function ScenarioLoader() {
   useEffect(() => {
     // Initialize settings panel state based on screen size
     const handleResize = () => {
-      setSettingsOpen(window.innerWidth > 768);
+      setSettingsOpen(window.innerWidth > 1500);
     };
 
     // Set initial state
@@ -183,7 +183,7 @@ function ScenarioLoader() {
   return (
     <div className="appWrapper">
       {/* Mobile settings toggle button */}
-      {window.innerWidth <= 768 && (
+      {window.innerWidth <= 1500 && (
         <button
           className={`settingsToggle ${settingsOpen ? "active" : ""}`}
           onClick={toggleSettings}
@@ -207,7 +207,7 @@ function ScenarioLoader() {
       )}
 
       {/* Background overlay that appears when settings panel is open on mobile */}
-      {window.innerWidth <= 768 && (
+      {window.innerWidth <= 1500 && (
         <div
           className={`settings-overlay ${settingsOpen ? "visible" : ""}`}
           onClick={() => setSettingsOpen(false)}
@@ -229,6 +229,7 @@ function ScenarioLoader() {
             scenario={scenario}
             id_scen={id}
             isOpen={settingsOpen}
+            onSettingsOpen={setSettingsOpen}
           />
         </div>
       </FlowContext.Provider>

@@ -17,7 +17,7 @@
   position: relative;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1500px) {
   .scenarioSettingsWrapper {
     position: fixed;
     left: 0;
@@ -69,7 +69,7 @@
   }
 }
 
-@media (max-width: 768px) and (orientation: landscape) {
+@media (max-width: 1500px) and (orientation: landscape) {
   .scenarioSettingsWrapper {
     height: 100vh;
     max-height: 100vh;
@@ -109,7 +109,7 @@
   display: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1500px) {
   .mobileHeader {
     display: flex;
     justify-content: space-between;
@@ -661,7 +661,7 @@
   display: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1500px) {
   .settingsToggle {
     display: flex;
     position: fixed;

@@ -71,7 +71,7 @@ export default function ScenarioSettings({
     let initialScreenHeight = window.screen?.height || window.innerHeight;
 
     const handleViewportChange = () => {
-      if (window.innerWidth <= 768) {
+      if (window.innerWidth <= 1500) {
         const currentHeight = window.innerHeight;
         const heightDifference = initialViewportHeight - currentHeight;
 
