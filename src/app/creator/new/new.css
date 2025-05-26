@@ -15,7 +15,7 @@
 }
 
 /* Responsive styles for the main layout */
-@media (max-width: 768px) {
+@media (max-width: 1500px) {
   .scenarioSettings {
     width: 0;
     min-width: 0;
@@ -33,7 +33,7 @@
 }
 
 /* For mobile, allow the flow container to take full width */
-@media (max-width: 768px) {
+@media (max-width: 1500px) {
   .flowContainer {
     width: 100%;
   }
@@ -78,7 +78,7 @@
   display: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1500px) {
   .settingsToggle {
     display: flex;
     position: fixed;
@@ -114,7 +114,7 @@
   display: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1500px) {
   .settings-overlay {
     position: fixed;
     top: 0;

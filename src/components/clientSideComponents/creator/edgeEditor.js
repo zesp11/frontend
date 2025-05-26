@@ -10,7 +10,7 @@ export default function EdgeEditor({
   scenario,
 }) {
   const [edgeData, setEdgeData] = useState({
-    label: edge.label || "Continue",
+    label: edge.label || "Kontynuuj",
     animated: edge.animated || false,
     id_players: edge.id_players || [],
     style: {

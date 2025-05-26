@@ -30,7 +30,12 @@ import { useFlow } from "./functionalComponents/flowContext";
 const nodeWidth = 180;
 const nodeHeight = 80;
 
-export default function FlowComponent({ scenario, id_scen, isOpen }) {
+export default function FlowComponent({
+  scenario,
+  id_scen,
+  isOpen,
+  onSettingsOpen,
+}) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [backupNodes, setBackupNodes] = useState([]);
   const { edges, setEdges, onEdgesChange } = useFlow();
@@ -221,7 +226,7 @@ export default function FlowComponent({ scenario, id_scen, isOpen }) {
                     strokeWidth: 2,
                     opacity: 0.8,
                   },
-                  label: "Continue",
+                  label: "Kontynuuj",
                   labelStyle: {
                     fill: "#ffffff",
                     fontWeight: 500,
@@ -255,7 +260,7 @@ export default function FlowComponent({ scenario, id_scen, isOpen }) {
                     strokeWidth: 2,
                     opacity: 0.8,
                   },
-                  label: "Continue",
+                  label: "Kontynuuj",
                   labelStyle: {
                     fill: "#ffffff",
                     fontWeight: 500,
@@ -343,6 +348,7 @@ export default function FlowComponent({ scenario, id_scen, isOpen }) {
 
   // Function to handle node click - open edit popup instead of alert
   const onNodeClick = useCallback((event, node) => {
+    onSettingsOpen(window.innerWidth > 1500);
     setSelectedNode(node);
   }, []);
 
@@ -492,6 +498,7 @@ export default function FlowComponent({ scenario, id_scen, isOpen }) {
   );
 
   const onEdgeClick = useCallback((event, edge) => {
+    onSettingsOpen(window.innerWidth > 1500);
     setSelectedEdge(edge);
   }, []);
 

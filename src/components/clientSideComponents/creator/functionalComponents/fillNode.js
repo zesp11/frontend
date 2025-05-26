@@ -80,7 +80,7 @@ export default async function FillNode(
           id: edgeId,
           source: stepId.toString(),
           target: nextStepId.toString(),
-          label: choice.choice_text || "Continue",
+          label: choice.choice_text || "Kontynuuj",
           id_players: choice.id_players || [],
           style: {
             stroke: "#ff8c42", // Orange color to match theme
