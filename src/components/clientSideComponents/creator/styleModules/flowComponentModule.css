@@ -80,16 +80,45 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.add-node-button {
-  background-color: #27ae60; /* Green color for add button */
+.layout-button {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 107, 0, 0.15) 0%,
+    rgba(255, 140, 51, 0.1) 100%
+  );
+  color: #ff6b00;
+  border: 2px solid rgba(255, 107, 0, 0.3);
+  box-shadow: none;
 }
-
-.add-node-button:hover {
-  background-color: #219653;
-}
-
 .layout-button:hover {
-  background-color: #357ab8;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 107, 0, 0.25) 0%,
+    rgba(255, 140, 51, 0.2) 100%
+  );
+  border-color: #ff6b00;
+  color: #ff8c33;
+  box-shadow: 0 4px 15px rgba(255, 107, 0, 0.2);
+}
+.add-node-button {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 107, 0, 0.15) 0%,
+    rgba(255, 140, 51, 0.1) 100%
+  );
+  color: #ff6b00;
+  border: 2px solid rgba(255, 107, 0, 0.3);
+  box-shadow: none;
+}
+.add-node-button:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 107, 0, 0.25) 0%,
+    rgba(255, 140, 51, 0.2) 100%
+  );
+  border-color: #ff6b00;
+  color: #ff8c33;
+  box-shadow: 0 4px 15px rgba(255, 107, 0, 0.2);
 }
 /* Map styles */
 .map-container {
@@ -233,4 +262,215 @@
 
 .button-group button.delete-button:hover {
   background-color: #c0392b;
+}
+/* Modern node styling with black background and white text */
+.react-flow__node {
+  border-radius: 8px;
+  width: 200px;
+  font-size: 13px;
+  color: #ffffff; /* White text */
+  text-align: center;
+  border: 2px solid #ff8c42; /* Orange border */
+  background-color: #1a1a1a; /* Black/dark background */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease;
+  padding: 10px 5px;
+}
+
+/* Hover effect with lighter border */
+.react-flow__node:hover {
+  border-color: #ffb07a; /* Lighter orange on hover */
+  box-shadow: 0 6px 12px rgba(255, 140, 66, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Selected node styling */
+.react-flow__node.selected {
+  border-color: #ffb07a; /* Lighter orange */
+  box-shadow: 0 0 0 2px rgba(255, 176, 122, 0.6);
+}
+
+/* Default node type specific styling */
+.react-flow__node-default {
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border: 2px solid #ff8c42;
+}
+
+/* Connection handles */
+.react-flow__handle {
+  width: 4px !important; /* Larger than default */
+  height: 4px !important;
+  background-color: #ff8c42 !important;
+  border-radius: 50% !important; /* Ensure they're circular */
+  border: 2px solid #1a1a1a !important;
+  transition: transform 0.2s ease, background-color 0.2s ease !important;
+}
+
+/* Hover effect */
+.react-flow__handle:hover {
+  background-color: #ffb07a !important; /* Lighter orange on hover */
+}
+
+/* Make edges match the theme */
+.react-flow__edge-path {
+  stroke: #ff8c42;
+  stroke-width: 1.5;
+}
+
+/* Enhanced visibility for node text */
+.react-flow__node-default div {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 2px 6px;
+}
+
+/* For terminal/end nodes, add a subtle indicator */
+.react-flow__node[data-type="terminal"] {
+  border-style: double;
+  border-width: 3px;
+}
+
+/* Better handle visibility on dark nodes */
+
+/* Edge styling */
+.react-flow__edge-path {
+  stroke: #ff8c42;
+  stroke-width: 2;
+  stroke-opacity: 0.8;
+}
+
+/* Edge interaction */
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke: #ffb07a; /* Lighter orange on hover */
+  stroke-width: 3;
+  stroke-opacity: 1;
+}
+
+/* Edge text styling */
+.react-flow__edge-text {
+  fill: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  text-shadow: 0px 0px 2px #000000, 0px 0px 3px #000000; /* Text shadow for better visibility */
+}
+
+/* Edge text background for better visibility */
+.react-flow__edge-textbg {
+  fill: rgba(26, 26, 26, 0.75);
+  rx: 4;
+  ry: 4;
+}
+
+/* Edge arrows */
+.react-flow__arrowclosed {
+  fill: #ff8c42;
+}
+
+.react-flow__edge:hover .react-flow__arrowclosed {
+  fill: #ffb07a;
+}
+
+/* Fix for edge label positioning */
+.react-flow__edge-text-wrapper {
+  pointer-events: all;
+}
+.react-flow__handle-top,
+.react-flow__handle-bottom,
+.react-flow__handle-left,
+.react-flow__handle-right {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.flow-loading-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #121212;
+}
+
+/* Override some of the loading animation styles when used in the flow component */
+.flow-loading-container .loading-overlay {
+  position: relative;
+  background-color: transparent;
+}
+
+/* Player Checkbox Styles - Add to your existing CSS file */
+.player-checkbox-container {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  z-index: 50;
+  max-width: 300px;
+  justify-content: flex-end;
+}
+
+.player-checkbox {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background-color: #1a1a1a;
+  border: 2px solid #ff8c42;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.player-checkbox:hover {
+  background-color: #2a2a2a;
+  border-color: #ffb07a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 140, 66, 0.3);
+}
+
+.player-checkbox.selected {
+  background-color: #ff8c42;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.checkbox-inner {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid #ff8c42;
+}
+
+.player-checkbox.selected .checkbox-inner {
+  background-color: #ffffff;
+}
+
+.checkbox-icon {
+  width: 16px;
+  height: 16px;
+  fill: #ff8c42;
+}
+
+.player-label {
+  font-size: 14px;
+}
+
+/* Ensure the bottom panel stays at the bottom right */
+.panel.bottom-right {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }

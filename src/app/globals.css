@@ -1,6 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary: #ff6b35;
+  --primary-hover: #ff8c5a;
+  --secondary: black;
+  --tertiary: black;
+  --text: #f5f5f5;
+  --text-secondary: #d1d1d1;
+  --accent: #ff914d;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -8,85 +18,42 @@
     --background: ##302a15;
     --foreground: #ededed;
   }
-} 
+}
 * {
   margin: 0;
   padding: 0;
-  /* box-sizing: border-box; */
+  box-sizing: border-box;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
 }
+
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
-  min-width: 500px;
-}
-
-/* .navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 16px 0;
-  text-align: center;
-  z-index: 1000;
+  min-width: 100vw;
+  background-color: var(--tertiary);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.6;
+  background-image: radial-gradient(
+      at 80% 0%,
+      hsla(189, 100%, 56%, 0.05) 0px,
+      transparent 100%
+    ),
+    radial-gradient(at 0% 50%, hsla(355, 100%, 93%, 0.05) 0px, transparent 100%);
+}
+/* Modern Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-.nav-links {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
+::-webkit-scrollbar-track {
+  background: var(--tertiary);
 }
 
-.nav-link {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
-  transition: color 0.3s ease-in-out;
-}
-
-.nav-link:hover {
-  color: #d1d5db;
-} */
-
-
-
-/* Efekt paralaksy */
-.parallax {
-  height: 100vh;
-  position: relative;
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  width: 100%;
-}
-
-/* Tła dla poszczególnych sekcji */
-.home {
-  background-image: url('/home-bg.jpg');
-}
-
-.about {
-  background-image: url('/bg.jpg');
-}
-
-.info {
-  background-image: url('/info-bg.jpg');
-}
-
-.contact {
-  background-image: url('/contact-bg.jpg');
-}
-.overlayblur {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 20px; /* Wysokość strefy rozmycia */
-  /* background: repeating-linear-gradient(); */
-  /* background: rgba(255, 255, 255, 0.5); */
-  backdrop-filter: blur(3px); /* Rozmycie */
-  pointer-events: none; /* Nie blokuje interakcji */
-  z-index: 1;
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
 }

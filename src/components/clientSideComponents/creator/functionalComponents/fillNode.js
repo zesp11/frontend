@@ -1,10 +1,13 @@
 import getLayoutedElements from "./dagreComponent";
+const url = process.env.NEXT_PUBLIC_API_URL;
 export default async function FillNode(
   scenario,
   setNodes,
   setEdges,
   nodeWidth,
-  nodeHeight
+  nodeHeight,
+  setBackupEdges,
+  setBackupNodes
 ) {
   // Create a queue of steps to process
   const stepQueue = [scenario.first_step];
@@ -43,11 +46,15 @@ export default async function FillNode(
       },
       position: { x: 0, y: 0 }, // Will be calculated by layout algorithm
       style: {
-        background: "#f0f0f0",
-        border: "1px solid #ddd",
-        padding: 10,
-        borderRadius: 5,
-        width: nodeWidth,
+        backgroundColor: "#1a1a1a",
+        color: "#ffffff",
+        border: "2px solid #ff8c42",
+        borderRadius: "8px",
+        padding: "10px 8px",
+        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.5)",
+        fontWeight: 500,
+        fontFamily:
+          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       },
     });
 
@@ -73,18 +80,40 @@ export default async function FillNode(
           id: edgeId,
           source: stepId.toString(),
           target: nextStepId.toString(),
-          label: choice.choice_text || "Continue",
-          style: { stroke: "#333" },
+          label: choice.choice_text || "Kontynuuj",
+          id_players: choice.id_players || [],
+          style: {
+            stroke: "#ff8c42", // Orange color to match theme
+            strokeWidth: 2,
+            opacity: 0.8,
+          },
+          labelStyle: {
+            fill: "#ffffff",
+            fontWeight: 500,
+            fontSize: 12,
+            fontFamily:
+              "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          },
+          labelBgStyle: {
+            fill: "rgba(26, 26, 26, 0.75)", // Semi-transparent dark background
+            rx: 4, // Rounded corners
+            ry: 4,
+          },
+          labelBgPadding: [4, 2],
+          labelShowBg: true,
           animated: false,
           markerEnd: {
             type: "arrowclosed",
+            color: "#ff8c42", // Match the edge color
+            width: 20,
+            height: 20,
           },
         });
 
         // Fetch next step if not processed yet
         if (!processedSteps.has(nextStepId)) {
           try {
-            const nextStepRes = await fetch(`/api/proxy/steps/${nextStepId}`, {
+            const nextStepRes = await fetch(`${url}/api/steps/${nextStepId}`, {
               method: "GET",
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -119,4 +148,6 @@ export default async function FillNode(
   // Update the graph with all nodes and edges at once
   setNodes(layoutedElements.nodes);
   setEdges(layoutedElements.edges);
+  setBackupNodes(layoutedElements.nodes);
+  setBackupEdges(layoutedElements.edges);
 }
